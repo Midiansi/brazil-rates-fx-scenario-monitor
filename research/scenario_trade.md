@@ -1,6 +1,7 @@
 # September 2026 Copom/FOMC Scenario Framework
 
-**Snapshot retrieved:** 1 September 2026 at 18:24:02 UTC (15:24:02 Brasília time)  
+**Snapshot retrieved:** 1 September 2026 at 19:17:24 UTC (16:17:24 Brasília time)
+
 **Status:** Fixed educational research snapshot; not investment advice and not an execution recommendation.
 
 The scenario labels describe Brazil's stance **relative to the US and to the saved exchange-pricing anchors**. They do not imply that both central banks must move in the same hawkish or dovish direction. CME's published FOMC probabilities are recorded below; no Copom probability or joint scenario probability is assigned.
@@ -16,10 +17,10 @@ The scenario labels describe Brazil's stance **relative to the US and to the sav
 
 **Result:** The three labels are retained. The middle row remains **Base case** because current meeting-specific primary-exchange evidence was obtained for both September decisions. It is a market-aligned analytical scenario, not a joint-probability forecast.
 
-- **FOMC:** The official [CME FedWatch](https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html) view for 16 September showed **68.2% for a 25 bp hike, 31.8% for no change and 0.0% for easing**, using ZQU6 at a 96.2913 mid-price. CME timestamped the observation **1 September 2026 at 01:26:53 CT**. FedWatch uses 30-Day Federal Funds futures under its published [methodology](https://www.cmegroup.com/articles/2023/understanding-the-cme-group-fedwatch-tool-methodology.html); the values can move after retrieval.
+- **FOMC:** The official [CME FedWatch](https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html) view for 16 September showed **68.2% for a 25 bp hike, 31.8% for no change and 0.0% for easing**, using ZQU6 at a 96.2913 mid-price. CME timestamped the observation **1 September 2026 at 02:07:02 CT**. FedWatch uses 30-Day Federal Funds futures under its published [methodology](https://www.cmegroup.com/articles/2023/understanding-the-cme-group-fedwatch-tool-methodology.html); the values can move after retrieval.
 - **Copom:** B3's official [BVBG.187.01 derivatives report](https://www.b3.com.br/pt_br/market-data-e-indices/servicos-de-dados/market-data/historico/boletins-diarios/pesquisa-por-pregao/pesquisa-por-pregao/) for **31 August 2026** gave settlement unit prices of **99,948.37 for DI1U26** and **98,878.16 for DI1V26**. Applying the [DI1 contract convention](https://www.b3.com.br/pt_br/produtos-e-servicos/negociacao/juros/futuro-de-taxa-media-de-depositos-interfinanceiros-de-um-dia.htm), `rate = (100000 / PU)^(252 / business days) - 1`, produces 13.898920% and 13.794943%. Splitting DI1V26 into 11 business days before and 11 after the 16 September decision implies a post-meeting DI rate of 13.691062%, or about **20.8 bp of easing**.
 
-The B3 calculation is a transparent curve decomposition, not an exchange-published Copom probability. It assumes no other rate change within the contract window and ignores term premia; 31 August was the latest completed settlement available during the 1 September audit.
+The B3 calculation is a transparent curve decomposition, not an exchange-published Copom probability. It assumes no other rate change within the contract window and ignores term premia; 31 August was the latest completed settlement available during the 1 September audit. All automated BCB and FRED requests succeeded; the lagged Focus, Treasury and B3 dates are recorded explicitly rather than filled.
 
 ## Timestamped market snapshot
 

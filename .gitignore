@@ -1,5 +1,6 @@
 .DS_Store
 .env
+.env.*
 .venv/
 venv/
 __pycache__/
@@ -10,8 +11,18 @@ __pycache__/
 .coverage
 htmlcov/
 .streamlit/secrets.toml
+.streamlit/credentials.toml
+.ipynb_checkpoints/
+.idea/
+.vscode/
+*.log
+*.pem
+*.key
+*.p12
 *.sqlite3
 *.db
 *.cache
+build/
+dist/
 work/
 tmp/

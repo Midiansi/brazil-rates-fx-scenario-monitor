@@ -558,7 +558,8 @@ def render_market_brief_markdown(context: dict[str, Any]) -> str:
     trade = context["trade"]
     return f"""# Brazil Rates & FX Trade Brief
 
-**Data snapshot:** {context['snapshot_display']}  
+**Data snapshot:** {context['snapshot_display']}
+
 **Educational paper trade - not investment advice.**
 
 ## Scenario-label audit

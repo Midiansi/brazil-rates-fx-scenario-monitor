@@ -68,9 +68,93 @@ def load_snapshot(as_of: date) -> tuple[dict[str, pd.DataFrame], dict[str, str]]
     return data, errors
 
 
-def show_source_warning(source_name: str, key: str, errors: dict[str, str]) -> None:
-    if key in errors:
-        st.warning(f"{source_name} is temporarily unavailable. {errors[key]}")
+def apply_saved_fallback(
+    data: dict[str, pd.DataFrame],
+    errors: dict[str, str],
+    research: dict | None,
+) -> dict[str, str]:
+    """Fill only unavailable live series from the validated saved snapshot."""
+
+    if research is None:
+        return {}
+
+    series = research["series"]
+    saved_frames: dict[str, pd.DataFrame] = {}
+
+    for key, indicator, series_key in (
+        ("focus_selic", "Selic", "focus_selic"),
+        ("focus_ipca", "IPCA", "focus_ipca"),
+    ):
+        item = series[series_key]
+        rows = [
+            {
+                "Indicator": indicator,
+                "Date": pd.Timestamp(item["latest_observation_date"]),
+                "Reference year": int(reference_year),
+                "Median": float(value),
+                "Calculation base": 0,
+            }
+            for reference_year, value in item["values_by_reference_year"].items()
+        ]
+        saved_frames[key] = pd.DataFrame(rows)
+
+    ptax = series["ptax_usd_brl_midpoint"]
+    ptax_timestamp = pd.Timestamp(ptax["latest_observation_timestamp"])
+    if ptax_timestamp.tzinfo is not None:
+        ptax_timestamp = ptax_timestamp.tz_localize(None)
+    saved_frames["ptax"] = pd.DataFrame(
+        [
+            {
+                "Date": pd.Timestamp(ptax["latest_observation_date"]),
+                "Timestamp": ptax_timestamp,
+                "Buying rate": float(ptax["buying_rate"]),
+                "Selling rate": float(ptax["selling_rate"]),
+                "Midpoint": float(ptax["value"]),
+            }
+        ]
+    )
+
+    rate_items = {
+        "selic_target": ("selic_target", "value"),
+        "fed_lower": ("fed_target_range", "lower"),
+        "fed_upper": ("fed_target_range", "upper"),
+        "us_2y": ("us_2_year_treasury", "value"),
+        "us_10y": ("us_10_year_treasury", "value"),
+    }
+    for key, (series_key, value_key) in rate_items.items():
+        item = series[series_key]
+        saved_frames[key] = pd.DataFrame(
+            [
+                {
+                    "Date": pd.Timestamp(item["latest_observation_date"]),
+                    "Value": float(item[value_key]),
+                }
+            ]
+        )
+
+    fallback_dates: dict[str, str] = {}
+    for key, frame in saved_frames.items():
+        if key in errors or data.get(key, pd.DataFrame()).empty:
+            data[key] = frame
+            fallback_dates[key] = frame["Date"].max().strftime("%Y-%m-%d")
+    return fallback_dates
+
+
+def show_source_warning(
+    source_name: str,
+    key: str,
+    errors: dict[str, str],
+    fallback_dates: dict[str, str],
+    saved_retrieval: str | None,
+) -> None:
+    if key in fallback_dates:
+        st.warning(
+            f"{source_name} live refresh was unavailable or returned no usable observations. "
+            f"Showing saved fallback retrieved {saved_retrieval}; latest saved observation "
+            f"{fallback_dates[key]}."
+        )
+    elif key in errors:
+        st.warning(f"{source_name} is temporarily unavailable; no saved fallback is available.")
 
 
 def fmt_number(value: float | None, decimals: int = 2, suffix: str = "") -> str:
@@ -148,22 +232,6 @@ def build_market_summary(
     return statements
 
 
-today = date.today()
-with st.spinner("Loading official market data…"):
-    snapshot, source_errors = load_snapshot(today)
-
-try:
-    policy_diff = policy_rate_differential(
-        snapshot["selic_target"], snapshot["fed_lower"], snapshot["fed_upper"]
-    )
-except Exception:
-    policy_diff = pd.DataFrame()
-
-try:
-    treasury_curve = us_curve(snapshot["us_2y"], snapshot["us_10y"])
-except Exception:
-    treasury_curve = pd.DataFrame()
-
 research_path = Path(
     os.environ.get(
         "SCENARIO_RESEARCH_PATH",
@@ -182,6 +250,25 @@ try:
 except ResearchDataError as exc:
     research_snapshot = None
     research_error = str(exc)
+
+today = date.today()
+with st.spinner("Loading official market data…"):
+    snapshot, source_errors = load_snapshot(today)
+
+fallback_dates = apply_saved_fallback(snapshot, source_errors, research_snapshot)
+saved_retrieval = research_snapshot["retrieved_at"] if research_snapshot else None
+
+try:
+    policy_diff = policy_rate_differential(
+        snapshot["selic_target"], snapshot["fed_lower"], snapshot["fed_upper"]
+    )
+except Exception:
+    policy_diff = pd.DataFrame()
+
+try:
+    treasury_curve = us_curve(snapshot["us_2y"], snapshot["us_10y"])
+except Exception:
+    treasury_curve = pd.DataFrame()
 
 st.title("Brazil Rates & FX Scenario Monitor")
 st.caption(
@@ -210,7 +297,9 @@ with expectations_tab:
 
     for key, indicator in (("focus_selic", "Selic"), ("focus_ipca", "IPCA")):
         st.subheader(f"{indicator} expectations")
-        show_source_warning("BCB Focus", key, source_errors)
+        show_source_warning(
+            "BCB Focus", key, source_errors, fallback_dates, saved_retrieval
+        )
         frame = snapshot[key]
         if frame.empty:
             st.info(f"No usable {indicator} expectation observations are available.")
@@ -260,7 +349,9 @@ with fx_tab:
         "USD/BRL PTAX midpoint, calculated as (official buying rate + official selling rate) / 2. "
         "Units: Brazilian reais per U.S. dollar."
     )
-    show_source_warning("BCB PTAX", "ptax", source_errors)
+    show_source_warning(
+        "BCB PTAX", "ptax", source_errors, fallback_dates, saved_retrieval
+    )
     ptax = snapshot["ptax"]
     if ptax.empty:
         st.info("No usable PTAX observations are available.")
@@ -311,7 +402,7 @@ with rates_tab:
         ("us_2y", "FRED U.S. 2-year Treasury"),
         ("us_10y", "FRED U.S. 10-year Treasury"),
     ):
-        show_source_warning(name, key, source_errors)
+        show_source_warning(name, key, source_errors, fallback_dates, saved_retrieval)
 
     if policy_diff.empty:
         st.info("The policy-rate comparison is unavailable until all three policy series load.")
@@ -428,8 +519,7 @@ else:
 
 if research_snapshot is None:
     st.warning(
-        "Scenario Lab research is unavailable or malformed. The three live dashboard views remain usable. "
-        f"Details: {research_error}"
+        "Scenario Lab research is unavailable or malformed. The three live dashboard views remain usable."
     )
 else:
     st.caption(

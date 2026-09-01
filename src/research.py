@@ -97,6 +97,15 @@ def validate_research_snapshot(payload: Any) -> dict[str, Any]:
     snapshot = dict(payload)
     _parse_timestamp(snapshot.get("retrieved_at"), "retrieved_at")
 
+    refresh_status = snapshot.get("refresh_status")
+    if not isinstance(refresh_status, Mapping):
+        raise ResearchDataError("Research snapshot must contain refresh status.")
+    _parse_timestamp(refresh_status.get("completed_at"), "refresh_status.completed_at")
+    if not isinstance(refresh_status.get("source_failures"), list):
+        raise ResearchDataError("Refresh status must record source failures as a list.")
+    if not isinstance(refresh_status.get("stale_series"), list):
+        raise ResearchDataError("Refresh status must record stale series as a list.")
+
     audit = snapshot.get("scenario_label_audit")
     if not isinstance(audit, Mapping):
         raise ResearchDataError("Research snapshot must contain a scenario-label audit.")

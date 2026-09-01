@@ -1,83 +1,102 @@
 # Brazil Rates & FX Scenario Monitor
 
-A compact Streamlit dashboard for monitoring Brazilian survey expectations, USD/BRL PTAX and the Brazil–US policy-rate backdrop. The project is designed to demonstrate careful market interpretation: every statement is generated from a displayed calculation, units are explicit, and each external source can fail without taking down the rest of the dashboard.
+A source-grounded Streamlit dashboard for tracking Brazilian expectations, USD/BRL PTAX and the Brazil–US rates backdrop around the September 2026 Copom and FOMC meetings.
 
-The secondary **Scenario Lab** adds a fixed, reviewable September 2026 Copom/FOMC scenario framework and exactly one conditional paper trade. Its narrative is loaded from `research/data_snapshot.json`; it is not generated dynamically and does not replace the three primary live-data views. The full research note is in `research/scenario_trade.md`.
+**Live Streamlit:** [brazil-rates-fx-monitor.streamlit.app](https://brazil-rates-fx-monitor.streamlit.app/)
 
-## One-page trade brief
+**Downloadable brief:** [Brazil Rates & FX Trade Brief — one-page PDF](outputs/Brazil_Rates_FX_Trade_Brief.pdf)
 
-[Download the generated Brazil Rates & FX Trade Brief](outputs/Brazil_Rates_FX_Trade_Brief.pdf).
+![Brazil Rates & FX Scenario Monitor dashboard](assets/dashboard.png)
 
-The brief uses the fixed snapshot retrieved **1 September 2026 at 18:24:02 UTC** and the exchange-pricing audit completed the same day. Regenerate both the PDF and its Markdown companion with:
+**Current snapshot:** 1 September 2026 at 19:17:24 UTC (16:17:24 Brasília time)
 
-```bash
-python scripts/generate_market_brief.py
-```
+**Educational analysis — not investment advice.**
 
-Refresh the underlying official data, CME FedWatch view and B3 DI curve before discussing or publishing the trade; the saved brief does not update itself silently.
+## Market question
 
-## Screenshot
+How might the coincident 15–16 September 2026 Copom and FOMC decisions change the Brazil–US policy-rate differential, Brazil's front end and the initial pressure on BRL/USD—and what observable evidence would confirm or invalidate one conditional paper trade?
 
-_Placeholder: add a screenshot of the deployed Streamlit dashboard here._
+## Dashboard
 
-## Data sources
+The application preserves three primary live-data views:
+
+1. **Brazil expectations** — BCB Focus annual Selic and IPCA medians, with five-observation and approximately one-month changes.
+2. **BRL/USD** — official USD/BRL PTAX buying, selling and calculated midpoint data, including recent changes and range context.
+3. **Brazil–US rates** — Selic versus the calculated federal-funds target-range midpoint, the policy differential, US 2-year and 10-year yields, and the 2s10s slope.
+
+Each source loads independently. If a feed fails or returns no usable observations, the application uses only that series' validated saved snapshot, labels the fallback with its retrieval and observation dates, and keeps unaffected feeds live. User-facing error messages do not expose exception details or stack traces.
+
+## Scenario Lab
+
+The secondary Scenario Lab presents exactly three saved, reviewable cases:
+
+- Hawkish relative to expectations
+- Base case
+- Dovish relative to expectations
+
+Each row specifies Copom and FOMC outcomes, differences from the saved pricing anchors, likely initial directional pressure, the differential change, two confirmation signals and the principal risk. Reactions are conditional, all else equal, and subject to broader risk sentiment.
+
+The current base case is a 25 bp Copom cut and a 25 bp FOMC hike. It is market-aligned analysis, not a joint-probability forecast: CME FedWatch published the FOMC probabilities, while the B3 Copom input is a transparent DI-curve decomposition rather than a B3-published probability.
+
+The complete reviewable inputs and narrative are in [the timestamped snapshot](research/data_snapshot.json), [the research note](research/scenario_trade.md) and [the generated brief companion](research/market_brief.md). No trade narrative is generated dynamically with an LLM.
+
+## Conditional trade methodology
+
+The project contains exactly one educational paper trade: **long USD / short BRL**, conditional on a daily PTAX midpoint close above **5.22**, the rounded high of the latest 20 valid observations. The initial invalidation reference is **5.16**, the rounded range midpoint, and the measured-move review zone is **5.35–5.36**, calculated from the unrounded range high plus one unrounded range width.
+
+The position is not active at the 5.1567 snapshot. It is supported by the base scenario and invalidated by the hawkish-relative scenario. The logic is reproducible in [the saved data](research/data_snapshot.json) and [the brief generator](src/brief.py); it does not represent actual execution or trading performance.
+
+## Official data sources
 
 | Data | Official source | Series or dataset |
 |---|---|---|
 | Selic and IPCA expectations | [Banco Central do Brasil Focus Expectations OData](https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/) | `ExpectativasMercadoAnuais`, `baseCalculo = 0` |
 | USD/BRL PTAX | [Banco Central do Brasil PTAX OData](https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/) | `CotacaoDolarPeriodo` buying and selling rates |
-| Selic target | [Banco Central do Brasil SGS series 432 API](https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json) | SGS series 432 |
-| Federal-funds target range | [FRED DFEDTARL](https://fred.stlouisfed.org/series/DFEDTARL) and [FRED DFEDTARU](https://fred.stlouisfed.org/series/DFEDTARU) | Lower and upper target-range limits |
-| U.S. Treasury yields | [FRED DGS2](https://fred.stlouisfed.org/series/DGS2) and [FRED DGS10](https://fred.stlouisfed.org/series/DGS10) | 2-year and 10-year constant-maturity yields |
+| Selic target | [Banco Central do Brasil SGS series 432](https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json) | SGS 432 |
+| Copom calendar, decision and minutes | [Banco Central do Brasil](https://www.bcb.gov.br/detalhenoticia/20739/nota) | Official 2026 calendar and meeting publications |
+| Federal-funds target range | [FRED DFEDTARL](https://fred.stlouisfed.org/series/DFEDTARL) and [FRED DFEDTARU](https://fred.stlouisfed.org/series/DFEDTARU) | Lower and upper target limits |
+| US Treasury yields | [FRED DGS2](https://fred.stlouisfed.org/series/DGS2) and [FRED DGS10](https://fred.stlouisfed.org/series/DGS10) | 2-year and 10-year constant maturities |
+| FOMC calendar, decision and minutes | [Federal Reserve](https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm) | Official calendar and meeting publications |
 | September FOMC pricing | [CME FedWatch](https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html) | ZQU6-implied 16 September target-range probabilities |
-| September Copom pricing | [B3 daily files](https://www.b3.com.br/pt_br/market-data-e-indices/servicos-de-dados/market-data/historico/boletins-diarios/pesquisa-por-pregao/pesquisa-por-pregao/) | BVBG.187.01 DI1U26 and DI1V26 settlement unit prices |
+| September Copom pricing anchor | [B3 daily files](https://www.b3.com.br/pt_br/market-data-e-indices/servicos-de-dados/market-data/historico/boletins-diarios/pesquisa-por-pregao/pesquisa-por-pregao/) | BVBG.187.01 DI1U26 and DI1V26 settlement unit prices |
 
-The BCB Expectations and PTAX entity and field names were selected from each service's official OData metadata.
+## Installation
 
-## Metric definitions
-
-- **Focus median:** the median in the BCB annual expectations dataset for each reference calendar year. Selic is a percent-per-year policy-rate expectation; IPCA is the expected calendar-year inflation rate in percent. `baseCalculo = 0` selects the standard aggregate calculation base returned by the service.
-- **Five-business-day change:** latest valid observation minus the observation five sorted, valid business-day observations earlier (t versus t−5). Rate and expectation changes are percentage-point changes. PTAX is a relative percentage change.
-- **Approximately one-month change:** latest valid value compared with the last valid observation on or before the calendar date one month earlier.
-- **USD/BRL PTAX midpoint:** `(cotacaoCompra + cotacaoVenda) / 2`, in BRL per USD. A rise means BRL weakened against USD; a fall means BRL strengthened.
-- **Fed target-range midpoint:** `(DFEDTARL + DFEDTARU) / 2`. This is a calculated policy-rate measure, not a bond yield and not the effective federal funds rate.
-- **Brazil–US policy-rate differential:** BCB Selic target minus the Fed target-range midpoint, in percentage points.
-- **U.S. 2s10s:** 10-year constant-maturity Treasury yield minus the 2-year yield, in percentage points. A positive change is a steepening; a negative change is a flattening.
-
-All series are explicitly converted to dates and numeric values, invalid observations are removed, duplicate dates are resolved, and data are sorted before changes are calculated. Policy-rate history uses only dates common to the source series; no synthetic market observations are inserted.
-
-## Install and run
-
-Python 3.11 or newer is recommended.
+Use Python 3.11 and the fully pinned dependency set:
 
 ```bash
-python3 -m venv .venv
+python3.11 -m venv .venv
 source .venv/bin/activate
-python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 streamlit run app.py
 ```
 
-Run the automated checks with:
+No API key, secret or file outside the repository is required. The public deployment uses `app.py`, `requirements.txt`, `.streamlit/config.toml`, the saved research files and the checked-in PDF.
+
+Regenerate the one-page brief from the saved snapshot with:
+
+```bash
+python scripts/generate_market_brief.py
+```
+
+## Tests
 
 ```bash
 python -m pytest -q
 ```
 
-## Reliability and known limitations
+Current result on a clean Python 3.11 environment: **28 passed**.
 
-- The dashboard depends on live BCB and FRED availability and their publication calendars. It warns on individual source failures and keeps unaffected views usable.
-- Focus figures are survey medians, not realized outcomes or executable market prices, and can be revised by the source.
-- PTAX is an official reference rate, not a continuously traded spot quote.
-- Treasury series are published for U.S. business days; Brazilian and U.S. holiday calendars do not always coincide.
-- “One month” is a calendar-month comparison to the latest available observation on or before the cutoff, so the exact day gap varies around holidays and weekends.
-- Streamlit's in-memory cache reduces repeat calls but is not a persistent database.
-- The B3 Copom figure is a DI-curve decomposition with an explicit business-day split, not a B3-published probability; it ignores term premia and other possible changes inside the contract window.
+## Limitations
 
-## Public deployment
+- **PTAX is an official reference rate**, not a continuously traded spot quote or executable price.
+- **Focus is survey data**, not a realized outcome or market price, and source values can be revised.
+- **The B3 decomposition is an analytical estimate**, not a B3-published Copom probability. It ignores term premia and assumes no other policy-rate change within the contract window.
+- FRED Treasury observations follow the US publication calendar; Focus, Treasury and B3 series can lag the dashboard retrieval date. Every lag is recorded in the saved snapshot.
+- CME FedWatch probabilities can change after the recorded timestamp. No Copom probability or joint scenario probability is assigned.
+- Scenario reactions describe likely initial pressure, all else equal. Fiscal news, commodities, liquidity and global risk sentiment can dominate.
+- The conditional paper trade is educational analysis only and does not represent actual execution, investment advice, backtested performance or past trading results.
 
-Push the repository to GitHub, sign in to [Streamlit Community Cloud](https://share.streamlit.io/), choose the repository and branch, and set the entry point to `app.py`. The platform installs `requirements.txt` automatically. No API secrets are required.
+## AI-assistance disclosure
 
-## Disclaimer
-
-This is an educational market-monitoring project and is not investment advice. AI assisted development of the application; source definitions, units and calculations were manually checked against the official BCB OData metadata and official series descriptions.
+AI assisted with implementation, test development, documentation and drafting. Source selection, units, calculations, scenario labels, trade logic, publication-lag treatment and the final outputs were explicitly checked against the cited official sources and automated tests. The saved reasoning remains inspectable and is not generated dynamically in the public application.

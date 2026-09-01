@@ -1,13 +1,14 @@
 # Brazil Rates & FX Trade Brief
 
-**Data snapshot:** 01 Sep 2026 18:24 UTC  
+**Data snapshot:** 01 Sep 2026 19:17 UTC
+
 **Educational paper trade - not investment advice.**
 
 ## Scenario-label audit
 
 The three labels are retained. The middle row remains 'Base case' because current meeting-specific primary-exchange evidence was obtained for both September decisions; it is a market-aligned analytical scenario, not a joint-probability forecast.
 
-CME FedWatch (2026-09-01T01:26:53-05:00): 68.2% 25 bp hike / 31.8% hold. B3 DI1 (2026-08-31): about 20.8 bp of easing across Copom. No Copom probability or joint scenario probability is assigned.
+CME FedWatch (2026-09-01T02:07:02-05:00): 68.2% 25 bp hike / 31.8% hold. B3 DI1 (2026-08-31): about 20.8 bp of easing across Copom. No Copom probability or joint scenario probability is assigned.
 
 ## Market snapshot
 

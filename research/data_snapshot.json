@@ -1,11 +1,25 @@
 {
   "schema_version": 1,
-  "retrieved_at": "2026-09-01T18:24:02Z",
-  "retrieved_at_brasilia": "2026-09-01T15:24:02-03:00",
+  "retrieved_at": "2026-09-01T19:17:24Z",
+  "retrieved_at_brasilia": "2026-09-01T16:17:24-03:00",
   "snapshot_purpose": "A fixed, reviewable input for the September 2026 Copom/FOMC scenario framework. It is not refreshed by an LLM or silently replaced by live values.",
+  "refresh_status": {
+    "completed_at": "2026-09-01T19:21:36Z",
+    "all_automated_series_succeeded": true,
+    "source_failures": [],
+    "stale_series": [
+      "focus_selic",
+      "focus_ipca",
+      "us_2_year_treasury",
+      "us_10_year_treasury",
+      "us_2s10s",
+      "b3_di1_settlement"
+    ],
+    "note": "All BCB and FRED requests succeeded. Focus and Treasury observations reflect official publication lags. B3's 31 August settlement remained the latest completed daily derivatives file at the audit time; CME pricing was refreshed separately."
+  },
   "scenario_axis": "The labels describe Brazil's monetary stance relative to the US and to the current exchange-pricing anchors saved below, not a claim that both central banks move in the same hawkish or dovish direction.",
   "scenario_label_audit": {
-    "audited_at": "2026-09-01T18:41:33Z",
+    "audited_at": "2026-09-01T19:21:36Z",
     "result": "The three labels are retained. The middle row remains 'Base case' because current meeting-specific primary-exchange evidence was obtained for both September decisions; it is a market-aligned analytical scenario, not a joint-probability forecast.",
     "current_meeting_specific_pricing_obtained": true,
     "probability_policy": "Only CME's published FOMC probabilities are reported. No Copom probability or joint probability is assigned.",
@@ -13,7 +27,7 @@
       "source": "CME FedWatch",
       "source_url": "https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html",
       "methodology_url": "https://www.cmegroup.com/articles/2023/understanding-the-cme-group-fedwatch-tool-methodology.html",
-      "pricing_timestamp": "2026-09-01T01:26:53-05:00",
+      "pricing_timestamp": "2026-09-01T02:07:02-05:00",
       "meeting_date": "2026-09-16",
       "contract": "ZQU6",
       "contract_mid_price": 96.2913,
@@ -22,7 +36,7 @@
       "hike_25bp_probability_percent": 68.2,
       "ease_probability_percent": 0.0,
       "methodology": "CME FedWatch converts 30-Day Federal Funds futures prices into target-range probabilities for the selected FOMC meeting. The values are copied from the official tool's 16 September 2026 view.",
-      "staleness_note": "CME labels the observation 'Data as of 1 Sep 2026 01:26:53 CT'; the tool can change after retrieval."
+      "staleness_note": "CME labels the observation 'Data as of 1 Sep 2026 02:07:02 CT'; the tool can change after retrieval."
     },
     "copom": {
       "source": "B3 BVBG.187.01 Simplified Price Report - Derivatives",
@@ -82,7 +96,7 @@
       ],
       "status": "scheduled",
       "source_url": "https://www.bcb.gov.br/detalhenoticia/20739/nota",
-      "source_checked_at": "2026-09-01T18:24:02Z"
+      "source_checked_at": "2026-09-01T19:21:36Z"
     },
     "fomc_september_2026": {
       "meeting_dates": [
@@ -91,7 +105,7 @@
       ],
       "status": "scheduled; meeting includes a Summary of Economic Projections",
       "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
-      "source_checked_at": "2026-09-01T18:24:02Z"
+      "source_checked_at": "2026-09-01T19:21:36Z"
     }
   },
   "policy_communications": {

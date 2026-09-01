@@ -48,6 +48,11 @@ def test_exactly_one_trade_references_valid_scenarios() -> None:
 def test_data_snapshot_contains_timestamps_and_direct_source_urls() -> None:
     snapshot = load_research_snapshot(RESEARCH_PATH)
     datetime.fromisoformat(snapshot["retrieved_at"].replace("Z", "+00:00"))
+    datetime.fromisoformat(
+        snapshot["refresh_status"]["completed_at"].replace("Z", "+00:00")
+    )
+    assert isinstance(snapshot["refresh_status"]["source_failures"], list)
+    assert isinstance(snapshot["refresh_status"]["stale_series"], list)
 
     for series in snapshot["series"].values():
         date.fromisoformat(series["latest_observation_date"])

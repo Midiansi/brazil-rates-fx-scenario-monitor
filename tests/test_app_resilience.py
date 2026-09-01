@@ -16,6 +16,8 @@ def test_all_three_views_render_when_every_source_is_unavailable(monkeypatch) ->
         "BRL/USD",
         "Brazil–US rates",
     ]
+    assert any("Showing saved fallback" in warning.value for warning in app.warning)
+    assert not any("simulated source outage" in warning.value for warning in app.warning)
 
 
 @pytest.mark.parametrize("file_contents", [None, "{not valid json"])
@@ -40,6 +42,7 @@ def test_app_loads_when_research_file_is_missing_or_malformed(
         "Brazil–US rates",
     ]
     assert any("Scenario Lab research is unavailable" in warning.value for warning in app.warning)
+    assert not any(str(research_path) in warning.value for warning in app.warning)
 
 
 def test_app_loads_when_downloadable_brief_is_missing(monkeypatch, tmp_path) -> None:
