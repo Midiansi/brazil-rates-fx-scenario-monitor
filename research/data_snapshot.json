@@ -1,26 +1,28 @@
 {
   "schema_version": 1,
-  "retrieved_at": "2026-09-01T19:17:24Z",
-  "retrieved_at_brasilia": "2026-09-01T16:17:24-03:00",
+  "retrieved_at": "2026-09-02T00:40:27Z",
+  "retrieved_at_brasilia": "2026-09-01T21:40:27-03:00",
   "snapshot_purpose": "A fixed, reviewable input for the September 2026 Copom/FOMC scenario framework. It is not refreshed by an LLM or silently replaced by live values.",
   "refresh_status": {
-    "completed_at": "2026-09-01T19:21:36Z",
+    "completed_at": "2026-09-02T00:40:27Z",
     "all_automated_series_succeeded": true,
-    "source_failures": [],
+    "source_failures": [
+      "CME FedWatch live refresh failed during the final audit because the official interactive tool returned HTTP/2 protocol errors and then timed out. The previously verified 1 September 02:07:02 CT values are retained and explicitly flagged as stale."
+    ],
     "stale_series": [
       "focus_selic",
       "focus_ipca",
       "us_2_year_treasury",
       "us_10_year_treasury",
       "us_2s10s",
-      "b3_di1_settlement"
+      "cme_fedwatch"
     ],
-    "note": "All BCB and FRED requests succeeded. Focus and Treasury observations reflect official publication lags. B3's 31 August settlement remained the latest completed daily derivatives file at the audit time; CME pricing was refreshed separately."
+    "note": "All BCB and FRED requests succeeded. Focus and Treasury observations reflect official publication lags. B3's 1 September derivatives file was published at 20:35 Brasilia time and was incorporated. The final CME interactive-tool refresh failed, so its earlier same-day verified observation remains saved and is marked stale."
   },
   "scenario_axis": "The labels describe Brazil's monetary stance relative to the US and to the current exchange-pricing anchors saved below, not a claim that both central banks move in the same hawkish or dovish direction.",
   "scenario_label_audit": {
-    "audited_at": "2026-09-01T19:21:36Z",
-    "result": "The three labels are retained. The middle row remains 'Base case' because current meeting-specific primary-exchange evidence was obtained for both September decisions; it is a market-aligned analytical scenario, not a joint-probability forecast.",
+    "audited_at": "2026-09-02T00:40:27Z",
+    "result": "The three labels are retained. The middle row remains 'Base case' because meeting-specific primary-exchange evidence was obtained for both September decisions; B3 is current to 1 September and CME's saved 1 September observation is stale after a failed final refresh. It is a market-aligned analytical scenario, not a joint-probability forecast.",
     "current_meeting_specific_pricing_obtained": true,
     "probability_policy": "Only CME's published FOMC probabilities are reported. No Copom probability or joint probability is assigned.",
     "fomc": {
@@ -36,35 +38,35 @@
       "hike_25bp_probability_percent": 68.2,
       "ease_probability_percent": 0.0,
       "methodology": "CME FedWatch converts 30-Day Federal Funds futures prices into target-range probabilities for the selected FOMC meeting. The values are copied from the official tool's 16 September 2026 view.",
-      "staleness_note": "CME labels the observation 'Data as of 1 Sep 2026 02:07:02 CT'; the tool can change after retrieval."
+      "staleness_note": "CME labels the saved observation 'Data as of 1 Sep 2026 02:07:02 CT.' A final refresh attempt at 21:40 Brasilia time failed because the official interactive tool returned HTTP/2 errors and timed out, so these probabilities may have changed."
     },
     "copom": {
       "source": "B3 BVBG.187.01 Simplified Price Report - Derivatives",
       "source_url": "https://www.b3.com.br/pt_br/market-data-e-indices/servicos-de-dados/market-data/historico/boletins-diarios/pesquisa-por-pregao/pesquisa-por-pregao/",
       "methodology_url": "https://www.b3.com.br/pt_br/produtos-e-servicos/negociacao/juros/futuro-de-taxa-media-de-depositos-interfinanceiros-de-um-dia.htm",
-      "pricing_date": "2026-08-31",
-      "report_created_at": "2026-08-31T20:25:57-03:00",
+      "pricing_date": "2026-09-01",
+      "report_created_at": "2026-09-01T20:35:44-03:00",
       "contracts": {
         "DI1U26": {
-          "settlement_unit_price": 99948.37,
-          "business_days_to_maturity": 1,
-          "annualized_rate_percent": 13.89892
+          "settlement_unit_price": 100000.0,
+          "business_days_to_maturity": 0,
+          "annualized_rate_percent": 13.9
         },
         "DI1V26": {
-          "settlement_unit_price": 98878.16,
-          "business_days_to_maturity": 22,
-          "annualized_rate_percent": 13.794943
+          "settlement_unit_price": 98929.53,
+          "business_days_to_maturity": 21,
+          "annualized_rate_percent": 13.785953
         }
       },
       "meeting_window_business_days": {
-        "pre_decision_rate_days": 11,
+        "pre_decision_rate_days": 10,
         "post_decision_rate_days": 11
       },
-      "implied_post_meeting_di_rate_percent": 13.691062,
-      "implied_easing_basis_points": 20.786,
-      "methodology": "Rates are recovered from B3 settlement unit prices using rate = (100000 / PU)^(252 / business_days) - 1. The DI1V26 rate is then split into 11 business days at the DI1U26 one-day rate and 11 business days after the 16 September decision; geometric compounding solves the post-meeting rate.",
-      "interpretation": "The curve embeds about 20.8 bp of easing across the Copom window, which is consistent with most of a 25 bp cut being priced. This is a transparent curve decomposition, not a B3-published Copom probability.",
-      "staleness_note": "31 August was the latest completed B3 trading session available during the 1 September audit; same-day 1 September settlement was not yet published. The decomposition ignores term premia and assumes no other rate change inside the contract window."
+      "implied_post_meeting_di_rate_percent": 13.682463,
+      "implied_easing_basis_points": 21.754,
+      "methodology": "The DI1V26 rate is recovered from B3's settlement unit price using rate = (100000 / PU)^(252 / business_days) - 1. DI1U26 matured on 1 September, so B3's published 13.900% adjusted-quote rate is used as the pre-decision anchor. DI1V26 is split into 10 business days before and 11 business days after the 16 September decision; geometric compounding solves the post-meeting rate.",
+      "interpretation": "The curve embeds about 21.8 bp of easing across the Copom window, which is consistent with most of a 25 bp cut being priced. This is a transparent curve decomposition, not a B3-published Copom probability.",
+      "staleness_note": "The 1 September report was the latest completed B3 settlement file at the final audit and was published at 20:35 Brasilia time. The decomposition ignores term premia and assumes no other rate change inside the contract window."
     }
   },
   "trade_threshold_calculations": {
@@ -96,7 +98,7 @@
       ],
       "status": "scheduled",
       "source_url": "https://www.bcb.gov.br/detalhenoticia/20739/nota",
-      "source_checked_at": "2026-09-01T19:21:36Z"
+      "source_checked_at": "2026-09-02T00:40:27Z"
     },
     "fomc_september_2026": {
       "meeting_dates": [
@@ -105,7 +107,7 @@
       ],
       "status": "scheduled; meeting includes a Summary of Economic Projections",
       "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
-      "source_checked_at": "2026-09-01T19:21:36Z"
+      "source_checked_at": "2026-09-02T00:40:27Z"
     }
   },
   "policy_communications": {
@@ -237,31 +239,31 @@
     "us_2_year_treasury": {
       "label": "US 2-year Treasury constant-maturity yield",
       "unit": "% p.a.",
-      "latest_observation_date": "2026-08-28",
+      "latest_observation_date": "2026-08-31",
       "value": 4.34,
       "five_business_day_change_pp": 0.1,
-      "one_month_change_pp": 0.08,
+      "one_month_change_pp": 0.06,
       "source_url": "https://fred.stlouisfed.org/series/DGS2",
       "is_stale_at_retrieval": true,
-      "staleness_note": "28 August was the latest published observation returned; 31 August and 1 September were not yet present."
+      "staleness_note": "31 August was the latest official observation published by the final 1 September audit; no 1 September observation was yet available."
     },
     "us_10_year_treasury": {
       "label": "US 10-year Treasury constant-maturity yield",
       "unit": "% p.a.",
-      "latest_observation_date": "2026-08-28",
-      "value": 4.73,
-      "five_business_day_change_pp": -0.01,
-      "one_month_change_pp": 0.12,
+      "latest_observation_date": "2026-08-31",
+      "value": 4.75,
+      "five_business_day_change_pp": 0.05,
+      "one_month_change_pp": 0.0,
       "source_url": "https://fred.stlouisfed.org/series/DGS10",
       "is_stale_at_retrieval": true,
-      "staleness_note": "28 August was the latest published observation returned; 31 August and 1 September were not yet present."
+      "staleness_note": "31 August was the latest official observation published by the final 1 September audit; no 1 September observation was yet available."
     },
     "us_2s10s": {
       "label": "US 2s10s curve slope (10-year minus 2-year)",
       "unit": "percentage points",
-      "latest_observation_date": "2026-08-28",
-      "value": 0.39,
-      "five_business_day_change_pp": -0.11,
+      "latest_observation_date": "2026-08-31",
+      "value": 0.41,
+      "five_business_day_change_pp": -0.05,
       "source_url": "https://fred.stlouisfed.org/series/DGS10",
       "additional_source_url": "https://fred.stlouisfed.org/series/DGS2",
       "is_stale_at_retrieval": true,
@@ -273,7 +275,7 @@
       "name": "Hawkish relative to expectations",
       "copom_outcome_and_guidance": "Copom holds the Selic target at 14.00% and emphasizes that further easing requires clearer re-anchoring, keeping an explicitly restrictive and data-dependent bias.",
       "fomc_outcome_and_guidance": "The FOMC holds 3.50%-3.75% rather than hiking, but retains firm price-stability language and optionality to tighten later.",
-      "difference_from_current_expectations": "The Copom hold is hawkish to the B3 curve's roughly 20.8 bp of September easing; the FOMC hold is dovish to CME FedWatch's 68.2% weight on a 0.25 pp hike. Together they leave Brazil's relative carry 0.50 pp wider than in the base-case path.",
+      "difference_from_current_expectations": "The Copom hold is hawkish to the B3 curve's roughly 21.8 bp of September easing; the FOMC hold is dovish to CME FedWatch's saved 68.2% weight on a 0.25 pp hike. Together they leave Brazil's relative carry 0.50 pp wider than in the base-case path.",
       "expected_initial_brl_usd_direction": "Likely initial BRL strengthening (USD/BRL lower), all else equal, because the local hold preserves carry while the Fed does not deliver the described hike; broader risk sentiment can dominate.",
       "expected_initial_brazil_front_end_rates_direction": "Likely initial upward pressure on Brazil's front-end rates as near-term easing is removed from the path.",
       "expected_initial_us_2y_direction": "Likely initial downward pressure on the US 2-year yield if the no-hike decision is not offset by stronger guidance.",
@@ -295,7 +297,7 @@
       "name": "Base case",
       "copom_outcome_and_guidance": "Copom cuts 0.25 pp to 13.75%, matching the 2026 Focus Selic median, and keeps guidance cautious, restrictive and explicitly dependent on inflation-expectation re-anchoring.",
       "fomc_outcome_and_guidance": "The FOMC raises the target range 0.25 pp to 3.75%-4.00% and stresses that subsequent decisions depend on incoming inflation and labor data rather than pre-committing to another move.",
-      "difference_from_current_expectations": "A 0.25 pp Copom cut is consistent with the B3 curve embedding roughly 20.8 bp of easing. A 0.25 pp FOMC hike is CME FedWatch's highest-weight outcome at 68.2%; no joint probability is inferred.",
+      "difference_from_current_expectations": "A 0.25 pp Copom cut is consistent with the B3 curve embedding roughly 21.8 bp of easing. A 0.25 pp FOMC hike is the highest-weight outcome in the saved CME FedWatch observation at 68.2%; no joint probability is inferred.",
       "expected_initial_brl_usd_direction": "Likely mild initial BRL depreciation (USD/BRL higher), all else equal, as the policy differential narrows; the reaction may be limited if both decisions are anticipated and is subject to broader risk sentiment.",
       "expected_initial_brazil_front_end_rates_direction": "Likely limited downward pressure on Brazil's front-end rates if the cut and cautious guidance validate the existing easing path.",
       "expected_initial_us_2y_direction": "Likely limited upward pressure on the US 2-year yield; guidance matters because the yield already rose 0.10 pp over the latest five observations.",
@@ -317,7 +319,7 @@
       "name": "Dovish relative to expectations",
       "copom_outcome_and_guidance": "Copom cuts 0.50 pp to 13.50% and signals that further gradual easing is possible if inflation expectations continue to improve.",
       "fomc_outcome_and_guidance": "The FOMC raises the target range 0.25 pp to 3.75%-4.00% and keeps a firmer tightening bias because inflation remains elevated.",
-      "difference_from_current_expectations": "The 0.50 pp Copom cut delivers about 29 bp more easing than the B3 curve embeds and ends below the 2026 Focus Selic median; paired with the CME-aligned US hike, it is more dovish for Brazil versus the US.",
+      "difference_from_current_expectations": "The 0.50 pp Copom cut delivers about 28 bp more easing than the B3 curve embeds and ends below the 2026 Focus Selic median; paired with the CME-aligned US hike, it is more dovish for Brazil versus the US.",
       "expected_initial_brl_usd_direction": "Likely initial BRL depreciation (USD/BRL higher), all else equal, because the relative-rate differential narrows more sharply; subject to the inflation rationale and global risk sentiment.",
       "expected_initial_brazil_front_end_rates_direction": "Likely initial downward pressure on Brazil's front-end rates if the larger cut is viewed as credible rather than premature.",
       "expected_initial_us_2y_direction": "Likely initial upward pressure on the US 2-year yield under the hike and firmer guidance.",
@@ -344,7 +346,7 @@
         "USD/BRL PTAX rose 1.57% over approximately one month and 0.16% over five valid observations to 5.1567.",
         "The Brazil-US policy differential narrowed 0.25 pp over one month to 10.375 pp and would narrow another 0.50 pp in the base scenario.",
         "The 2026 Focus Selic median is 13.75%, 0.25 pp below the current 14.00% target, and fell 0.25 pp over one month.",
-        "The US 2-year yield rose 0.10 pp over five valid observations to 4.34%, while the curve flattened 0.11 pp."
+        "The US 2-year yield rose 0.10 pp over five valid observations to 4.34%, while the curve flattened 0.05 pp."
       ],
       "catalyst": "The coincident 15-16 September Copom and FOMC decisions, especially confirmation of a Brazilian cut alongside a US hike or firm US guidance.",
       "entry_logic": "No position at the 5.1567 snapshot. Consider the paper trade only after a daily PTAX midpoint closes above approximately 5.22, the rounded high of the latest 20 valid observations (5.2233), with the US 2-year yield still near or above 4.34% or the policy differential not widening.",

@@ -2,13 +2,13 @@
 
 A source-grounded Streamlit dashboard for tracking Brazilian expectations, USD/BRL PTAX and the Brazil–US rates backdrop around the September 2026 Copom and FOMC meetings.
 
-**Live Streamlit:** [brazil-rates-fx-monitor.streamlit.app](https://brazil-rates-fx-monitor.streamlit.app/)
+**Live Streamlit:** [brasilmacro.streamlit.app](https://brasilmacro.streamlit.app/)
 
 **Downloadable brief:** [Brazil Rates & FX Trade Brief — one-page PDF](outputs/Brazil_Rates_FX_Trade_Brief.pdf)
 
 ![Brazil Rates & FX Scenario Monitor dashboard](assets/dashboard.png)
 
-**Current snapshot:** 1 September 2026 at 19:17:24 UTC (16:17:24 Brasília time)
+**Current snapshot:** 2 September 2026 at 00:40:27 UTC (1 September 2026 at 21:40:27 Brasília time)
 
 **Educational analysis — not investment advice.**
 

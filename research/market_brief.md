@@ -1,14 +1,14 @@
 # Brazil Rates & FX Trade Brief
 
-**Data snapshot:** 01 Sep 2026 19:17 UTC
+**Data snapshot:** 02 Sep 2026 00:40 UTC
 
 **Educational paper trade - not investment advice.**
 
 ## Scenario-label audit
 
-The three labels are retained. The middle row remains 'Base case' because current meeting-specific primary-exchange evidence was obtained for both September decisions; it is a market-aligned analytical scenario, not a joint-probability forecast.
+The three labels are retained. The middle row remains 'Base case' because meeting-specific primary-exchange evidence was obtained for both September decisions; B3 is current to 1 September and CME's saved 1 September observation is stale after a failed final refresh. It is a market-aligned analytical scenario, not a joint-probability forecast.
 
-CME FedWatch (2026-09-01T02:07:02-05:00): 68.2% 25 bp hike / 31.8% hold. B3 DI1 (2026-08-31): about 20.8 bp of easing across Copom. No Copom probability or joint scenario probability is assigned.
+CME FedWatch (2026-09-01T02:07:02-05:00): 68.2% 25 bp hike / 31.8% hold. B3 DI1 (2026-09-01): about 21.8 bp of easing across Copom. No Copom probability or joint scenario probability is assigned.
 
 ## Market snapshot
 
@@ -19,13 +19,13 @@ CME FedWatch (2026-09-01T02:07:02-05:00): 68.2% 25 bp hike / 31.8% hold. B3 DI1 
 | Selic target | 14.00% p.a. | 01 Sep 2026 |
 | Fed target midpoint | 3.625% p.a. | 01 Sep 2026 |
 | Brazil-US policy differential | 10.375 pp | 01 Sep 2026 |
-| US 2s10s slope | +0.39 pp | 28 Aug 2026 |
+| US 2s10s slope | +0.41 pp | 31 Aug 2026 |
 
 ## What changed
 
 - 2026 Focus Selic was unchanged over five observations and fell 0.25 pp over one month; Focus IPCA edged down 0.0102 pp over five observations.
 - BRL/USD fell 0.16% over five observations, the inverse of the saved PTAX USD/BRL move, indicating mild BRL weakening.
-- The Brazil-US policy differential was unchanged over five business days and narrowed 0.25 pp over one month; US 2s10s flattened 0.11 pp over five observations.
+- The Brazil-US policy differential was unchanged over five business days and narrowed 0.25 pp over one month; US 2s10s flattened 0.05 pp over five observations.
 
 ## Three scenarios
 
