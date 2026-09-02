@@ -1,3 +1,4 @@
+# Runtime dependencies only. Test and report-generation tools are in requirements-dev.txt.
 pandas==2.3.3
 plotly==6.9.0
 requests==2.32.5
