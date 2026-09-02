@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from html import escape
 from pathlib import Path
 from typing import Any
 
@@ -29,15 +30,143 @@ st.set_page_config(page_title="Brazil Macro", page_icon="🇧🇷", layout="wide
 st.markdown(
     """
     <style>
-    .block-container {max-width: 1080px; padding-top: 2.5rem; padding-bottom: 5rem;}
-    h1 {font-size: 3rem !important; letter-spacing: -.045em; font-weight: 650 !important;}
-    h2 {margin-top: 3.2rem !important; letter-spacing: -.025em;}
-    [data-testid="stMetric"] {background: transparent; border: 0; padding: 0;}
-    .brief {padding: 1rem 0 1.15rem; border-top: 1px solid rgba(128,128,128,.22);}
-    .brief-label {font-size: .76rem; text-transform: uppercase; letter-spacing: .09em; opacity: .62;}
-    .brief-copy {font-size: 1.08rem; line-height: 1.55; max-width: 850px; margin-top: .25rem;}
-    .commodity {padding: 1rem 0; border-bottom: 1px solid rgba(128,128,128,.18);}
-    .muted {opacity: .67; font-size: .88rem;}
+    :root {
+        --macro-bg: #07131d;
+        --macro-panel: #0c1d29;
+        --macro-panel-2: #102634;
+        --macro-ink: #edf4f2;
+        --macro-muted: #8ea5ae;
+        --macro-line: rgba(148, 178, 184, .18);
+        --macro-teal: #35c3ad;
+        --macro-copper: #e58a54;
+        --macro-sand: #d8c9a7;
+    }
+    .stApp {
+        background:
+            radial-gradient(circle at 84% 8%, rgba(53, 195, 173, .075), transparent 26rem),
+            var(--macro-bg);
+        color: var(--macro-ink);
+    }
+    .stApp::before {
+        content: "";
+        position: fixed;
+        inset: 0 0 auto 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--macro-teal) 0 58%, var(--macro-copper) 58% 76%, var(--macro-sand) 76%);
+        z-index: 99999;
+    }
+    [data-testid="stHeader"] {background: transparent;}
+    .block-container {max-width: 1160px; padding-top: 3.2rem; padding-bottom: 5rem;}
+    html, body, [class*="st-"] {font-family: "Avenir Next", "Helvetica Neue", Arial, sans-serif;}
+    h1 {
+        max-width: 900px;
+        color: var(--macro-ink) !important;
+        font-size: clamp(3.1rem, 7vw, 5.9rem) !important;
+        line-height: .94 !important;
+        letter-spacing: -.065em !important;
+        font-weight: 640 !important;
+        margin: .35rem 0 1.25rem !important;
+    }
+    h2 {
+        color: var(--macro-ink) !important;
+        margin-top: 4.2rem !important;
+        padding-bottom: .7rem;
+        border-bottom: 1px solid var(--macro-line);
+        font-size: 1.8rem !important;
+        letter-spacing: -.035em !important;
+        font-weight: 570 !important;
+    }
+    h3 {color: var(--macro-ink) !important; letter-spacing: -.025em !important; font-weight: 570 !important;}
+    p {line-height: 1.62;}
+    a {color: var(--macro-teal) !important; text-underline-offset: 3px;}
+    a:focus-visible, button:focus-visible {outline: 2px solid var(--macro-teal) !important; outline-offset: 3px;}
+    [data-testid="stCaptionContainer"] {color: var(--macro-muted);}
+    .macro-kicker, .brief-label, .commodity-label, .trade-kicker {
+        color: var(--macro-teal);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: .72rem;
+        font-weight: 650;
+        letter-spacing: .13em;
+        text-transform: uppercase;
+    }
+    .macro-intro {
+        max-width: 760px;
+        color: #bccbd0;
+        font-size: 1.16rem;
+        line-height: 1.6;
+        margin-bottom: .75rem;
+    }
+    .market-strip {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin: 2.4rem 0 .5rem;
+        border-top: 1px solid var(--macro-line);
+        border-bottom: 1px solid var(--macro-line);
+    }
+    .market-cell {padding: 1rem 1.1rem 1.15rem 0; border-right: 1px solid var(--macro-line);}
+    .market-cell:not(:first-child) {padding-left: 1.1rem;}
+    .market-cell:last-child {border-right: 0;}
+    .market-label {
+        color: var(--macro-muted);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: .68rem;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+    }
+    .market-value {font-size: 1.65rem; font-weight: 620; letter-spacing: -.035em; margin-top: .2rem;}
+    .market-note {color: var(--macro-muted); font-size: .76rem; margin-top: .15rem;}
+    .brief-grid, .commodity-grid, .scenario-strip, .trade-detail-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1px;
+        background: var(--macro-line);
+        border: 1px solid var(--macro-line);
+    }
+    .brief-card, .commodity-card, .trade-detail {background: var(--macro-panel); padding: 1.35rem 1.45rem 1.5rem;}
+    .brief-copy {font-size: 1rem; line-height: 1.55; margin-top: .7rem; color: #dbe6e4;}
+    .commodity-card {min-height: 210px;}
+    .commodity-title {font-size: 1.35rem; font-weight: 610; letter-spacing: -.025em; margin: .45rem 0 .25rem;}
+    .commodity-move {color: var(--macro-sand); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .82rem;}
+    .commodity-meta {color: var(--macro-muted); font-size: .76rem; margin: .55rem 0 1rem;}
+    .commodity-copy {color: #c3d1d3; line-height: 1.55;}
+    .scenario-strip {grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 1.1rem 0 1.2rem;}
+    .scenario-card {background: var(--macro-panel); padding: 1.15rem 1.25rem 1.3rem;}
+    .scenario-card.base {background: var(--macro-panel-2); box-shadow: inset 0 3px 0 var(--macro-teal);}
+    .scenario-name {font-weight: 620; letter-spacing: -.02em; margin-bottom: .65rem;}
+    .scenario-direction {color: #d2dfdd; font-size: .88rem; line-height: 1.45;}
+    .scenario-diff {color: var(--macro-muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .72rem; margin-top: .65rem;}
+    .trade-card {
+        border-left: 4px solid var(--macro-copper);
+        background: linear-gradient(105deg, rgba(229, 138, 84, .09), rgba(12, 29, 41, .72));
+        padding: 1.35rem 1.55rem 1.5rem;
+        margin: .5rem 0 1px;
+    }
+    .trade-title {font-size: 1.65rem; font-weight: 620; letter-spacing: -.035em; margin: .35rem 0 .6rem;}
+    .trade-thesis {max-width: 920px; color: #d5e1df; font-size: 1.02rem; line-height: 1.58;}
+    .trade-detail-grid {margin-bottom: .75rem;}
+    .trade-detail strong {display: block; color: var(--macro-sand); margin-bottom: .5rem; font-size: .8rem; letter-spacing: .04em; text-transform: uppercase;}
+    .trade-detail {color: #bac9cc; font-size: .9rem; line-height: 1.55;}
+    [data-testid="stDataFrame"] {border: 1px solid var(--macro-line); background: var(--macro-panel);}
+    [data-testid="stExpander"] {border: 1px solid var(--macro-line); border-radius: 2px; background: rgba(12, 29, 41, .55);}
+    [data-testid="stDownloadButton"] button {
+        background: var(--macro-teal);
+        color: #04120f;
+        border: 0;
+        border-radius: 2px;
+        font-weight: 700;
+        min-height: 2.8rem;
+    }
+    [data-testid="stDownloadButton"] button:hover {background: #55d3bf; color: #04120f;}
+    hr {border-color: var(--macro-line) !important;}
+    @media (max-width: 760px) {
+        .block-container {padding-top: 2rem; padding-left: 1.2rem; padding-right: 1.2rem;}
+        h1 {font-size: 3.25rem !important;}
+        .market-strip, .brief-grid, .commodity-grid, .scenario-strip, .trade-detail-grid {grid-template-columns: 1fr;}
+        .market-cell {border-right: 0; border-bottom: 1px solid var(--macro-line); padding-left: 0 !important;}
+        .market-cell:last-child {border-bottom: 0;}
+        .commodity-card {min-height: 0;}
+    }
+    @media (prefers-reduced-motion: reduce) {*, *::before, *::after {scroll-behavior: auto !important; transition: none !important;}}
     </style>
     """,
     unsafe_allow_html=True,
@@ -52,12 +181,32 @@ source_registry = research.get("source_registry", [])
 commodities = commodity_snapshot.get("commodities", {})
 retrieved = research.get("retrieved_at_brasilia", research.get("retrieved_at", "unavailable"))
 
-st.title("Brazil macro, without the terminal clutter")
+st.markdown('<div class="macro-kicker">Brazil rates / FX / commodities</div>', unsafe_allow_html=True)
+st.title("Brazil macro, from policy to price.")
 st.markdown(
-    "Rates, currency and commodities — selected for what they say about Brazil, "
-    "not for how many numbers fit on a screen."
+    '<div class="macro-intro">A source-grounded desk view of how Copom, FOMC and '
+    'export commodities transmit into BRL, inflation expectations and the curve.</div>',
+    unsafe_allow_html=True,
 )
 st.caption(f"Local snapshot: {retrieved} · live refresh is optional and never blocks this page")
+
+if series:
+    tape = (
+        ("Selic", f"{series.get('selic_target', {}).get('value', 0):.2f}%", "current target"),
+        ("USD / BRL", f"{series.get('ptax_usd_brl_midpoint', {}).get('value', 0):.4f}", "PTAX reference"),
+        ("BR-US gap", f"{series.get('brazil_us_policy_differential', {}).get('value', 0):.2f} pp", "policy midpoint"),
+        ("US 2-year", f"{series.get('us_2_year_treasury', {}).get('value', 0):.2f}%", "Treasury yield"),
+    )
+    st.markdown(
+        '<div class="market-strip">'
+        + "".join(
+            f'<div class="market-cell"><div class="market-label">{escape(label)}</div>'
+            f'<div class="market-value">{escape(value)}</div><div class="market-note">{escape(note)}</div></div>'
+            for label, value, note in tape
+        )
+        + "</div>",
+        unsafe_allow_html=True,
+    )
 
 st.header("Brazil in brief")
 if series:
@@ -87,12 +236,16 @@ if series:
             "currency backdrop and domestic inflation channels.",
         ),
     )
-    for label, copy in briefs:
-        st.markdown(
-            f'<div class="brief"><div class="brief-label">{label}</div>'
-            f'<div class="brief-copy">{copy}</div></div>',
-            unsafe_allow_html=True,
+    st.markdown(
+        '<div class="brief-grid">'
+        + "".join(
+            f'<article class="brief-card"><div class="brief-label">{escape(label)}</div>'
+            f'<div class="brief-copy">{escape(copy)}</div></article>'
+            for label, copy in briefs
         )
+        + "</div>",
+        unsafe_allow_html=True,
+    )
 else:
     st.info("The saved market snapshot is temporarily unavailable.")
 
@@ -138,17 +291,19 @@ st.write(
     "Dates and source frequencies are kept explicit rather than presented as synchronized data."
 )
 if commodities:
+    commodity_cards = []
     for item in commodities.values():
         previous = float(item["previous"])
         change = (float(item["latest"]) / previous - 1) * 100 if previous else 0.0
-        st.markdown(
-            f'<div class="commodity"><strong>{item["label"]}</strong> · '
-            f'{item["signal"]} in the latest source period ({signed(change)}%)<br>'
-            f'<span class="muted">{item["benchmark"]} · {item["latest_date"]} · '
-            f'{item["frequency"]}</span></div>',
-            unsafe_allow_html=True,
+        commodity_cards.append(
+            f'<article class="commodity-card"><div class="commodity-label">External channel</div>'
+            f'<div class="commodity-title">{escape(str(item["label"]))}</div>'
+            f'<div class="commodity-move">{escape(str(item["signal"]))} / {signed(change)}%</div>'
+            f'<div class="commodity-meta">{escape(str(item["benchmark"]))} · '
+            f'{escape(str(item["latest_date"]))} · {escape(str(item["frequency"]))}</div>'
+            f'<div class="commodity-copy">{escape(str(item["channel"]))}</div></article>'
         )
-        st.write(item["channel"])
+    st.markdown('<div class="commodity-grid">' + "".join(commodity_cards) + "</div>", unsafe_allow_html=True)
 else:
     st.info("The saved commodity snapshot is temporarily unavailable.")
 
@@ -159,8 +314,15 @@ st.caption(
 )
 if len(scenarios) == 3:
     scenario_rows = []
+    scenario_cards = []
     for scenario in scenarios:
         brief = scenario.get("brief_summary", {})
+        card_class = "scenario-card base" if scenario.get("name") == "Base case" else "scenario-card"
+        scenario_cards.append(
+            f'<article class="{card_class}"><div class="scenario-name">{escape(str(scenario.get("name", "")))}</div>'
+            f'<div class="scenario-direction">{escape(str(brief.get("brl_usd_pressure", "")))}</div>'
+            f'<div class="scenario-diff">{escape(str(brief.get("differential", "")))}</div></article>'
+        )
         scenario_rows.append(
             {
                 "Scenario": scenario.get("name", ""),
@@ -171,6 +333,7 @@ if len(scenarios) == 3:
                 "Confirmation": brief.get("confirmation", ""),
             }
         )
+    st.markdown('<div class="scenario-strip">' + "".join(scenario_cards) + "</div>", unsafe_allow_html=True)
     st.dataframe(scenario_rows, hide_index=True, width="stretch")
 else:
     st.info("The saved three-scenario comparison is temporarily unavailable.")
@@ -178,22 +341,31 @@ else:
 st.subheader("Conditional paper trade")
 if len(paper_trades) == 1:
     trade = paper_trades[0]
-    st.markdown(f"**{trade.get('direction', '')}**")
-    st.write(trade.get("thesis", ""))
-    left, right = st.columns(2)
-    with left:
-        st.markdown("**Entry logic**")
-        st.write(trade.get("entry_logic", ""))
-        st.markdown("**Profit-taking logic**")
-        st.write(trade.get("profit_taking_logic", ""))
-    with right:
-        st.markdown("**Invalidation**")
-        st.write(trade.get("invalidation_condition", ""))
-        st.markdown("**Scenario mapping**")
-        st.write(
+    st.markdown(
+        f'<div class="trade-card"><div class="trade-kicker">Conditional / no position at snapshot</div>'
+        f'<div class="trade-title">{escape(str(trade.get("direction", "")))}</div>'
+        f'<div class="trade-thesis">{escape(str(trade.get("thesis", "")))}</div></div>',
+        unsafe_allow_html=True,
+    )
+    trade_details = (
+        ("Entry logic", trade.get("entry_logic", "")),
+        ("Invalidation", trade.get("invalidation_condition", "")),
+        ("Profit-taking", trade.get("profit_taking_logic", "")),
+        (
+            "Scenario mapping",
             f"Supported by: {trade.get('supporting_scenario', 'unavailable')} · "
-            f"Invalidated by: {trade.get('invalidating_scenario', 'unavailable')}"
+            f"Invalidated by: {trade.get('invalidating_scenario', 'unavailable')}",
+        ),
+    )
+    st.markdown(
+        '<div class="trade-detail-grid">'
+        + "".join(
+            f'<div class="trade-detail"><strong>{escape(label)}</strong>{escape(str(copy))}</div>'
+            for label, copy in trade_details
         )
+        + "</div>",
+        unsafe_allow_html=True,
+    )
     st.caption(
         f"Expected holding period: {trade.get('expected_holding_period', 'unavailable')} · "
         "Educational paper trade only; no position or performance is represented."
