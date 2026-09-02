@@ -14,11 +14,15 @@ from reportlab.pdfgen.canvas import Canvas
 from src.research import load_research_snapshot, validate_research_snapshot
 
 
-ACCENT = HexColor("#1F4E5F")
-INK = HexColor("#172126")
-MUTED = HexColor("#5B686E")
-PALE = HexColor("#F1F4F5")
-GRID = HexColor("#CDD5D8")
+BG = HexColor("#07131D")
+PANEL = HexColor("#0C1D29")
+PANEL_2 = HexColor("#102634")
+ACCENT = HexColor("#35C3AD")
+COPPER = HexColor("#E58A54")
+INK = HexColor("#EDF4F2")
+MUTED = HexColor("#8EA5AE")
+PALE = PANEL
+GRID = HexColor("#29414C")
 WHITE = white
 PAGE_WIDTH, PAGE_HEIGHT = A4
 MARGIN = 28.0
@@ -88,32 +92,32 @@ def build_brief_context(payload: dict[str, Any]) -> dict[str, Any]:
 
     market_metrics = [
         {
-            "label": "USD/BRL PTAX midpoint",
+            "label": "Official USD/BRL reference",
             "value": f"{ptax['value']:.4f} BRL per USD",
             "date": _format_date(ptax["latest_observation_date"]),
         },
         {
-            "label": "BRL/USD - 5 observations",
+            "label": "Real move - 5 observations",
             "value": f"{brl_usd_five_day:+.2f}%",
             "date": _format_date(ptax["latest_observation_date"]),
         },
         {
-            "label": "Selic target",
+            "label": "Brazil's main interest rate",
             "value": f"{series['selic_target']['value']:.2f}% p.a.",
             "date": _format_date(series["selic_target"]["latest_observation_date"]),
         },
         {
-            "label": "Fed target midpoint",
+            "label": "Comparable U.S. rate",
             "value": f"{series['fed_target_range']['midpoint']:.3f}% p.a.",
             "date": _format_date(series["fed_target_range"]["latest_observation_date"]),
         },
         {
-            "label": "Brazil-US policy differential",
+            "label": "Brazil's rate advantage",
             "value": f"{differential['value']:.3f} pp",
             "date": _format_date(differential["latest_observation_date"]),
         },
         {
-            "label": "US 2s10s slope",
+            "label": "U.S. 10-year minus 2-year yield",
             "value": f"{curve['value']:+.2f} pp",
             "date": _format_date(curve["latest_observation_date"]),
         },
@@ -121,50 +125,48 @@ def build_brief_context(payload: dict[str, Any]) -> dict[str, Any]:
 
     what_changed = [
         (
-            f"2026 Focus Selic was unchanged over five observations and fell "
-            f"{abs(focus_selic['selected_1_month_change_pp']):.2f} pp over one month; "
-            f"Focus IPCA edged down {abs(focus_ipca['selected_5_business_day_change_pp']):.4f} pp "
-            "over five observations."
+            f"Economists' 2026 Brazil-rate forecast fell {abs(focus_selic['selected_1_month_change_pp']):.2f} "
+            f"percentage point over one month, while their inflation forecast edged lower."
         ),
         (
-            f"BRL/USD fell {abs(brl_usd_five_day):.2f}% over five observations, the inverse "
-            "of the saved PTAX USD/BRL move, indicating mild BRL weakening."
+            f"The real weakened {abs(brl_usd_five_day):.2f}% against the dollar over the latest five observations."
         ),
         (
-            f"The Brazil-US policy differential was unchanged over five business days and "
-            f"narrowed {abs(differential['one_month_change_pp']):.2f} pp over one month; "
-            f"US 2s10s flattened {abs(curve['five_business_day_change_pp']):.2f} pp over five observations."
+            f"Brazil's interest-rate advantage over the U.S. narrowed {abs(differential['one_month_change_pp']):.2f} "
+            "percentage point over one month."
         ),
     ]
 
     scenario_rows = []
+    friendly = {
+        "Hawkish relative to expectations": ("Brazil stays tougher", "Real likely strengthens", "Hold at 14.00%", "Hold at 3.50%-3.75%", "Stays near 10.38 pp", "Rate forecasts rise; USD/BRL below 5.09"),
+        "Base case": ("Most expected path", "Real likely weakens slightly", "Cut 0.25% to 13.75%", "Raise 0.25% to 3.75%-4.00%", "Falls to about 9.88 pp", "Rate gap reaches 9.88 pp; USD/BRL above 5.22"),
+        "Dovish relative to expectations": ("Brazil cuts faster", "Real likely weakens more", "Cut 0.50% to 13.50%", "Raise 0.25% to 3.75%-4.00%", "Falls to about 9.63 pp", "Brazil rate forecasts fall; USD/BRL above 5.22"),
+    }
     for scenario in snapshot["scenarios"]:
-        compact = scenario["brief_summary"]
+        scenario_name, fx_effect, brazil_move, us_move, rate_gap, confirmation = friendly[scenario["name"]]
         scenario_rows.append(
             {
-                "scenario": scenario["name"],
-                "copom": compact["copom"],
-                "fomc": compact["fomc"],
-                "differential": compact["differential"],
-                "brl_usd_pressure": compact["brl_usd_pressure"],
-                "confirmation": compact["confirmation"],
+                "scenario": scenario_name,
+                "copom": brazil_move,
+                "fomc": us_move,
+                "differential": rate_gap,
+                "brl_usd_pressure": fx_effect,
+                "confirmation": confirmation,
             }
         )
 
     entry_text = (
-        f"A daily PTAX midpoint closes above {thresholds.entry:.2f}, the rounded saved "
-        f"20-observation high of {thresholds.range_high:.4f}, with US 2Y near or above "
-        f"{us_2y['value']:.2f}% or no widening in the policy differential."
+        f"Wait for USD/BRL to close above {thresholds.entry:.2f}, the top of its recent range. "
+        f"Until then, there is no trade."
     )
     invalidation_text = (
-        f"After entry, two consecutive PTAX midpoints below {thresholds.invalidation:.2f}, "
-        f"or a differential still near/above {differential['value']:.3f} pp because Copom "
-        "does not ease and the FOMC does not hike."
+        f"Abandon the idea after two closes below {thresholds.invalidation:.2f}, or if Brazil's "
+        "interest-rate advantage does not shrink."
     )
     review_text = (
-        f"{thresholds.review_low:.2f}-{thresholds.review_high:.2f}; saved high "
-        f"{thresholds.range_high:.4f} + range width {thresholds.range_width:.4f} = "
-        f"{thresholds.measured_move:.4f}, bracketed to adjacent cents."
+        f"Reassess around {thresholds.review_low:.2f}-{thresholds.review_high:.2f}, one recent-range width above entry. "
+        f"Technical basis: {thresholds.range_high:.4f} + {thresholds.range_width:.4f} = {thresholds.measured_move:.4f}."
     )
     latest_reference = (
         f"{trade['latest_ptax_reference']['value']:.4f} BRL per USD on "
@@ -201,9 +203,9 @@ def build_brief_context(payload: dict[str, Any]) -> dict[str, Any]:
         "what_changed": what_changed,
         "scenario_rows": scenario_rows,
         "trade": {
-            "direction": trade["direction"],
-            "status": "NO CURRENT POSITION - activates only if the entry condition occurs",
-            "thesis": trade["thesis"],
+            "direction": "Buy USD / sell BRL after confirmation",
+            "status": "NO LIVE POSITION - WAITING FOR CONFIRMATION",
+            "thesis": "If Brazil cuts rates while the U.S. raises them, Brazil becomes relatively less attractive and the real may weaken. I would act only after the currency confirms that view.",
             "entry": entry_text,
             "latest_reference": latest_reference,
             "invalidation": invalidation_text,
@@ -215,9 +217,8 @@ def build_brief_context(payload: dict[str, Any]) -> dict[str, Any]:
         "bottom_line": bottom_line,
         "sources": source_links,
         "limitations": (
-            "PTAX is a reference rate; Focus is survey data. Initial reactions remain conditional "
-            "on broader risk sentiment, commodities and Brazilian fiscal developments. B3's Copom "
-            "move is a curve decomposition that ignores term premia, not an exchange probability."
+            "PTAX is an official reference, not an executable price. Forecasts are survey data. "
+            "Global risk appetite, export prices and Brazilian fiscal news may matter more than rates."
         ),
         "audit_summary": (
             f"CME FedWatch ({audit['fomc']['pricing_timestamp']}): "
@@ -301,7 +302,7 @@ def _draw_metric_cards(pdf: Canvas, metrics: list[dict[str, str]], y_top: float)
         y = y_top - row * (card_height + 5) - card_height
         pdf.setFillColor(PALE)
         pdf.setStrokeColor(GRID)
-        pdf.roundRect(x, y, card_width, card_height, 2, fill=1, stroke=1)
+        pdf.roundRect(x, y, card_width, card_height, 7, fill=1, stroke=1)
         pdf.setFillColor(ACCENT)
         pdf.rect(x, y, 2.2, card_height, fill=1, stroke=0)
         pdf.setFillColor(MUTED)
@@ -327,12 +328,12 @@ def _draw_bullets(pdf: Canvas, bullets: Iterable[str], y: float, width: float) -
 
 def _draw_scenario_table(pdf: Canvas, rows: list[dict[str, str]], y_top: float) -> float:
     columns = [
-        ("Scenario", "scenario", 74.0),
-        ("Copom", "copom", 83.0),
-        ("FOMC", "fomc", 87.0),
-        ("Differential", "differential", 77.0),
-        ("Likely initial BRL/USD pressure", "brl_usd_pressure", 92.0),
-        ("Key confirmation", "confirmation", CONTENT_WIDTH - 413.0),
+        ("Outcome", "scenario", 74.0),
+        ("Brazil decision", "copom", 83.0),
+        ("U.S. decision", "fomc", 87.0),
+        ("Rate advantage", "differential", 77.0),
+        ("Likely effect on the real", "brl_usd_pressure", 92.0),
+        ("What would confirm it", "confirmation", CONTENT_WIDTH - 413.0),
     ]
     header_height = 22.0
     pdf.setFillColor(ACCENT)
@@ -357,7 +358,7 @@ def _draw_scenario_table(pdf: Canvas, rows: list[dict[str, str]], y_top: float) 
             _wrap(row[key], width - 6, "Helvetica", 6.55) for _, key, width in columns
         ]
         row_height = max(27.0, max(len(lines) for lines in wrapped_cells) * 7.4 + 6)
-        pdf.setFillColor(WHITE if row_index % 2 == 0 else PALE)
+        pdf.setFillColor(PANEL if row_index % 2 == 0 else PANEL_2)
         pdf.setStrokeColor(GRID)
         pdf.rect(MARGIN, y - row_height, CONTENT_WIDTH, row_height, fill=1, stroke=1)
         x = MARGIN
@@ -424,7 +425,7 @@ def _draw_paper_trade(pdf: Canvas, trade: dict[str, Any], y_top: float) -> float
     pdf.setFillColor(PALE)
     pdf.setStrokeColor(ACCENT)
     pdf.setLineWidth(0.8)
-    pdf.roundRect(MARGIN, y_bottom, CONTENT_WIDTH, box_height, 3, fill=1, stroke=1)
+    pdf.roundRect(MARGIN, y_bottom, CONTENT_WIDTH, box_height, 8, fill=1, stroke=1)
 
     pdf.setFillColor(ACCENT)
     pdf.setFont("Helvetica-Bold", 10.2)
@@ -486,34 +487,37 @@ def render_market_brief_pdf(context: dict[str, Any], output_path: str | Path) ->
     destination.parent.mkdir(parents=True, exist_ok=True)
     pdf = Canvas(str(destination), pagesize=A4, pageCompression=1)
     pdf.setTitle("Brazil Rates & FX Trade Brief")
-    pdf.setAuthor("Brazil Rates & FX Scenario Monitor")
+    pdf.setAuthor("Romeo Mugnier de Almeida")
+
+    pdf.setFillColor(BG)
+    pdf.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT, fill=1, stroke=0)
 
     pdf.setFillColor(INK)
     pdf.setFont("Helvetica-Bold", 17.0)
-    pdf.drawString(MARGIN, PAGE_HEIGHT - 36, "Brazil Rates & FX Trade Brief")
+    pdf.drawString(MARGIN, PAGE_HEIGHT - 36, "Brazil macro: one conditional trade")
     pdf.setFillColor(MUTED)
     pdf.setFont("Helvetica", 6.8)
     pdf.drawRightString(PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 33, context["snapshot_display"])
-    pdf.setFillColor(ACCENT)
-    pdf.rect(MARGIN, PAGE_HEIGHT - 53, CONTENT_WIDTH, 12, fill=1, stroke=0)
-    pdf.setFillColor(WHITE)
+    pdf.setFillColor(COPPER)
+    pdf.roundRect(MARGIN, PAGE_HEIGHT - 53, CONTENT_WIDTH, 12, 5, fill=1, stroke=0)
+    pdf.setFillColor(BG)
     pdf.setFont("Helvetica-Bold", 7.4)
     pdf.drawString(MARGIN + 6, PAGE_HEIGHT - 49, "EDUCATIONAL PAPER TRADE - NOT INVESTMENT ADVICE")
 
-    y = _draw_section_heading(pdf, "Market snapshot", PAGE_HEIGHT - 67)
+    y = _draw_section_heading(pdf, "The numbers", PAGE_HEIGHT - 67)
     y = _draw_metric_cards(pdf, context["market_metrics"], y)
     y = _draw_section_heading(pdf, "What changed", y - 3)
     y = _draw_bullets(pdf, context["what_changed"], y, CONTENT_WIDTH)
-    y = _draw_section_heading(pdf, "Three scenarios", y - 1)
+    y = _draw_section_heading(pdf, "Three ways the meetings could go", y - 1)
     y = _draw_scenario_table(pdf, context["scenario_rows"], y)
-    y = _draw_section_heading(pdf, "One conditional paper trade", y - 9)
+    y = _draw_section_heading(pdf, "One conditional idea", y - 9)
     y = _draw_paper_trade(pdf, context["trade"], y)
-    y = _draw_section_heading(pdf, "Bottom line", y - 9)
+    y = _draw_section_heading(pdf, "Decision rule", y - 9)
     for sentence in context["bottom_line"]:
         y = _draw_wrapped(pdf, sentence, MARGIN, y, CONTENT_WIDTH, size=7.25, leading=8.5)
         y -= 1.5
 
-    y = _draw_section_heading(pdf, "Sources and limitations", y - 2)
+    y = _draw_section_heading(pdf, "Technical detail and sources", y - 2)
     y = _draw_link_labels(pdf, context["sources"], MARGIN, y, CONTENT_WIDTH)
     y = _draw_wrapped(pdf, context["limitations"], MARGIN, y, CONTENT_WIDTH, size=6.25, leading=7.3, color=MUTED)
     y = _draw_wrapped(
@@ -556,7 +560,7 @@ def render_market_brief_markdown(context: dict[str, Any]) -> str:
     sources = " · ".join(f"[{label}]({url})" for label, url in context["sources"])
     bottom_line = " ".join(context["bottom_line"])
     trade = context["trade"]
-    return f"""# Brazil Rates & FX Trade Brief
+    return f"""# Brazil macro: one conditional trade
 
 **Data snapshot:** {context['snapshot_display']}
 

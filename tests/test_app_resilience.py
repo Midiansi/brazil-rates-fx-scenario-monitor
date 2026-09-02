@@ -10,10 +10,10 @@ def test_app_renders_without_any_network(monkeypatch) -> None:
     app = AppTest.from_file("app.py").run(timeout=10)
 
     assert not app.exception
-    assert any("Brazil in brief" in header.value for header in app.header)
-    assert any("Brazil commodities" in header.value for header in app.header)
-    assert any("Scenario Lab" in header.value for header in app.header)
-    assert any("Conditional paper trade" in header.value for header in app.subheader)
+    assert any("Why these numbers matter" in header.value for header in app.header)
+    assert any("Brazil's export backdrop" in header.value for header in app.header)
+    assert any("Three ways the September meetings could go" in header.value for header in app.header)
+    assert any("One conditional idea" in header.value for header in app.subheader)
     assert any("live refresh is optional" in caption.value for caption in app.caption)
     assert not app.warning
 

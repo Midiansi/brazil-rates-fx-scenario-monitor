@@ -141,8 +141,9 @@ st.markdown(
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
         margin: 2.4rem 0 .5rem;
-        border-top: 1px solid var(--macro-line);
-        border-bottom: 1px solid var(--macro-line);
+        border: 1px solid var(--macro-line);
+        border-radius: 16px;
+        overflow: hidden;
     }
     .market-cell {padding: 1rem 1.1rem 1.15rem 0; border-right: 1px solid var(--macro-line);}
     .market-cell:not(:first-child) {padding-left: 1.1rem;}
@@ -160,12 +161,12 @@ st.markdown(
     .proof-grid, .process-grid, .pricing-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 1px;
-        background: var(--macro-line);
-        border: 1px solid var(--macro-line);
+        gap: .75rem;
+        background: transparent;
+        border: 0;
     }
     .decision-grid {grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 1rem;}
-    .decision-card {background: var(--macro-panel); padding: 1.25rem 1.3rem 1.4rem; min-height: 174px;}
+    .decision-card {background: var(--macro-panel); border: 1px solid var(--macro-line); border-radius: 14px; padding: 1.25rem 1.3rem 1.4rem; min-height: 174px;}
     .decision-card.signal {box-shadow: inset 0 3px 0 var(--macro-copper);}
     .decision-number {
         color: var(--macro-sand);
@@ -174,7 +175,7 @@ st.markdown(
         margin: .65rem 0 .45rem;
     }
     .decision-copy {color: #d8e4e2; font-size: .94rem; line-height: 1.52;}
-    .brief-card, .commodity-card, .trade-detail {background: var(--macro-panel); padding: 1.35rem 1.45rem 1.5rem;}
+    .brief-card, .commodity-card, .trade-detail {background: var(--macro-panel); border: 1px solid var(--macro-line); border-radius: 14px; padding: 1.35rem 1.45rem 1.5rem;}
     .brief-copy {font-size: 1rem; line-height: 1.55; margin-top: .7rem; color: #dbe6e4;}
     .commodity-card {min-height: 210px;}
     .commodity-title {font-size: 1.35rem; font-weight: 610; letter-spacing: -.025em; margin: .45rem 0 .25rem;}
@@ -194,10 +195,10 @@ st.markdown(
     .path-cell.year {color: var(--macro-muted); font-size: .72rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;}
     .path-cell.value {color: var(--macro-ink); font-weight: 640;}
     .pricing-grid {margin-top: 1rem;}
-    .pricing-card {background: var(--macro-panel); padding: 1.2rem 1.35rem;}
+    .pricing-card {background: var(--macro-panel); border: 1px solid var(--macro-line); border-radius: 14px; padding: 1.2rem 1.35rem;}
     .pricing-value {font-size: 1.45rem; font-weight: 650; margin: .45rem 0 .3rem; letter-spacing: -.03em;}
     .pricing-copy {color: var(--macro-muted); font-size: .82rem; line-height: 1.48;}
-    .range-box {background: var(--macro-panel); border: 1px solid var(--macro-line); padding: 1.35rem 1.5rem 1.15rem;}
+    .range-box {background: var(--macro-panel); border: 1px solid var(--macro-line); border-radius: 14px; padding: 1.35rem 1.5rem 1.15rem;}
     .range-track {height: 6px; background: #27404b; position: relative; margin: 2rem .15rem .8rem;}
     .range-fill {position: absolute; inset: 0 auto 0 0; background: var(--macro-teal);}
     .range-dot {position: absolute; top: 50%; width: 16px; height: 16px; border-radius: 50%; background: var(--macro-ink); border: 4px solid var(--macro-teal); transform: translate(-50%, -50%);}
@@ -205,7 +206,7 @@ st.markdown(
     .range-labels {display: flex; justify-content: space-between; color: var(--macro-muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .7rem;}
     .range-caption {color: #c5d2d3; font-size: .87rem; line-height: 1.5; margin-top: 1rem;}
     .scenario-strip {grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 1.1rem 0 1.2rem;}
-    .scenario-card {background: var(--macro-panel); padding: 1.15rem 1.25rem 1.3rem;}
+    .scenario-card {background: var(--macro-panel); border: 1px solid var(--macro-line); border-radius: 14px; padding: 1.15rem 1.25rem 1.3rem;}
     .scenario-card.base {background: var(--macro-panel-2); box-shadow: inset 0 3px 0 var(--macro-teal);}
     .scenario-name {font-weight: 620; letter-spacing: -.02em; margin-bottom: .65rem;}
     .scenario-direction {color: #d2dfdd; font-size: .88rem; line-height: 1.45;}
@@ -215,21 +216,22 @@ st.markdown(
         background: linear-gradient(105deg, rgba(229, 138, 84, .09), rgba(12, 29, 41, .72));
         padding: 1.35rem 1.55rem 1.5rem;
         margin: .5rem 0 1px;
+        border-radius: 14px;
     }
     .trade-title {font-size: 1.65rem; font-weight: 620; letter-spacing: -.035em; margin: .35rem 0 .6rem;}
     .trade-thesis {max-width: 920px; color: #d5e1df; font-size: 1.02rem; line-height: 1.58;}
-    .trade-detail-grid {margin-bottom: .75rem;}
+    .trade-detail-grid {margin: .75rem 0;}
     .trade-detail strong {display: block; color: var(--macro-sand); margin-bottom: .5rem; font-size: .8rem; letter-spacing: .04em; text-transform: uppercase;}
     .trade-detail {color: #bac9cc; font-size: .9rem; line-height: 1.55;}
     .evidence-list {margin: .4rem 0 0; padding-left: 1.15rem; color: #c8d5d6;}
     .evidence-list li {margin-bottom: .65rem; line-height: 1.5;}
     .mind-change {border: 1px solid var(--macro-line); border-left: 4px solid var(--macro-teal); background: rgba(53, 195, 173, .045); padding: 1rem 1.2rem; margin: 1rem 0 1.4rem; color: #cbd8d8; line-height: 1.55;}
     .proof-grid {grid-template-columns: repeat(5, minmax(0, 1fr)); margin: 1rem 0 1px;}
-    .proof-card {background: var(--macro-panel); padding: 1rem 1.05rem 1.1rem;}
+    .proof-card {background: var(--macro-panel); border: 1px solid var(--macro-line); border-radius: 14px; padding: 1rem 1.05rem 1.1rem;}
     .proof-value {font-size: 1.45rem; color: var(--macro-sand); font-weight: 650;}
     .proof-label {color: var(--macro-muted); font-size: .72rem; line-height: 1.35; margin-top: .25rem;}
     .process-grid {grid-template-columns: repeat(4, minmax(0, 1fr));}
-    .process-card {background: var(--macro-panel); padding: 1.25rem 1.35rem 1.4rem;}
+    .process-card {background: var(--macro-panel); border: 1px solid var(--macro-line); border-radius: 14px; padding: 1.25rem 1.35rem 1.4rem;}
     .process-step {color: var(--macro-teal); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .68rem; letter-spacing: .1em; text-transform: uppercase;}
     .process-title {font-size: 1.05rem; font-weight: 620; margin: .5rem 0;}
     .process-copy {color: var(--macro-muted); font-size: .82rem; line-height: 1.5;}
@@ -242,18 +244,19 @@ st.markdown(
         border: 1px solid var(--macro-line);
         background: linear-gradient(120deg, rgba(53, 195, 173, .07), rgba(12, 29, 41, .8));
         margin-top: 1.2rem;
+        border-radius: 16px;
     }
     .builder-name {font-size: 1.55rem; font-weight: 650; letter-spacing: -.035em; margin: .35rem 0 .55rem;}
     .builder-copy {color: #c8d5d6; line-height: 1.56; max-width: 720px;}
     .builder-links {display: flex; justify-content: flex-end; gap: .7rem; flex-wrap: wrap;}
     .builder-links a {border: 1px solid var(--macro-line); padding: .62rem .8rem; text-decoration: none; font-size: .8rem;}
-    [data-testid="stDataFrame"] {border: 1px solid var(--macro-line); background: var(--macro-panel);}
-    [data-testid="stExpander"] {border: 1px solid var(--macro-line); border-radius: 2px; background: rgba(12, 29, 41, .55);}
+    [data-testid="stDataFrame"] {border: 1px solid var(--macro-line); border-radius: 14px; overflow: hidden; background: var(--macro-panel);}
+    [data-testid="stExpander"] {border: 1px solid var(--macro-line); border-radius: 12px; background: rgba(12, 29, 41, .55);}
     [data-testid="stDownloadButton"] button {
         background: var(--macro-teal);
         color: #04120f;
         border: 0;
-        border-radius: 2px;
+        border-radius: 10px;
         font-weight: 700;
         min-height: 2.8rem;
     }
@@ -302,8 +305,8 @@ st.markdown(
 st.markdown('<div class="macro-kicker">Brazil rates / FX / commodities</div>', unsafe_allow_html=True)
 st.title("Brazil macro, from policy to price.")
 st.markdown(
-    '<div class="macro-intro">A source-grounded desk view of how Copom, FOMC and '
-    'export commodities transmit into BRL, inflation expectations and the curve.</div>',
+    '<div class="macro-intro">A clear view of what Brazilian interest rates, U.S. rates and '
+    'export prices could mean for the real.</div>',
     unsafe_allow_html=True,
 )
 st.caption(
@@ -329,35 +332,35 @@ if series:
         unsafe_allow_html=True,
     )
 
-st.header("Decision frame")
-st.caption("The view, expression and failure condition in one screen. No position is represented.")
+st.header("The short version")
+st.caption("What I expect, why it matters, when I would act and when I would admit the idea is wrong.")
 if series and base_scenario and trade:
     base_brief = base_scenario.get("brief_summary", {})
     entry_value = thresholds.get("entry_trigger", {}).get("value", 5.22)
     invalidation_value = thresholds.get("invalidation_reference", {}).get("value", 5.16)
     decision_cards = (
         (
-            "Base path",
-            "COPOM −25 BP / FOMC +25 BP",
-            "The saved exchange-pricing anchors point to a Brazilian cut alongside a U.S. hike.",
+            "Most expected outcome",
+            "BRAZIL CUTS / U.S. RAISES",
+            "Markets currently point to a small Brazilian rate cut and a small U.S. rate increase.",
             "",
         ),
         (
-            "Transmission",
-            "BR–US GAP −50 BP",
-            f"The policy differential would narrow to about {base_brief.get('differential', '9.88 pp').split('to')[-1].strip()}.",
+            "Why the real may weaken",
+            "RATE ADVANTAGE SHRINKS",
+            f"Brazil's interest-rate advantage would fall to about {base_brief.get('differential', '9.88 pp').split('to')[-1].strip()}.",
             "",
         ),
         (
-            "Expression",
-            f"USD/BRL > {entry_value:.2f}",
-            "Conditional long USD / short BRL only after a confirmed PTAX range break.",
+            "When I would act",
+            f"ONLY ABOVE {entry_value:.2f}",
+            "I would buy dollars against reais only after USD/BRL breaks above its recent range.",
             "signal",
         ),
         (
-            "Risk control",
-            f"INVALID < {invalidation_value:.2f}",
-            "Two post-entry closes below the range midpoint, or failure of the rate gap to narrow.",
+            "When the idea is wrong",
+            f"TWO CLOSES BELOW {invalidation_value:.2f}",
+            "I would abandon the idea if the breakout fails or Brazil keeps its rate advantage.",
             "",
         ),
     )
@@ -375,7 +378,7 @@ if series and base_scenario and trade:
 else:
     st.info("The saved decision frame is temporarily unavailable.")
 
-st.header("Brazil in brief")
+st.header("Why these numbers matter")
 if series:
     selic = series["selic_target"]["value"]
     gap = series["brazil_us_policy_differential"]["value"]
@@ -384,8 +387,8 @@ if series:
     briefs = (
         (
             "Rates",
-            f"The Selic target is {selic:.1f}%, leaving Brazil's policy rate about {gap:.1f} "
-            "percentage points above the U.S. target-range midpoint.",
+            f"Brazil's main interest rate is {selic:.1f}%, about {gap:.1f} percentage points above "
+            "the comparable U.S. rate. That attracts capital, but also reflects persistent inflation risk.",
         ),
         (
             "Currency",
@@ -394,13 +397,13 @@ if series:
         ),
         (
             "Inflation",
-            f"The Focus median for 2026 IPCA is {ipca['selected_value']:.1f}%, "
-            f"{abs(ipca['selected_1_month_change_pp']):.1f} percentage point lower over one month.",
+            f"Economists surveyed by Brazil's central bank expect 2026 inflation near "
+            f"{ipca['selected_value']:.1f}%, slightly lower than one month earlier.",
         ),
         (
             "Commodities",
-            "Oil, iron ore, soybeans and sugar connect external prices to Brazil's export income, "
-            "currency backdrop and domestic inflation channels.",
+            "Oil, iron ore, soybeans and sugar affect Brazil's export income and therefore help shape "
+            "the outlook for the real and inflation.",
         ),
     )
     st.markdown(
@@ -416,7 +419,7 @@ if series:
 else:
     st.info("The saved market snapshot is temporarily unavailable.")
 
-st.header("Inflation & rates")
+st.header("Interest rates and inflation")
 if series:
     left, right = st.columns([1, 1.7])
     with left:
@@ -426,10 +429,11 @@ if series:
             f"{series['brazil_us_policy_differential']['value']:.1f} pp",
         )
     with right:
-        st.subheader("Why it matters")
+        st.subheader("Plain-English read")
         st.write(
-            "Brazil still offers a large interest-rate advantage over the U.S. That can support "
-            "the currency, while high domestic rates also signal inflation that remains uncomfortable."
+            "Brazil pays much higher interest than the U.S. That can support the real because investors "
+            "earn more by holding Brazilian assets. The trade-off is that rates are high because inflation "
+            "is still uncomfortable."
         )
         st.write(
             "The saved Focus survey shows 2026 inflation expectations easing over the latest month, "
@@ -463,17 +467,17 @@ if series:
     copom_anchor = pricing_audit.get("copom", {})
     fomc_anchor = pricing_audit.get("fomc", {})
     if copom_anchor and fomc_anchor:
-        st.subheader("Meeting-pricing anchors")
+        st.subheader("What markets currently expect")
         pricing_cards = (
             (
-                "B3 DI1 / Copom",
-                f"≈{copom_anchor.get('implied_easing_basis_points', 0):.0f} bp easing",
-                "Curve decomposition across the September meeting window; not a B3-published probability.",
+                "Brazil / B3 interest-rate futures",
+                "Most of a 0.25% cut priced",
+                "This comes from futures prices around the September central-bank meeting, not a published probability.",
             ),
             (
-                "CME FedWatch / FOMC",
-                f"{fomc_anchor.get('hike_25bp_probability_percent', 0):.1f}% for +25 bp",
-                "Saved official-tool observation; timestamp and refresh limitation remain disclosed below.",
+                "United States / CME FedWatch",
+                f"{fomc_anchor.get('hike_25bp_probability_percent', 0):.1f}% chance of a 0.25% rise",
+                "CME's official tool gave this outcome the highest weight in the saved observation.",
             ),
         )
         st.markdown(
@@ -488,7 +492,7 @@ if series:
             unsafe_allow_html=True,
         )
 
-st.header("Currency")
+st.header("The real against the dollar")
 if series:
     fx = series["ptax_usd_brl_midpoint"]
     left, right = st.columns([1, 1.7])
@@ -511,7 +515,7 @@ if series:
         current_position = bounded_position(float(fx["value"]), low, high)
         entry_value = float(thresholds.get("entry_trigger", {}).get("value", high))
         entry_position = bounded_position(entry_value, low, high)
-        st.subheader("Twenty-observation context")
+        st.subheader("Where USD/BRL sits in its recent range")
         st.markdown(
             f'<div class="range-box"><div class="brief-label">PTAX range / saved observations</div>'
             f'<div class="range-track"><div class="range-fill" style="width:{current_position:.1f}%"></div>'
@@ -519,12 +523,12 @@ if series:
             f'<div class="range-trigger" style="left:{entry_position:.1f}%"></div></div>'
             f'<div class="range-labels"><span>LOW {low:.4f}</span><span>CURRENT {float(fx["value"]):.4f}</span>'
             f'<span>HIGH {high:.4f}</span></div><div class="range-caption">The orange marker is the '
-            f'conditional {entry_value:.2f} entry threshold. It is a range-based decision rule, not a forecast '
-            f'or a claim of execution.</div></div>',
+            f'level where I would consider the idea. Until USD/BRL closes above {entry_value:.2f}, there is no '
+            f'trade.</div></div>',
             unsafe_allow_html=True,
         )
 
-st.header("Brazil commodities")
+st.header("Brazil's export backdrop")
 st.write(
     "Four exposures that connect physical markets to Brazilian export income, BRL and inflation. "
     "Dates and source frequencies are kept explicit rather than presented as synchronized data."
@@ -546,20 +550,27 @@ if commodities:
 else:
     st.info("The saved commodity snapshot is temporarily unavailable.")
 
-st.header("Scenario Lab")
+st.header("Three ways the September meetings could go")
 st.caption(
-    "Three conditional Copom/FOMC paths from the saved, timestamped market snapshot. "
-    "Reactions are directional hypotheses, not certainties."
+    "The first read is deliberately simple. Full assumptions and technical detail are available underneath."
 )
 if len(scenarios) == 3:
     scenario_rows = []
     scenario_cards = []
+    friendly_scenarios = {
+        "Hawkish relative to expectations": ("Brazil stays tougher", "The real would probably strengthen"),
+        "Base case": ("Most expected path", "The real would probably weaken slightly"),
+        "Dovish relative to expectations": ("Brazil cuts faster", "The real would probably weaken more"),
+    }
     for scenario in scenarios:
         brief = scenario.get("brief_summary", {})
         card_class = "scenario-card base" if scenario.get("name") == "Base case" else "scenario-card"
+        friendly_name, friendly_direction = friendly_scenarios.get(
+            scenario.get("name", ""), (scenario.get("name", ""), brief.get("brl_usd_pressure", ""))
+        )
         scenario_cards.append(
-            f'<article class="{card_class}"><div class="scenario-name">{escape(str(scenario.get("name", "")))}</div>'
-            f'<div class="scenario-direction">{escape(str(brief.get("brl_usd_pressure", "")))}</div>'
+            f'<article class="{card_class}"><div class="scenario-name">{escape(str(friendly_name))}</div>'
+            f'<div class="scenario-direction">{escape(str(friendly_direction))}</div>'
             f'<div class="scenario-diff">{escape(str(brief.get("differential", "")))}</div></article>'
         )
         scenario_rows.append(
@@ -594,21 +605,21 @@ if len(scenarios) == 3:
 else:
     st.info("The saved three-scenario comparison is temporarily unavailable.")
 
-st.subheader("Conditional paper trade")
+st.subheader("One conditional idea - not a live trade")
 if len(paper_trades) == 1:
     trade = paper_trades[0]
     st.markdown(
         f'<div class="trade-card"><div class="trade-kicker">Conditional / no position at snapshot</div>'
-        f'<div class="trade-title">{escape(str(trade.get("direction", "")))}</div>'
+        f'<div class="trade-title">Buy USD / sell BRL, only after confirmation</div>'
         f'<div class="trade-thesis">{escape(str(trade.get("thesis", "")))}</div></div>',
         unsafe_allow_html=True,
     )
     trade_details = (
-        ("Entry logic", trade.get("entry_logic", "")),
-        ("Invalidation", trade.get("invalidation_condition", "")),
-        ("Profit-taking", trade.get("profit_taking_logic", "")),
+        ("What must happen first", trade.get("entry_logic", "")),
+        ("When the idea is wrong", trade.get("invalidation_condition", "")),
+        ("Where I would reassess", trade.get("profit_taking_logic", "")),
         (
-            "Scenario mapping",
+            "Which path supports it",
             f"Supported by: {trade.get('supporting_scenario', 'unavailable')} · "
             f"Invalidated by: {trade.get('invalidating_scenario', 'unavailable')}",
         ),
@@ -628,7 +639,7 @@ if len(paper_trades) == 1:
     )
     evidence_col, risk_col = st.columns(2)
     with evidence_col:
-        st.markdown("#### Evidence stack")
+        st.markdown("#### Why the idea is plausible")
         evidence_items = trade.get("supporting_evidence", [])
         if evidence_items:
             st.markdown(
@@ -640,7 +651,7 @@ if len(paper_trades) == 1:
         st.markdown("#### Catalyst")
         st.write(trade.get("catalyst", "Unavailable"))
     with risk_col:
-        st.markdown("#### Principal risks")
+        st.markdown("#### What could go wrong")
         risk_items = trade.get("brief_principal_risks", trade.get("principal_risks", []))
         if risk_items:
             st.markdown(
@@ -649,13 +660,13 @@ if len(paper_trades) == 1:
                 + "</ul>",
                 unsafe_allow_html=True,
             )
-        st.markdown("#### Scenario discipline")
+        st.markdown("#### Scenario check")
         st.write(
             f"Supported by **{trade.get('supporting_scenario', 'unavailable')}**; "
             f"invalidated by **{trade.get('invalidating_scenario', 'unavailable')}**."
         )
     st.markdown(
-        '<div class="mind-change"><strong>What would change the view</strong><br>'
+        '<div class="mind-change"><strong>What would make me change my mind</strong><br>'
         + escape(str(trade.get("view_change_evidence", "Unavailable")))
         + "</div>",
         unsafe_allow_html=True,
@@ -676,11 +687,11 @@ if brief_bytes:
         mime="application/pdf",
     )
 
-st.header("Built as a decision system")
+st.header("How I built it")
 st.write(
-    "The deliverable is more than a dashboard: it moves from official observations to an explicit "
-    "market view, a conditional expression and pre-defined failure conditions. Every published "
-    "narrative is deterministic and reviewable."
+    "I started with official data, compared three possible outcomes, formed one conditional idea and "
+    "defined what would prove it wrong. The technical detail below makes the reasoning auditable; it is "
+    "not the starting point."
 )
 proof_items = (
     (str(len(series)), "macro series"),

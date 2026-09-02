@@ -35,17 +35,17 @@ def test_brief_contains_required_sections_and_one_trade(tmp_path: Path) -> None:
     text = PdfReader(pdf_path).pages[0].extract_text()
 
     required = (
-        "Brazil Rates & FX Trade Brief",
-        "MARKET SNAPSHOT",
+        "Brazil macro: one conditional trade",
+        "THE NUMBERS",
         "WHAT CHANGED",
-        "THREE SCENARIOS",
-        "ONE CONDITIONAL PAPER TRADE",
-        "BOTTOM LINE",
-        "SOURCES AND LIMITATIONS",
+        "THREE WAYS THE MEETINGS COULD GO",
+        "ONE CONDITIONAL IDEA",
+        "DECISION RULE",
+        "TECHNICAL DETAIL AND SOURCES",
     )
     assert all(section in text for section in required)
-    assert text.count("LONG USD / SHORT BRL") == 1
-    assert "NO CURRENT POSITION" in text
+    assert text.count("BUY USD / SELL BRL AFTER CONFIRMATION") == 1
+    assert "NO LIVE POSITION" in text
 
 
 def test_brief_thresholds_match_saved_ptax_range(tmp_path: Path) -> None:
