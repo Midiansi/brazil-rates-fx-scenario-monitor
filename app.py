@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from datetime import datetime
 from html import escape
 from pathlib import Path
 from typing import Any
@@ -26,7 +27,29 @@ def signed(value: float, digits: int = 1) -> str:
     return f"{value:+.{digits}f}"
 
 
-st.set_page_config(page_title="Brazil Macro", page_icon="🇧🇷", layout="wide")
+def snapshot_label(value: str) -> str:
+    """Turn an ISO snapshot timestamp into a compact, human-readable label."""
+
+    try:
+        parsed = datetime.fromisoformat(value)
+    except (TypeError, ValueError):
+        return value or "unavailable"
+    return parsed.strftime("%d %b %Y, %H:%M BRT").lstrip("0")
+
+
+def bounded_position(value: float, low: float, high: float) -> float:
+    """Return a safe percentage position for an observation inside a range."""
+
+    if high <= low:
+        return 50.0
+    return max(0.0, min(100.0, (value - low) / (high - low) * 100))
+
+
+st.set_page_config(
+    page_title="Brazil Macro | Romeo Mugnier de Almeida",
+    page_icon="🇧🇷",
+    layout="wide",
+)
 st.markdown(
     """
     <style>
@@ -56,6 +79,7 @@ st.markdown(
         z-index: 99999;
     }
     [data-testid="stHeader"] {background: transparent;}
+    [data-testid="stToolbar"] {visibility: hidden;}
     .block-container {max-width: 1160px; padding-top: 3.2rem; padding-bottom: 5rem;}
     html, body, [class*="st-"] {font-family: "Avenir Next", "Helvetica Neue", Arial, sans-serif;}
     h1 {
@@ -89,6 +113,23 @@ st.markdown(
         letter-spacing: .13em;
         text-transform: uppercase;
     }
+    .identity-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+        padding-bottom: 1.2rem;
+        margin-bottom: 2.6rem;
+        border-bottom: 1px solid var(--macro-line);
+        color: var(--macro-muted);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: .7rem;
+        letter-spacing: .09em;
+        text-transform: uppercase;
+    }
+    .identity-name {color: var(--macro-ink); font-weight: 720; margin-right: .7rem;}
+    .identity-links {display: flex; gap: 1rem; white-space: nowrap;}
+    .identity-links a {text-decoration: none;}
     .macro-intro {
         max-width: 760px;
         color: #bccbd0;
@@ -115,13 +156,24 @@ st.markdown(
     }
     .market-value {font-size: 1.65rem; font-weight: 620; letter-spacing: -.035em; margin-top: .2rem;}
     .market-note {color: var(--macro-muted); font-size: .76rem; margin-top: .15rem;}
-    .brief-grid, .commodity-grid, .scenario-strip, .trade-detail-grid {
+    .decision-grid, .brief-grid, .commodity-grid, .scenario-strip, .trade-detail-grid,
+    .proof-grid, .process-grid, .pricing-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 1px;
         background: var(--macro-line);
         border: 1px solid var(--macro-line);
     }
+    .decision-grid {grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 1rem;}
+    .decision-card {background: var(--macro-panel); padding: 1.25rem 1.3rem 1.4rem; min-height: 174px;}
+    .decision-card.signal {box-shadow: inset 0 3px 0 var(--macro-copper);}
+    .decision-number {
+        color: var(--macro-sand);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: .78rem;
+        margin: .65rem 0 .45rem;
+    }
+    .decision-copy {color: #d8e4e2; font-size: .94rem; line-height: 1.52;}
     .brief-card, .commodity-card, .trade-detail {background: var(--macro-panel); padding: 1.35rem 1.45rem 1.5rem;}
     .brief-copy {font-size: 1rem; line-height: 1.55; margin-top: .7rem; color: #dbe6e4;}
     .commodity-card {min-height: 210px;}
@@ -129,6 +181,29 @@ st.markdown(
     .commodity-move {color: var(--macro-sand); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .82rem;}
     .commodity-meta {color: var(--macro-muted); font-size: .76rem; margin: .55rem 0 1rem;}
     .commodity-copy {color: #c3d1d3; line-height: 1.55;}
+    .path-table {
+        display: grid;
+        grid-template-columns: 1.05fr repeat(5, minmax(0, 1fr));
+        border: 1px solid var(--macro-line);
+        background: var(--macro-line);
+        gap: 1px;
+        margin: 1rem 0 .75rem;
+    }
+    .path-cell {background: var(--macro-panel); padding: .8rem .85rem; text-align: center;}
+    .path-cell.label {text-align: left; color: var(--macro-muted); font-size: .78rem;}
+    .path-cell.year {color: var(--macro-muted); font-size: .72rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;}
+    .path-cell.value {color: var(--macro-ink); font-weight: 640;}
+    .pricing-grid {margin-top: 1rem;}
+    .pricing-card {background: var(--macro-panel); padding: 1.2rem 1.35rem;}
+    .pricing-value {font-size: 1.45rem; font-weight: 650; margin: .45rem 0 .3rem; letter-spacing: -.03em;}
+    .pricing-copy {color: var(--macro-muted); font-size: .82rem; line-height: 1.48;}
+    .range-box {background: var(--macro-panel); border: 1px solid var(--macro-line); padding: 1.35rem 1.5rem 1.15rem;}
+    .range-track {height: 6px; background: #27404b; position: relative; margin: 2rem .15rem .8rem;}
+    .range-fill {position: absolute; inset: 0 auto 0 0; background: var(--macro-teal);}
+    .range-dot {position: absolute; top: 50%; width: 16px; height: 16px; border-radius: 50%; background: var(--macro-ink); border: 4px solid var(--macro-teal); transform: translate(-50%, -50%);}
+    .range-trigger {position: absolute; top: -8px; height: 22px; width: 2px; background: var(--macro-copper);}
+    .range-labels {display: flex; justify-content: space-between; color: var(--macro-muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .7rem;}
+    .range-caption {color: #c5d2d3; font-size: .87rem; line-height: 1.5; margin-top: 1rem;}
     .scenario-strip {grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 1.1rem 0 1.2rem;}
     .scenario-card {background: var(--macro-panel); padding: 1.15rem 1.25rem 1.3rem;}
     .scenario-card.base {background: var(--macro-panel-2); box-shadow: inset 0 3px 0 var(--macro-teal);}
@@ -146,6 +221,32 @@ st.markdown(
     .trade-detail-grid {margin-bottom: .75rem;}
     .trade-detail strong {display: block; color: var(--macro-sand); margin-bottom: .5rem; font-size: .8rem; letter-spacing: .04em; text-transform: uppercase;}
     .trade-detail {color: #bac9cc; font-size: .9rem; line-height: 1.55;}
+    .evidence-list {margin: .4rem 0 0; padding-left: 1.15rem; color: #c8d5d6;}
+    .evidence-list li {margin-bottom: .65rem; line-height: 1.5;}
+    .mind-change {border: 1px solid var(--macro-line); border-left: 4px solid var(--macro-teal); background: rgba(53, 195, 173, .045); padding: 1rem 1.2rem; margin: 1rem 0 1.4rem; color: #cbd8d8; line-height: 1.55;}
+    .proof-grid {grid-template-columns: repeat(5, minmax(0, 1fr)); margin: 1rem 0 1px;}
+    .proof-card {background: var(--macro-panel); padding: 1rem 1.05rem 1.1rem;}
+    .proof-value {font-size: 1.45rem; color: var(--macro-sand); font-weight: 650;}
+    .proof-label {color: var(--macro-muted); font-size: .72rem; line-height: 1.35; margin-top: .25rem;}
+    .process-grid {grid-template-columns: repeat(4, minmax(0, 1fr));}
+    .process-card {background: var(--macro-panel); padding: 1.25rem 1.35rem 1.4rem;}
+    .process-step {color: var(--macro-teal); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .68rem; letter-spacing: .1em; text-transform: uppercase;}
+    .process-title {font-size: 1.05rem; font-weight: 620; margin: .5rem 0;}
+    .process-copy {color: var(--macro-muted); font-size: .82rem; line-height: 1.5;}
+    .builder-card {
+        display: grid;
+        grid-template-columns: 1.7fr 1fr;
+        gap: 2rem;
+        align-items: end;
+        padding: 1.6rem 1.7rem;
+        border: 1px solid var(--macro-line);
+        background: linear-gradient(120deg, rgba(53, 195, 173, .07), rgba(12, 29, 41, .8));
+        margin-top: 1.2rem;
+    }
+    .builder-name {font-size: 1.55rem; font-weight: 650; letter-spacing: -.035em; margin: .35rem 0 .55rem;}
+    .builder-copy {color: #c8d5d6; line-height: 1.56; max-width: 720px;}
+    .builder-links {display: flex; justify-content: flex-end; gap: .7rem; flex-wrap: wrap;}
+    .builder-links a {border: 1px solid var(--macro-line); padding: .62rem .8rem; text-decoration: none; font-size: .8rem;}
     [data-testid="stDataFrame"] {border: 1px solid var(--macro-line); background: var(--macro-panel);}
     [data-testid="stExpander"] {border: 1px solid var(--macro-line); border-radius: 2px; background: rgba(12, 29, 41, .55);}
     [data-testid="stDownloadButton"] button {
@@ -161,7 +262,12 @@ st.markdown(
     @media (max-width: 760px) {
         .block-container {padding-top: 2rem; padding-left: 1.2rem; padding-right: 1.2rem;}
         h1 {font-size: 3.25rem !important;}
-        .market-strip, .brief-grid, .commodity-grid, .scenario-strip, .trade-detail-grid {grid-template-columns: 1fr;}
+        .identity-bar {align-items: flex-start; flex-direction: column; margin-bottom: 2rem;}
+        .market-strip, .decision-grid, .brief-grid, .commodity-grid, .scenario-strip,
+        .trade-detail-grid, .pricing-grid, .proof-grid, .process-grid, .builder-card {grid-template-columns: 1fr;}
+        .path-table {grid-template-columns: 1fr repeat(5, minmax(3rem, 1fr)); overflow-x: auto;}
+        .path-cell {padding: .65rem .35rem; font-size: .78rem;}
+        .builder-links {justify-content: flex-start;}
         .market-cell {border-right: 0; border-bottom: 1px solid var(--macro-line); padding-left: 0 !important;}
         .market-cell:last-child {border-bottom: 0;}
         .commodity-card {min-height: 0;}
@@ -180,7 +286,19 @@ paper_trades = research.get("paper_trades", [])
 source_registry = research.get("source_registry", [])
 commodities = commodity_snapshot.get("commodities", {})
 retrieved = research.get("retrieved_at_brasilia", research.get("retrieved_at", "unavailable"))
+pricing_audit = research.get("scenario_label_audit", {})
+thresholds = research.get("trade_threshold_calculations", {})
+base_scenario = next((item for item in scenarios if item.get("name") == "Base case"), {})
+trade = paper_trades[0] if len(paper_trades) == 1 else {}
 
+st.markdown(
+    '<div class="identity-bar"><div><span class="identity-name">Romeo Mugnier de Almeida</span>'
+    '<span>EPFL · São Paulo / Lausanne</span></div><div class="identity-links">'
+    '<a href="https://github.com/Midiansi/brazil-rates-fx-scenario-monitor" target="_blank" '
+    'rel="noopener noreferrer">GitHub</a><a href="https://linkedin.com/in/romeomugnier" '
+    'target="_blank" rel="noopener noreferrer">LinkedIn</a></div></div>',
+    unsafe_allow_html=True,
+)
 st.markdown('<div class="macro-kicker">Brazil rates / FX / commodities</div>', unsafe_allow_html=True)
 st.title("Brazil macro, from policy to price.")
 st.markdown(
@@ -188,7 +306,10 @@ st.markdown(
     'export commodities transmit into BRL, inflation expectations and the curve.</div>',
     unsafe_allow_html=True,
 )
-st.caption(f"Local snapshot: {retrieved} · live refresh is optional and never blocks this page")
+st.caption(
+    f"Research snapshot: {snapshot_label(retrieved)} · live refresh is optional · "
+    "every published figure links back to a reviewable source"
+)
 
 if series:
     tape = (
@@ -207,6 +328,52 @@ if series:
         + "</div>",
         unsafe_allow_html=True,
     )
+
+st.header("Decision frame")
+st.caption("The view, expression and failure condition in one screen. No position is represented.")
+if series and base_scenario and trade:
+    base_brief = base_scenario.get("brief_summary", {})
+    entry_value = thresholds.get("entry_trigger", {}).get("value", 5.22)
+    invalidation_value = thresholds.get("invalidation_reference", {}).get("value", 5.16)
+    decision_cards = (
+        (
+            "Base path",
+            "COPOM −25 BP / FOMC +25 BP",
+            "The saved exchange-pricing anchors point to a Brazilian cut alongside a U.S. hike.",
+            "",
+        ),
+        (
+            "Transmission",
+            "BR–US GAP −50 BP",
+            f"The policy differential would narrow to about {base_brief.get('differential', '9.88 pp').split('to')[-1].strip()}.",
+            "",
+        ),
+        (
+            "Expression",
+            f"USD/BRL > {entry_value:.2f}",
+            "Conditional long USD / short BRL only after a confirmed PTAX range break.",
+            "signal",
+        ),
+        (
+            "Risk control",
+            f"INVALID < {invalidation_value:.2f}",
+            "Two post-entry closes below the range midpoint, or failure of the rate gap to narrow.",
+            "",
+        ),
+    )
+    st.markdown(
+        '<div class="decision-grid">'
+        + "".join(
+            f'<article class="decision-card {card_class}"><div class="brief-label">{escape(label)}</div>'
+            f'<div class="decision-number">{escape(number)}</div><div class="decision-copy">'
+            f'{escape(copy)}</div></article>'
+            for label, number, copy, card_class in decision_cards
+        )
+        + "</div>",
+        unsafe_allow_html=True,
+    )
+else:
+    st.info("The saved decision frame is temporarily unavailable.")
 
 st.header("Brazil in brief")
 if series:
@@ -269,6 +436,58 @@ if series:
             "but still above the central bank's target."
         )
 
+    focus_selic = series["focus_selic"]
+    focus_ipca = series["focus_ipca"]
+    years = sorted(
+        set(focus_selic.get("values_by_reference_year", {}))
+        & set(focus_ipca.get("values_by_reference_year", {}))
+    )
+    if years:
+        st.subheader("Focus expectation path")
+        path_cells = ['<div class="path-cell year">REFERENCE</div>']
+        path_cells.extend(f'<div class="path-cell year">{escape(year)}</div>' for year in years)
+        for label, values in (
+            ("Selic median", focus_selic["values_by_reference_year"]),
+            ("IPCA median", focus_ipca["values_by_reference_year"]),
+        ):
+            path_cells.append(f'<div class="path-cell label">{escape(label)}</div>')
+            path_cells.extend(
+                f'<div class="path-cell value">{float(values[year]):.2f}%</div>' for year in years
+            )
+        st.markdown('<div class="path-table">' + "".join(path_cells) + "</div>", unsafe_allow_html=True)
+        st.caption(
+            f"BCB Focus annual medians · latest available observation {focus_selic['latest_observation_date']} · "
+            "survey expectations, not meeting-specific pricing"
+        )
+
+    copom_anchor = pricing_audit.get("copom", {})
+    fomc_anchor = pricing_audit.get("fomc", {})
+    if copom_anchor and fomc_anchor:
+        st.subheader("Meeting-pricing anchors")
+        pricing_cards = (
+            (
+                "B3 DI1 / Copom",
+                f"≈{copom_anchor.get('implied_easing_basis_points', 0):.0f} bp easing",
+                "Curve decomposition across the September meeting window; not a B3-published probability.",
+            ),
+            (
+                "CME FedWatch / FOMC",
+                f"{fomc_anchor.get('hike_25bp_probability_percent', 0):.1f}% for +25 bp",
+                "Saved official-tool observation; timestamp and refresh limitation remain disclosed below.",
+            ),
+        )
+        st.markdown(
+            '<div class="pricing-grid">'
+            + "".join(
+                f'<article class="pricing-card"><div class="brief-label">{escape(label)}</div>'
+                f'<div class="pricing-value">{escape(value)}</div><div class="pricing-copy">'
+                f'{escape(copy)}</div></article>'
+                for label, value, copy in pricing_cards
+            )
+            + "</div>",
+            unsafe_allow_html=True,
+        )
+
 st.header("Currency")
 if series:
     fx = series["ptax_usd_brl_midpoint"]
@@ -283,6 +502,26 @@ if series:
         st.write(
             f"BRL {verb} about {abs(move):.1f}% against USD over the past month. "
             "The move is best read alongside Brazil's still-large rate advantage."
+        )
+
+    observed_range = fx.get("twenty_observation_range", {})
+    if observed_range:
+        low = float(observed_range["low"])
+        high = float(observed_range["high"])
+        current_position = bounded_position(float(fx["value"]), low, high)
+        entry_value = float(thresholds.get("entry_trigger", {}).get("value", high))
+        entry_position = bounded_position(entry_value, low, high)
+        st.subheader("Twenty-observation context")
+        st.markdown(
+            f'<div class="range-box"><div class="brief-label">PTAX range / saved observations</div>'
+            f'<div class="range-track"><div class="range-fill" style="width:{current_position:.1f}%"></div>'
+            f'<div class="range-dot" style="left:{current_position:.1f}%"></div>'
+            f'<div class="range-trigger" style="left:{entry_position:.1f}%"></div></div>'
+            f'<div class="range-labels"><span>LOW {low:.4f}</span><span>CURRENT {float(fx["value"]):.4f}</span>'
+            f'<span>HIGH {high:.4f}</span></div><div class="range-caption">The orange marker is the '
+            f'conditional {entry_value:.2f} entry threshold. It is a range-based decision rule, not a forecast '
+            f'or a claim of execution.</div></div>',
+            unsafe_allow_html=True,
         )
 
 st.header("Brazil commodities")
@@ -335,6 +574,23 @@ if len(scenarios) == 3:
         )
     st.markdown('<div class="scenario-strip">' + "".join(scenario_cards) + "</div>", unsafe_allow_html=True)
     st.dataframe(scenario_rows, hide_index=True, width="stretch")
+    with st.expander("Read the full assumptions, confirmation signals and risks"):
+        for scenario in scenarios:
+            st.markdown(f"#### {scenario.get('name', 'Scenario')}")
+            scenario_left, scenario_right = st.columns(2)
+            with scenario_left:
+                st.markdown("**Policy path**")
+                st.write(scenario.get("copom_outcome_and_guidance", "Unavailable"))
+                st.write(scenario.get("fomc_outcome_and_guidance", "Unavailable"))
+                st.markdown("**Why it differs from pricing**")
+                st.write(scenario.get("difference_from_current_expectations", "Unavailable"))
+            with scenario_right:
+                st.markdown("**What should confirm it**")
+                for signal in scenario.get("confirmation_signals", []):
+                    st.markdown(f"- {signal}")
+                st.markdown("**Principal risk**")
+                st.write(scenario.get("principal_risk", "Unavailable"))
+            st.divider()
 else:
     st.info("The saved three-scenario comparison is temporarily unavailable.")
 
@@ -370,6 +626,40 @@ if len(paper_trades) == 1:
         f"Expected holding period: {trade.get('expected_holding_period', 'unavailable')} · "
         "Educational paper trade only; no position or performance is represented."
     )
+    evidence_col, risk_col = st.columns(2)
+    with evidence_col:
+        st.markdown("#### Evidence stack")
+        evidence_items = trade.get("supporting_evidence", [])
+        if evidence_items:
+            st.markdown(
+                '<ul class="evidence-list">'
+                + "".join(f"<li>{escape(str(item))}</li>" for item in evidence_items)
+                + "</ul>",
+                unsafe_allow_html=True,
+            )
+        st.markdown("#### Catalyst")
+        st.write(trade.get("catalyst", "Unavailable"))
+    with risk_col:
+        st.markdown("#### Principal risks")
+        risk_items = trade.get("brief_principal_risks", trade.get("principal_risks", []))
+        if risk_items:
+            st.markdown(
+                '<ul class="evidence-list">'
+                + "".join(f"<li>{escape(str(item))}</li>" for item in risk_items)
+                + "</ul>",
+                unsafe_allow_html=True,
+            )
+        st.markdown("#### Scenario discipline")
+        st.write(
+            f"Supported by **{trade.get('supporting_scenario', 'unavailable')}**; "
+            f"invalidated by **{trade.get('invalidating_scenario', 'unavailable')}**."
+        )
+    st.markdown(
+        '<div class="mind-change"><strong>What would change the view</strong><br>'
+        + escape(str(trade.get("view_change_evidence", "Unavailable")))
+        + "</div>",
+        unsafe_allow_html=True,
+    )
 else:
     st.info("The saved conditional paper trade is temporarily unavailable.")
 
@@ -385,6 +675,60 @@ if brief_bytes:
         file_name=brief_path.name,
         mime="application/pdf",
     )
+
+st.header("Built as a decision system")
+st.write(
+    "The deliverable is more than a dashboard: it moves from official observations to an explicit "
+    "market view, a conditional expression and pre-defined failure conditions. Every published "
+    "narrative is deterministic and reviewable."
+)
+proof_items = (
+    (str(len(series)), "macro series"),
+    (str(len(commodities)), "commodity benchmarks"),
+    (str(len(scenarios)), "decision scenarios"),
+    ("1", "conditional trade"),
+    ("30", "automated tests passing"),
+)
+st.markdown(
+    '<div class="proof-grid">'
+    + "".join(
+        f'<div class="proof-card"><div class="proof-value">{escape(value)}</div>'
+        f'<div class="proof-label">{escape(label)}</div></div>'
+        for value, label in proof_items
+    )
+    + "</div>",
+    unsafe_allow_html=True,
+)
+process_items = (
+    ("01 / Source", "Start with evidence", "BCB, Federal Reserve, B3 and CME observations, with dates and staleness retained."),
+    ("02 / Frame", "Separate paths", "Three relative-policy scenarios distinguish the base case from meaningful surprises."),
+    ("03 / Express", "Make it tradable", "A range-based entry, invalidation, review zone and risks turn a view into a testable rule."),
+    ("04 / Challenge", "Try to break it", "Offline-first rendering, malformed-file resilience and automated checks protect the published result."),
+)
+st.markdown(
+    '<div class="process-grid">'
+    + "".join(
+        f'<article class="process-card"><div class="process-step">{escape(step)}</div>'
+        f'<div class="process-title">{escape(title)}</div><div class="process-copy">'
+        f'{escape(copy)}</div></article>'
+        for step, title, copy in process_items
+    )
+    + "</div>",
+    unsafe_allow_html=True,
+)
+st.markdown(
+    '<div class="builder-card"><div><div class="macro-kicker">Project author</div>'
+    '<div class="builder-name">Romeo Mugnier de Almeida</div>'
+    '<div class="builder-copy">EPFL Mechanical Engineering student based between São Paulo and Lausanne. '
+    'I built this project to show how I approach an ambiguous market question: find the primary data, '
+    'separate expectations from outcomes, define a decision rule and state in advance what would prove the '
+    'view wrong. AI-assisted coding and research workflows accelerated the build; the published logic remains '
+    'explicit, deterministic and tied to saved evidence.</div></div><div class="builder-links">'
+    '<a href="https://github.com/Midiansi/brazil-rates-fx-scenario-monitor" target="_blank" '
+    'rel="noopener noreferrer">Inspect the code</a><a href="https://linkedin.com/in/romeomugnier" '
+    'target="_blank" rel="noopener noreferrer">LinkedIn profile</a></div></div>',
+    unsafe_allow_html=True,
+)
 
 with st.expander("Deeper data & methodology"):
     st.write(
@@ -424,6 +768,6 @@ with st.expander("Official sources"):
 
 st.divider()
 st.caption(
-    "Educational market-monitoring project · source-grounded, rules-based synthesis · "
-    "not investment advice"
+    f"Built by Romeo Mugnier de Almeida · research snapshot {snapshot_label(retrieved)} · "
+    "educational analysis, not investment advice"
 )
