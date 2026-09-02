@@ -1,68 +1,37 @@
-# Brazil Rates & FX Scenario Monitor
+# Brazil Macro
 
-A source-grounded Streamlit dashboard for tracking Brazilian expectations, USD/BRL PTAX and the Brazil–US rates backdrop around the September 2026 Copom and FOMC meetings.
+A source-grounded Streamlit market brief connecting Brazilian rates, BRL and commodities. The public site is designed for a fast first read: synthesis first, evidence second, methodology third.
 
-**Live Streamlit:** [brasilmacro.streamlit.app](https://brasilmacro.streamlit.app/)
+**Live site:** https://brasilmacro.streamlit.app/
 
-**Downloadable brief:** [Brazil Rates & FX Trade Brief — one-page PDF](outputs/Brazil_Rates_FX_Trade_Brief.pdf)
+## What changed
 
-![Brazil Rates & FX Scenario Monitor dashboard](assets/dashboard.png)
+The production entrypoint now renders entirely from checked-in, reviewable snapshots. No BCB or FRED request sits on the first-paint path. A visitor sees the full brief immediately after the Streamlit session connects; live source checks are an optional action in the deeper-data section.
 
-**Current snapshot:** 2 September 2026 at 00:40:27 UTC (1 September 2026 at 21:40:27 Brasília time)
+The opening view answers four questions in plain English: what Brazilian rates imply, what BRL has done, where inflation expectations stand, and whether the latest available commodity observations are broadly supportive or mixed. Exact values, dates, frequencies and source detail remain available below.
 
-**Educational analysis — not investment advice.**
+## Commodities
 
-## Market question
+The portfolio adds four economically relevant Brazil exposures: Brent crude, iron ore, soybeans and sugar. Their publication frequencies are labelled explicitly rather than forcing daily, monthly and quarterly observations into a misleading synchronized dashboard. The section explains the transmission channels to export receipts, BRL, inflation and monetary policy.
 
-How might the coincident 15–16 September 2026 Copom and FOMC decisions change the Brazil–US policy-rate differential, Brazil's front end and the initial pressure on BRL/USD—and what observable evidence would confirm or invalidate one conditional paper trade?
+The reviewable commodity input is `research/commodity_snapshot.json`. The macro/scenario input remains `research/data_snapshot.json`.
 
-## Dashboard
+## Performance architecture
 
-The application preserves three primary live-data views:
+1. `app.py` imports the production portfolio view in `portfolio_app.py`.
+2. Local JSON snapshots are parsed before any network-capable code is invoked.
+3. `src/portfolio.py` converts those snapshots into presentation data and deterministic plain-language synthesis.
+4. Live BCB/FRED requests are isolated behind an explicit **Check official sources now** button.
+5. When requested, the eight independent macro feeds run concurrently with `ThreadPoolExecutor` and remain cached for one hour.
+6. Production dependencies are limited to pandas, Plotly, Requests and Streamlit; test/report packages are no longer installed by Streamlit Community Cloud.
 
-1. **Brazil expectations** — BCB Focus annual Selic and IPCA medians, with five-observation and approximately one-month changes.
-2. **BRL/USD** — official USD/BRL PTAX buying, selling and calculated midpoint data, including recent changes and range context.
-3. **Brazil–US rates** — Selic versus the calculated federal-funds target-range midpoint, the policy differential, US 2-year and 10-year yields, and the 2s10s slope.
+This removes the previous `Loading official market data…` spinner and the sequential eight-request critical path. Streamlit Community Cloud hibernation can still delay the server/session itself; application code cannot eliminate that hosting-level wake-up latency.
 
-Each source loads independently. If a feed fails or returns no usable observations, the application uses only that series' validated saved snapshot, labels the fallback with its retrieval and observation dates, and keeps unaffected feeds live. User-facing error messages do not expose exception details or stack traces.
+## Source discipline
 
-## Scenario Lab
+Primary macro data comes from Banco Central do Brasil and Federal Reserve/FRED series. Commodity benchmarks use EIA/IMF series distributed through FRED. Every commodity observation records its source, date, unit and frequency. The UI does not imply that differently timed observations are contemporaneous, and deterministic copy avoids unsupported causal claims.
 
-The secondary Scenario Lab presents exactly three saved, reviewable cases:
-
-- Hawkish relative to expectations
-- Base case
-- Dovish relative to expectations
-
-Each row specifies Copom and FOMC outcomes, differences from the saved pricing anchors, likely initial directional pressure, the differential change, two confirmation signals and the principal risk. Reactions are conditional, all else equal, and subject to broader risk sentiment.
-
-The current base case is a 25 bp Copom cut and a 25 bp FOMC hike. It is market-aligned analysis, not a joint-probability forecast: CME FedWatch published the FOMC probabilities, while the B3 Copom input is a transparent DI-curve decomposition rather than a B3-published probability.
-
-The complete reviewable inputs and narrative are in [the timestamped snapshot](research/data_snapshot.json), [the research note](research/scenario_trade.md) and [the generated brief companion](research/market_brief.md). No trade narrative is generated dynamically with an LLM.
-
-## Conditional trade methodology
-
-The project contains exactly one educational paper trade: **long USD / short BRL**, conditional on a daily PTAX midpoint close above **5.22**, the rounded high of the latest 20 valid observations. The initial invalidation reference is **5.16**, the rounded range midpoint, and the measured-move review zone is **5.35–5.36**, calculated from the unrounded range high plus one unrounded range width.
-
-The position is not active at the 5.1567 snapshot. It is supported by the base scenario and invalidated by the hawkish-relative scenario. The logic is reproducible in [the saved data](research/data_snapshot.json) and [the brief generator](src/brief.py); it does not represent actual execution or trading performance.
-
-## Official data sources
-
-| Data | Official source | Series or dataset |
-|---|---|---|
-| Selic and IPCA expectations | [Banco Central do Brasil Focus Expectations OData](https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/) | `ExpectativasMercadoAnuais`, `baseCalculo = 0` |
-| USD/BRL PTAX | [Banco Central do Brasil PTAX OData](https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/) | `CotacaoDolarPeriodo` buying and selling rates |
-| Selic target | [Banco Central do Brasil SGS series 432](https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json) | SGS 432 |
-| Copom calendar, decision and minutes | [Banco Central do Brasil](https://www.bcb.gov.br/detalhenoticia/20739/nota) | Official 2026 calendar and meeting publications |
-| Federal-funds target range | [FRED DFEDTARL](https://fred.stlouisfed.org/series/DFEDTARL) and [FRED DFEDTARU](https://fred.stlouisfed.org/series/DFEDTARU) | Lower and upper target limits |
-| US Treasury yields | [FRED DGS2](https://fred.stlouisfed.org/series/DGS2) and [FRED DGS10](https://fred.stlouisfed.org/series/DGS10) | 2-year and 10-year constant maturities |
-| FOMC calendar, decision and minutes | [Federal Reserve](https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm) | Official calendar and meeting publications |
-| September FOMC pricing | [CME FedWatch](https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html) | ZQU6-implied 16 September target-range probabilities |
-| September Copom pricing anchor | [B3 daily files](https://www.b3.com.br/pt_br/market-data-e-indices/servicos-de-dados/market-data/historico/boletins-diarios/pesquisa-por-pregao/pesquisa-por-pregao/) | BVBG.187.01 DI1U26 and DI1V26 settlement unit prices |
-
-## Installation
-
-Use Python 3.11 and the fully pinned dependency set:
+## Run locally
 
 ```bash
 python3.11 -m venv .venv
@@ -71,32 +40,24 @@ python -m pip install -r requirements.txt
 streamlit run app.py
 ```
 
-No API key, secret or file outside the repository is required. The public deployment uses `app.py`, `requirements.txt`, `.streamlit/config.toml`, the saved research files and the checked-in PDF.
-
-Regenerate the one-page brief from the saved snapshot with:
-
-```bash
-python scripts/generate_market_brief.py
-```
-
 ## Tests
 
 ```bash
+python -m pip install pytest
 python -m pytest -q
 ```
 
-Current result on a clean Python 3.11 environment: **28 passed**.
+CI is defined in `.github/workflows/test.yml`. The resilience tests assert that first render makes zero HTTP requests and still displays the market brief and commodities section.
 
-## Limitations
+## Project structure
 
-- **PTAX is an official reference rate**, not a continuously traded spot quote or executable price.
-- **Focus is survey data**, not a realized outcome or market price, and source values can be revised.
-- **The B3 decomposition is an analytical estimate**, not a B3-published Copom probability. It ignores term premia and assumes no other policy-rate change within the contract window.
-- FRED Treasury observations follow the US publication calendar; Focus, Treasury and B3 series can lag the dashboard retrieval date. Every lag is recorded in the saved snapshot.
-- CME FedWatch probabilities can change after the recorded timestamp. No Copom probability or joint scenario probability is assigned.
-- Scenario reactions describe likely initial pressure, all else equal. Fiscal news, commodities, liquidity and global risk sentiment can dominate.
-- The conditional paper trade is educational analysis only and does not represent actual execution, investment advice, backtested performance or past trading results.
+- `app.py` — production Streamlit entrypoint
+- `portfolio_app.py` — portfolio-first UI and optional concurrent refresh
+- `src/portfolio.py` — local-first snapshot conversion and deterministic synthesis
+- `src/data.py` — validated BCB/FRED parsers and fetchers
+- `src/analytics.py` — rate, curve and change calculations
+- `research/data_snapshot.json` — reviewable macro/scenario snapshot
+- `research/commodity_snapshot.json` — reviewable commodity snapshot
+- `tests/` — calculation, parsing, resilience and portfolio tests
 
-## AI-assistance disclosure
-
-AI assisted with implementation, test development, documentation and drafting. Source selection, units, calculations, scenario labels, trade logic, publication-lag treatment and the final outputs were explicitly checked against the cited official sources and automated tests. The saved reasoning remains inspectable and is not generated dynamically in the public application.
+**Educational analysis — not investment advice.**
