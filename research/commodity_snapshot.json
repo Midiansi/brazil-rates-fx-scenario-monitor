@@ -1,0 +1,66 @@
+{
+  "retrieved_at": "2026-09-02T05:15:00Z",
+  "note": "Reviewable commodity snapshot for the portfolio dashboard. Frequencies differ by source; the UI never presents these observations as synchronous.",
+  "commodities": {
+    "brent": {
+      "label": "Oil",
+      "benchmark": "Brent crude",
+      "series_id": "DCOILBRENTEU",
+      "source": "U.S. Energy Information Administration via FRED",
+      "source_url": "https://fred.stlouisfed.org/series/DCOILBRENTEU",
+      "frequency": "Daily",
+      "unit": "USD per barrel",
+      "latest_date": "2026-08-18",
+      "latest": 95.29,
+      "previous_date": "2026-08-17",
+      "previous": 92.43,
+      "signal": "higher",
+      "channel": "Brazil is a major oil producer, so crude prices matter for export and producer revenues; fuel costs can also feed into the domestic inflation discussion."
+    },
+    "iron_ore": {
+      "label": "Iron ore",
+      "benchmark": "IMF global iron-ore price",
+      "series_id": "PIORECRUSDM",
+      "source": "International Monetary Fund via FRED",
+      "source_url": "https://fred.stlouisfed.org/series/PIORECRUSDM",
+      "frequency": "Monthly",
+      "unit": "USD per metric ton",
+      "latest_date": "2026-07-01",
+      "latest": 101.59565,
+      "previous_date": "2026-06-01",
+      "previous": 103.79091,
+      "signal": "lower",
+      "channel": "Iron ore is a large Brazilian export. Changes in global demand can therefore alter export income and the external backdrop for BRL."
+    },
+    "soybeans": {
+      "label": "Soybeans",
+      "benchmark": "IMF global soybean price",
+      "series_id": "PSOYBUSDQ",
+      "source": "International Monetary Fund via FRED",
+      "source_url": "https://fred.stlouisfed.org/series/PSOYBUSDQ",
+      "frequency": "Quarterly",
+      "unit": "USD per metric ton",
+      "latest_date": "2026-04-01",
+      "latest": 426.32816,
+      "previous_date": "2026-01-01",
+      "previous": 406.43959,
+      "signal": "higher",
+      "channel": "Soy exports generate large foreign-currency receipts for Brazil, with timing shaped by the harvest and export season."
+    },
+    "sugar": {
+      "label": "Sugar",
+      "benchmark": "IMF Sugar No. 11 world price",
+      "series_id": "PSUGAISAUSDM",
+      "source": "International Monetary Fund via FRED",
+      "source_url": "https://fred.stlouisfed.org/series/PSUGAISAUSDM",
+      "frequency": "Monthly",
+      "unit": "US cents per pound",
+      "latest_date": "2026-07-01",
+      "latest": 14.81227,
+      "previous_date": "2026-06-01",
+      "previous": 13.90773,
+      "signal": "higher",
+      "channel": "Brazilian mills can shift cane between sugar and ethanol, linking the export market to domestic fuel economics."
+    }
+  }
+}
