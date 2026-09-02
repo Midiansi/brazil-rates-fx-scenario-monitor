@@ -81,7 +81,12 @@ st.markdown(
     [data-testid="stHeader"] {background: transparent;}
     [data-testid="stToolbar"] {visibility: hidden;}
     .block-container {max-width: 1160px; padding-top: 3.2rem; padding-bottom: 5rem;}
-    html, body, [class*="st-"] {font-family: "Avenir Next", "Helvetica Neue", Arial, sans-serif;}
+    html, body, .stApp {font-family: "Avenir Next", "Helvetica Neue", Arial, sans-serif;}
+    .material-symbols-rounded, [data-testid="stIconMaterial"] {
+        font-family: "Material Symbols Rounded" !important;
+        font-weight: normal !important;
+        font-style: normal !important;
+    }
     h1 {
         max-width: 900px;
         color: var(--macro-ink) !important;
@@ -741,7 +746,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-with st.expander("Deeper data & methodology"):
+with st.expander("Data and method"):
     st.write(
         "This page renders exclusively from reviewable JSON files stored with the application. "
         "It makes no network request on startup, and it does not manufacture a synchronized "
@@ -766,7 +771,7 @@ with st.expander("Deeper data & methodology"):
                 f"{item['latest_observation_date']} · [source]({source})"
             )
 
-with st.expander("Official sources"):
+with st.expander("Official source links"):
     if source_registry:
         for source in source_registry:
             st.markdown(f"- [{source.get('label', 'Official source')}]({source.get('url', '')})")
