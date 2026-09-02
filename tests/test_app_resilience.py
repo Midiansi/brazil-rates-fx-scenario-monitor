@@ -12,6 +12,8 @@ def test_app_renders_without_any_network(monkeypatch) -> None:
     assert not app.exception
     assert any("Brazil in brief" in header.value for header in app.header)
     assert any("Brazil commodities" in header.value for header in app.header)
+    assert any("Scenario Lab" in header.value for header in app.header)
+    assert any("Conditional paper trade" in header.value for header in app.subheader)
     assert any("live refresh is optional" in caption.value for caption in app.caption)
     assert not app.warning
 

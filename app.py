@@ -46,6 +46,9 @@ st.markdown(
 research = read_json("data_snapshot.json")
 commodity_snapshot = read_json("commodity_snapshot.json")
 series = research.get("series", {})
+scenarios = research.get("scenarios", [])
+paper_trades = research.get("paper_trades", [])
+source_registry = research.get("source_registry", [])
 commodities = commodity_snapshot.get("commodities", {})
 retrieved = research.get("retrieved_at_brasilia", research.get("retrieved_at", "unavailable"))
 
@@ -149,6 +152,68 @@ if commodities:
 else:
     st.info("The saved commodity snapshot is temporarily unavailable.")
 
+st.header("Scenario Lab")
+st.caption(
+    "Three conditional Copom/FOMC paths from the saved, timestamped market snapshot. "
+    "Reactions are directional hypotheses, not certainties."
+)
+if len(scenarios) == 3:
+    scenario_rows = []
+    for scenario in scenarios:
+        brief = scenario.get("brief_summary", {})
+        scenario_rows.append(
+            {
+                "Scenario": scenario.get("name", ""),
+                "Copom": brief.get("copom", ""),
+                "FOMC": brief.get("fomc", ""),
+                "Brazil-US differential": brief.get("differential", ""),
+                "Likely initial FX pressure": brief.get("brl_usd_pressure", ""),
+                "Confirmation": brief.get("confirmation", ""),
+            }
+        )
+    st.dataframe(scenario_rows, hide_index=True, width="stretch")
+else:
+    st.info("The saved three-scenario comparison is temporarily unavailable.")
+
+st.subheader("Conditional paper trade")
+if len(paper_trades) == 1:
+    trade = paper_trades[0]
+    st.markdown(f"**{trade.get('direction', '')}**")
+    st.write(trade.get("thesis", ""))
+    left, right = st.columns(2)
+    with left:
+        st.markdown("**Entry logic**")
+        st.write(trade.get("entry_logic", ""))
+        st.markdown("**Profit-taking logic**")
+        st.write(trade.get("profit_taking_logic", ""))
+    with right:
+        st.markdown("**Invalidation**")
+        st.write(trade.get("invalidation_condition", ""))
+        st.markdown("**Scenario mapping**")
+        st.write(
+            f"Supported by: {trade.get('supporting_scenario', 'unavailable')} · "
+            f"Invalidated by: {trade.get('invalidating_scenario', 'unavailable')}"
+        )
+    st.caption(
+        f"Expected holding period: {trade.get('expected_holding_period', 'unavailable')} · "
+        "Educational paper trade only; no position or performance is represented."
+    )
+else:
+    st.info("The saved conditional paper trade is temporarily unavailable.")
+
+brief_path = ROOT / "outputs" / "Brazil_Rates_FX_Trade_Brief.pdf"
+try:
+    brief_bytes = brief_path.read_bytes()
+except OSError:
+    brief_bytes = b""
+if brief_bytes:
+    st.download_button(
+        "Download the one-page market brief (PDF)",
+        data=brief_bytes,
+        file_name=brief_path.name,
+        mime="application/pdf",
+    )
+
 with st.expander("Deeper data & methodology"):
     st.write(
         "This page renders exclusively from reviewable JSON files stored with the application. "
@@ -173,6 +238,17 @@ with st.expander("Deeper data & methodology"):
                 f"- **{item['label']}**: {value} {item['unit']} · "
                 f"{item['latest_observation_date']} · [source]({source})"
             )
+
+with st.expander("Official sources"):
+    if source_registry:
+        for source in source_registry:
+            st.markdown(f"- [{source.get('label', 'Official source')}]({source.get('url', '')})")
+    for item in commodities.values():
+        source_url = item.get("source_url", "")
+        if source_url:
+            st.markdown(f"- [{item.get('label', 'Commodity source')}]({source_url})")
+    if not source_registry and not commodities:
+        st.write("Official source links are temporarily unavailable.")
 
 st.divider()
 st.caption(
