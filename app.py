@@ -321,10 +321,10 @@ st.caption(
 
 if series:
     tape = (
-        ("Selic", f"{series.get('selic_target', {}).get('value', 0):.2f}%", "current target"),
-        ("USD / BRL", f"{series.get('ptax_usd_brl_midpoint', {}).get('value', 0):.4f}", "PTAX reference"),
-        ("BR-US gap", f"{series.get('brazil_us_policy_differential', {}).get('value', 0):.2f} pp", "policy midpoint"),
-        ("US 2-year", f"{series.get('us_2_year_treasury', {}).get('value', 0):.2f}%", "Treasury yield"),
+        ("Brazil interest rate", f"{series.get('selic_target', {}).get('value', 0):.2f}%", "Selic target"),
+        ("One U.S. dollar", f"{series.get('ptax_usd_brl_midpoint', {}).get('value', 0):.4f}", "Brazilian reais"),
+        ("Brazil's rate lead", f"{series.get('brazil_us_policy_differential', {}).get('value', 0):.2f} pp", "above the U.S."),
+        ("U.S. two-year rate", f"{series.get('us_2_year_treasury', {}).get('value', 0):.2f}%", "government bond"),
     )
     st.markdown(
         '<div class="market-strip">'
@@ -352,8 +352,8 @@ if series and base_scenario and trade:
         ),
         (
             "Why the real may weaken",
-            "RATE ADVANTAGE SHRINKS",
-            f"Brazil's interest-rate advantage would fall to about {base_brief.get('differential', '9.88 pp').split('to')[-1].strip()}.",
+            "THE REAL LOSES SOME SUPPORT",
+            f"Brazil's rate lead over the U.S. would fall to about {base_brief.get('differential', '9.88 pp').split('to')[-1].strip()}.",
             "",
         ),
         (
@@ -364,8 +364,8 @@ if series and base_scenario and trade:
         ),
         (
             "When the idea is wrong",
-            f"TWO CLOSES BELOW {invalidation_value:.2f}",
-            "I would abandon the idea if the breakout fails or Brazil keeps its rate advantage.",
+            f"BELOW {invalidation_value:.2f} TWICE",
+            "I would abandon the idea if the price move fails or Brazil keeps its rate lead.",
             "",
         ),
     )
@@ -424,7 +424,7 @@ if series:
 else:
     st.info("The saved market snapshot is temporarily unavailable.")
 
-st.header("Interest rates and inflation")
+st.header("Why interest rates matter for the real")
 if series:
     left, right = st.columns([1, 1.7])
     with left:
@@ -434,7 +434,7 @@ if series:
             f"{series['brazil_us_policy_differential']['value']:.1f} pp",
         )
     with right:
-        st.subheader("Plain-English read")
+        st.subheader("The simple link")
         st.write(
             "Brazil pays much higher interest than the U.S. That can support the real because investors "
             "earn more by holding Brazilian assets. The trade-off is that rates are high because inflation "
@@ -452,12 +452,12 @@ if series:
         & set(focus_ipca.get("values_by_reference_year", {}))
     )
     if years:
-        st.subheader("Focus expectation path")
+        st.subheader("What economists expect next")
         path_cells = ['<div class="path-cell year">REFERENCE</div>']
         path_cells.extend(f'<div class="path-cell year">{escape(year)}</div>' for year in years)
         for label, values in (
-            ("Selic median", focus_selic["values_by_reference_year"]),
-            ("IPCA median", focus_ipca["values_by_reference_year"]),
+            ("Brazil interest rate", focus_selic["values_by_reference_year"]),
+            ("Inflation", focus_ipca["values_by_reference_year"]),
         ):
             path_cells.append(f'<div class="path-cell label">{escape(label)}</div>')
             path_cells.extend(
@@ -465,19 +465,19 @@ if series:
             )
         st.markdown('<div class="path-table">' + "".join(path_cells) + "</div>", unsafe_allow_html=True)
         st.caption(
-            f"BCB Focus annual medians · latest available observation {focus_selic['latest_observation_date']} · "
-            "survey expectations, not meeting-specific pricing"
+            f"Median forecasts from economists surveyed by Brazil's central bank · latest observation "
+            f"{focus_selic['latest_observation_date']}"
         )
 
     copom_anchor = pricing_audit.get("copom", {})
     fomc_anchor = pricing_audit.get("fomc", {})
     if copom_anchor and fomc_anchor:
-        st.subheader("What markets currently expect")
+        st.subheader("What markets expect in September")
         pricing_cards = (
             (
                 "Brazil / B3 interest-rate futures",
-                "Most of a 0.25% cut priced",
-                "This comes from futures prices around the September central-bank meeting, not a published probability.",
+                "Close to a 0.25-point cut",
+                "This estimate comes from market prices around Brazil's September central-bank meeting.",
             ),
             (
                 "United States / CME FedWatch",
@@ -535,8 +535,8 @@ if series:
 
 st.header("Brazil's export backdrop")
 st.write(
-    "Four exposures that connect physical markets to Brazilian export income, BRL and inflation. "
-    "Dates and source frequencies are kept explicit rather than presented as synchronized data."
+    "Brazil earns dollars by exporting products such as oil, iron ore, soybeans and sugar. "
+    "Their prices can therefore affect the real, company earnings and inflation."
 )
 if commodities:
     commodity_cards = []
@@ -557,7 +557,7 @@ else:
 
 st.header("Three ways the September meetings could go")
 st.caption(
-    "The first read is deliberately simple. Full assumptions and technical detail are available underneath."
+    "Three simple stories: Brazil stays tougher, follows the expected path or cuts faster."
 )
 if len(scenarios) == 3:
     scenario_rows = []
@@ -589,8 +589,8 @@ if len(scenarios) == 3:
             }
         )
     st.markdown('<div class="scenario-strip">' + "".join(scenario_cards) + "</div>", unsafe_allow_html=True)
-    st.dataframe(scenario_rows, hide_index=True, width="stretch")
-    with st.expander("Read the full assumptions, confirmation signals and risks"):
+    with st.expander("See the exact decisions, evidence and risks"):
+        st.dataframe(scenario_rows, hide_index=True, width="stretch")
         for scenario in scenarios:
             st.markdown(f"#### {scenario.get('name', 'Scenario')}")
             scenario_left, scenario_right = st.columns(2)
@@ -610,23 +610,28 @@ if len(scenarios) == 3:
 else:
     st.info("The saved three-scenario comparison is temporarily unavailable.")
 
-st.subheader("One conditional idea - not a live trade")
+st.subheader("A paper trade - only if the market confirms it")
 if len(paper_trades) == 1:
     trade = paper_trades[0]
+    entry_value = float(thresholds.get("entry_trigger", {}).get("value", 5.22))
+    invalidation_value = float(thresholds.get("invalidation_reference", {}).get("value", 5.16))
+    review_low = float(thresholds.get("review_zone", {}).get("low", 5.35))
+    review_high = float(thresholds.get("review_zone", {}).get("high", 5.36))
     st.markdown(
         f'<div class="trade-card"><div class="trade-kicker">Conditional / no position at snapshot</div>'
-        f'<div class="trade-title">Buy USD / sell BRL, only after confirmation</div>'
-        f'<div class="trade-thesis">{escape(str(trade.get("thesis", "")))}</div></div>',
+        f'<div class="trade-title">Buy dollars only above {entry_value:.2f}</div>'
+        f'<div class="trade-thesis">If Brazil cuts interest rates while the U.S. raises them, holding reais '
+        f'becomes slightly less attractive. I would act only if USD/BRL rises above its recent range, confirming '
+        f'that the market is moving that way.</div></div>',
         unsafe_allow_html=True,
     )
     trade_details = (
-        ("What must happen first", trade.get("entry_logic", "")),
-        ("When the idea is wrong", trade.get("invalidation_condition", "")),
-        ("Where I would reassess", trade.get("profit_taking_logic", "")),
+        ("Wait for confirmation", f"Do nothing at the current reference. Consider the trade only after USD/BRL closes above {entry_value:.2f}."),
+        ("Admit it is wrong", f"Leave the trade after two closes below {invalidation_value:.2f}, or if the expected rate moves do not happen."),
+        ("Reassess the reward", f"Review the position around {review_low:.2f}-{review_high:.2f}; do not treat that range as a guaranteed target."),
         (
-            "Which path supports it",
-            f"Supported by: {trade.get('supporting_scenario', 'unavailable')} · "
-            f"Invalidated by: {trade.get('invalidating_scenario', 'unavailable')}",
+            "Why September matters",
+            "Brazil's and the U.S. central banks announce their decisions on the same two days, creating a clear test of the idea.",
         ),
     )
     st.markdown(
@@ -639,13 +644,16 @@ if len(paper_trades) == 1:
         unsafe_allow_html=True,
     )
     st.caption(
-        f"Expected holding period: {trade.get('expected_holding_period', 'unavailable')} · "
-        "Educational paper trade only; no position or performance is represented."
+        "Educational exercise only: no real money, no claimed performance and no position at the saved snapshot."
     )
     evidence_col, risk_col = st.columns(2)
     with evidence_col:
         st.markdown("#### Why the idea is plausible")
-        evidence_items = trade.get("supporting_evidence", [])
+        evidence_items = (
+            "The dollar rose about 1.6% against the real over the latest month in the saved data.",
+            "Brazil's interest-rate lead over the U.S. already narrowed by 0.25 percentage point.",
+            "If the expected September decisions happen, that lead narrows by another 0.50 point.",
+        )
         if evidence_items:
             st.markdown(
                 '<ul class="evidence-list">'
@@ -654,10 +662,14 @@ if len(paper_trades) == 1:
                 unsafe_allow_html=True,
             )
         st.markdown("#### Catalyst")
-        st.write(trade.get("catalyst", "Unavailable"))
+        st.write("The Brazilian and U.S. central-bank decisions on 15-16 September.")
     with risk_col:
         st.markdown("#### What could go wrong")
-        risk_items = trade.get("brief_principal_risks", trade.get("principal_risks", []))
+        risk_items = (
+            "Brazil keeps rates unchanged or signals that high rates will last longer.",
+            "The U.S. does not raise rates or signals lower rates ahead.",
+            "Better fiscal news, stronger exports or a global rally strengthens the real instead.",
+        )
         if risk_items:
             st.markdown(
                 '<ul class="evidence-list">'
@@ -665,17 +677,21 @@ if len(paper_trades) == 1:
                 + "</ul>",
                 unsafe_allow_html=True,
             )
-        st.markdown("#### Scenario check")
-        st.write(
-            f"Supported by **{trade.get('supporting_scenario', 'unavailable')}**; "
-            f"invalidated by **{trade.get('invalidating_scenario', 'unavailable')}**."
-        )
     st.markdown(
         '<div class="mind-change"><strong>What would make me change my mind</strong><br>'
-        + escape(str(trade.get("view_change_evidence", "Unavailable")))
+        + f'USD/BRL fails to stay above {entry_value:.2f}; Brazil keeps its rate lead; or new fiscal, export or global-market evidence strengthens the real.'
         + "</div>",
         unsafe_allow_html=True,
     )
+    with st.expander("See the calculations and full trade rules"):
+        st.markdown("**Original thesis**")
+        st.write(trade.get("thesis", "Unavailable"))
+        st.markdown("**Entry rule**")
+        st.write(trade.get("entry_logic", "Unavailable"))
+        st.markdown("**Invalidation rule**")
+        st.write(trade.get("invalidation_condition", "Unavailable"))
+        st.markdown("**Review-zone calculation**")
+        st.write(trade.get("profit_taking_logic", "Unavailable"))
 else:
     st.info("The saved conditional paper trade is temporarily unavailable.")
 
@@ -692,11 +708,10 @@ if brief_bytes:
         mime="application/pdf",
     )
 
-st.header("How I built it")
+st.header("How I approached the question")
 st.write(
-    "I started with official data, compared three possible outcomes, formed one conditional idea and "
-    "defined what would prove it wrong. The technical detail below makes the reasoning auditable; it is "
-    "not the starting point."
+    "Start with public evidence. Compare a few plausible outcomes. Form one view. Decide what would prove it "
+    "wrong before acting. The calculations come afterward so anyone can check the reasoning."
 )
 proof_items = (
     (str(len(series)), "macro series"),
@@ -716,10 +731,10 @@ st.markdown(
     unsafe_allow_html=True,
 )
 process_items = (
-    ("01 / Source", "Start with evidence", "BCB, Federal Reserve, B3 and CME observations, with dates and staleness retained."),
-    ("02 / Frame", "Separate paths", "Three relative-policy scenarios distinguish the base case from meaningful surprises."),
-    ("03 / Express", "Make it tradable", "A range-based entry, invalidation, review zone and risks turn a view into a testable rule."),
-    ("04 / Challenge", "Try to break it", "Offline-first rendering, malformed-file resilience and automated checks protect the published result."),
+    ("01 / Evidence", "Use primary sources", "Start with central-bank and exchange data, and keep every date visible."),
+    ("02 / Scenarios", "Separate the paths", "Ask what changes if Brazil stays tougher, follows expectations or cuts faster."),
+    ("03 / Decision", "Wait for confirmation", "Set the entry, exit and risks before any trade would begin."),
+    ("04 / Challenge", "Try to break it", "Check the numbers, test the rules and keep the page working when a data feed fails."),
 )
 st.markdown(
     '<div class="process-grid">'
@@ -738,8 +753,8 @@ st.markdown(
     '<div class="builder-copy">EPFL Mechanical Engineering student based between São Paulo and Lausanne. '
     'I built this project to show how I approach an ambiguous market question: find the primary data, '
     'separate expectations from outcomes, define a decision rule and state in advance what would prove the '
-    'view wrong. AI-assisted coding and research workflows accelerated the build; the published logic remains '
-    'explicit, deterministic and tied to saved evidence.</div></div><div class="builder-links">'
+    'view wrong. Every conclusion is linked to saved evidence and a rule that another reader can check.</div>'
+    '</div><div class="builder-links">'
     '<a href="https://github.com/Midiansi/brazil-rates-fx-scenario-monitor" target="_blank" '
     'rel="noopener noreferrer">Inspect the code</a><a href="https://linkedin.com/in/romeomugnier" '
     'target="_blank" rel="noopener noreferrer">LinkedIn profile</a></div></div>',
@@ -748,9 +763,9 @@ st.markdown(
 
 with st.expander("Data and method"):
     st.write(
-        "This page renders exclusively from reviewable JSON files stored with the application. "
-        "It makes no network request on startup, and it does not manufacture a synchronized "
-        "commodity index from observations published at different frequencies."
+        "For readers who want to check the work: the page uses a saved copy of public data so it can be "
+        "reproduced even when a source is temporarily unavailable. Commodity observations keep their real "
+        "publication dates rather than being forced into a false like-for-like index."
     )
     if series:
         for key in (
