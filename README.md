@@ -43,7 +43,7 @@ streamlit run app.py
 ## Tests
 
 ```bash
-python -m pip install pytest
+python -m pip install -r requirements-dev.txt
 python -m pytest -q
 ```
 
@@ -52,7 +52,6 @@ CI is defined in `.github/workflows/test.yml`. The resilience tests assert that 
 ## Project structure
 
 - `app.py` — production Streamlit entrypoint
-- `portfolio_app.py` — portfolio-first UI and optional concurrent refresh
 - `src/portfolio.py` — local-first snapshot conversion and deterministic synthesis
 - `src/data.py` — validated BCB/FRED parsers and fetchers
 - `src/analytics.py` — rate, curve and change calculations
