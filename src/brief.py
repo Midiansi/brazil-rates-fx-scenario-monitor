@@ -284,8 +284,8 @@ def _draw_section_heading(pdf: Canvas, text: str, y: float) -> float:
     pdf.drawString(MARGIN, y, _ascii_hyphens(text).upper())
     pdf.setStrokeColor(ACCENT)
     pdf.setLineWidth(0.8)
-    pdf.line(MARGIN, y - 4, PAGE_WIDTH - MARGIN, y - 4)
-    return y - 13
+    pdf.line(MARGIN, y - 5, PAGE_WIDTH - MARGIN, y - 5)
+    return y - 17
 
 
 def _draw_metric_cards(pdf: Canvas, metrics: list[dict[str, str]], y_top: float) -> float:
@@ -330,7 +330,7 @@ def _draw_scenario_table(pdf: Canvas, rows: list[dict[str, str]], y_top: float) 
         ("Rate advantage", "differential", 96.0),
         ("Likely effect on the real", "brl_usd_pressure", CONTENT_WIDTH - 382.0),
     ]
-    header_height = 22.0
+    header_height = 25.0
     pdf.setFillColor(ACCENT)
     pdf.rect(MARGIN, y_top - header_height, CONTENT_WIDTH, header_height, fill=1, stroke=0)
     x = MARGIN
@@ -339,7 +339,7 @@ def _draw_scenario_table(pdf: Canvas, rows: list[dict[str, str]], y_top: float) 
             pdf,
             heading,
             x + 3,
-            y_top - 8,
+            y_top - 9,
             width - 6,
             font="Helvetica-Bold",
             size=6.3,
@@ -352,7 +352,7 @@ def _draw_scenario_table(pdf: Canvas, rows: list[dict[str, str]], y_top: float) 
         wrapped_cells = [
             _wrap(row[key], width - 6, "Helvetica", 6.55) for _, key, width in columns
         ]
-        row_height = max(27.0, max(len(lines) for lines in wrapped_cells) * 7.4 + 6)
+        row_height = max(32.0, max(len(lines) for lines in wrapped_cells) * 7.8 + 9)
         pdf.setFillColor(PANEL if row_index % 2 == 0 else PANEL_2)
         pdf.setStrokeColor(GRID)
         pdf.rect(MARGIN, y - row_height, CONTENT_WIDTH, row_height, fill=1, stroke=1)
@@ -362,10 +362,10 @@ def _draw_scenario_table(pdf: Canvas, rows: list[dict[str, str]], y_top: float) 
                 pdf.line(x, y, x, y - row_height)
             pdf.setFillColor(INK)
             pdf.setFont("Helvetica-Bold" if column_index == 0 else "Helvetica", 6.55)
-            text_y = y - 9
+            text_y = y - 11
             for line in lines:
                 pdf.drawString(x + 3, text_y, line)
-                text_y -= 7.4
+                text_y -= 7.8
             x += width
         y -= row_height
     return y
@@ -413,7 +413,7 @@ def _draw_paper_trade(pdf: Canvas, trade: dict[str, Any], y_top: float) -> float
             f"{trade['holding_period']} Supporting scenario: {trade['supporting_scenario']}.",
         ),
     ]
-    row_height = sum(_measure_label_value(label, value, content_width) + 2 for label, value in rows)
+    row_height = sum(_measure_label_value(label, value, content_width) + 4 for label, value in rows)
     risks_height = sum(max(8.8, len(_wrap(risk, content_width - 10, "Helvetica", 7.15)) * 8.3) for risk in trade["risks"])
     box_height = 31 + row_height + risks_height + 13
     y_bottom = y_top - box_height
@@ -431,7 +431,7 @@ def _draw_paper_trade(pdf: Canvas, trade: dict[str, Any], y_top: float) -> float
     y = y_top - 27
     for label, value in rows:
         y = _draw_label_value(pdf, f"{label}:", value, MARGIN + 8, y, content_width)
-        y -= 2
+        y -= 4
 
     pdf.setFillColor(ACCENT)
     pdf.setFont("Helvetica-Bold", 7.5)
@@ -447,6 +447,7 @@ def _draw_paper_trade(pdf: Canvas, trade: dict[str, Any], y_top: float) -> float
             size=7.15,
             leading=8.3,
         )
+        y -= 1.2
     return y_bottom
 
 
@@ -499,22 +500,22 @@ def render_market_brief_pdf(context: dict[str, Any], output_path: str | Path) ->
     pdf.setFont("Helvetica-Bold", 7.4)
     pdf.drawString(MARGIN + 6, PAGE_HEIGHT - 49, "EDUCATIONAL PAPER TRADE - NOT INVESTMENT ADVICE")
 
-    y = _draw_section_heading(pdf, "The numbers", PAGE_HEIGHT - 67)
+    y = _draw_section_heading(pdf, "The numbers", PAGE_HEIGHT - 70)
     y = _draw_metric_cards(pdf, context["market_metrics"], y)
-    y = _draw_section_heading(pdf, "What changed", y - 3)
+    y = _draw_section_heading(pdf, "What changed", y - 12)
     y = _draw_bullets(pdf, context["what_changed"], y, CONTENT_WIDTH)
-    y = _draw_section_heading(pdf, "Three ways the meetings could go", y - 1)
+    y = _draw_section_heading(pdf, "Three ways the meetings could go", y - 8)
     y = _draw_scenario_table(pdf, context["scenario_rows"], y)
-    y = _draw_section_heading(pdf, "What can overturn the view", y - 8)
+    y = _draw_section_heading(pdf, "What can overturn the view", y - 13)
     y = _draw_bullets(pdf, context["context_checks"], y, CONTENT_WIDTH)
-    y = _draw_section_heading(pdf, "One conditional idea", y - 5)
+    y = _draw_section_heading(pdf, "One conditional idea", y - 11)
     y = _draw_paper_trade(pdf, context["trade"], y)
-    y = _draw_section_heading(pdf, "Decision rule", y - 9)
+    y = _draw_section_heading(pdf, "Decision rule", y - 13)
     for sentence in context["bottom_line"]:
         y = _draw_wrapped(pdf, sentence, MARGIN, y, CONTENT_WIDTH, size=7.25, leading=8.5)
         y -= 1.5
 
-    y = _draw_section_heading(pdf, "Technical detail and sources", y - 2)
+    y = _draw_section_heading(pdf, "Technical detail and sources", y - 10)
     y = _draw_link_labels(pdf, context["sources"], MARGIN, y, CONTENT_WIDTH)
     y = _draw_wrapped(pdf, context["limitations"], MARGIN, y, CONTENT_WIDTH, size=6.25, leading=7.3, color=MUTED)
     y = _draw_wrapped(

@@ -98,14 +98,14 @@ st.markdown(
     }
     h2 {
         color: var(--macro-ink) !important;
-        margin-top: 4.2rem !important;
+        margin-top: 5.4rem !important;
         padding-bottom: .7rem;
         border-bottom: 1px solid var(--macro-line);
         font-size: 1.8rem !important;
         letter-spacing: -.035em !important;
         font-weight: 570 !important;
     }
-    h3 {color: var(--macro-ink) !important; letter-spacing: -.025em !important; font-weight: 570 !important;}
+    h3 {color: var(--macro-ink) !important; letter-spacing: -.025em !important; font-weight: 570 !important; margin-top: 2.8rem !important;}
     p {line-height: 1.62;}
     a {color: var(--macro-teal) !important; text-underline-offset: 3px;}
     a:focus-visible, button:focus-visible {outline: 2px solid var(--macro-teal) !important; outline-offset: 3px;}
@@ -169,8 +169,24 @@ st.markdown(
         background: transparent;
         border: 0;
     }
-    .decision-grid {grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 1rem;}
-    .decision-card {background: var(--macro-panel); border: 1px solid var(--macro-line); border-radius: 14px; padding: 1.25rem 1.3rem 1.4rem; min-height: 174px;}
+    .decision-grid {grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.15rem; margin: 1.25rem 0 2.25rem;}
+    .decision-card {position: relative; background: var(--macro-panel); border: 1px solid var(--macro-line); border-radius: 14px; padding: 1.25rem 1.3rem 1.4rem; min-height: 174px;}
+    .decision-card:not(:last-child)::after {
+        content: "→";
+        position: absolute;
+        right: -.92rem;
+        top: 46%;
+        z-index: 3;
+        width: 1.65rem;
+        height: 1.65rem;
+        border: 1px solid var(--macro-line);
+        border-radius: 50%;
+        background: var(--macro-bg);
+        color: var(--macro-teal);
+        text-align: center;
+        line-height: 1.55rem;
+        font-size: 1rem;
+    }
     .decision-card.signal {box-shadow: inset 0 3px 0 var(--macro-copper);}
     .decision-number {
         color: var(--macro-sand);
@@ -180,6 +196,7 @@ st.markdown(
     }
     .decision-copy {color: #d8e4e2; font-size: .94rem; line-height: 1.52;}
     .brief-card, .commodity-card, .trade-detail {background: var(--macro-panel); border: 1px solid var(--macro-line); border-radius: 14px; padding: 1.35rem 1.45rem 1.5rem;}
+    .brief-grid, .commodity-grid, .pricing-grid {margin: 1.25rem 0 2.1rem;}
     .brief-copy {font-size: 1rem; line-height: 1.55; margin-top: .7rem; color: #dbe6e4;}
     .commodity-card {min-height: 210px;}
     .commodity-title {font-size: 1.35rem; font-weight: 610; letter-spacing: -.025em; margin: .45rem 0 .25rem;}
@@ -209,7 +226,7 @@ st.markdown(
     .range-trigger {position: absolute; top: -8px; height: 22px; width: 2px; background: var(--macro-copper);}
     .range-labels {display: flex; justify-content: space-between; color: var(--macro-muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .7rem;}
     .range-caption {color: #c5d2d3; font-size: .87rem; line-height: 1.5; margin-top: 1rem;}
-    .scenario-strip {grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 1.1rem 0 1.2rem;}
+    .scenario-strip {grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 1.35rem 0 2rem;}
     .scenario-card {background: var(--macro-panel); border: 1px solid var(--macro-line); border-radius: 14px; padding: 1.15rem 1.25rem 1.3rem;}
     .scenario-card.base {background: var(--macro-panel-2); box-shadow: inset 0 3px 0 var(--macro-teal);}
     .scenario-name {font-weight: 620; letter-spacing: -.02em; margin-bottom: .65rem;}
@@ -224,17 +241,17 @@ st.markdown(
     }
     .trade-title {font-size: 1.65rem; font-weight: 620; letter-spacing: -.035em; margin: .35rem 0 .6rem;}
     .trade-thesis {max-width: 920px; color: #d5e1df; font-size: 1.02rem; line-height: 1.58;}
-    .trade-detail-grid {margin: .75rem 0;}
+    .trade-detail-grid {margin: 1.15rem 0 1.4rem;}
     .trade-detail strong {display: block; color: var(--macro-sand); margin-bottom: .5rem; font-size: .8rem; letter-spacing: .04em; text-transform: uppercase;}
     .trade-detail {color: #bac9cc; font-size: .9rem; line-height: 1.55;}
     .evidence-list {margin: .4rem 0 0; padding-left: 1.15rem; color: #c8d5d6;}
     .evidence-list li {margin-bottom: .65rem; line-height: 1.5;}
     .mind-change {border: 1px solid var(--macro-line); border-left: 4px solid var(--macro-teal); background: rgba(53, 195, 173, .045); padding: 1rem 1.2rem; margin: 1rem 0 1.4rem; color: #cbd8d8; line-height: 1.55;}
-    .proof-grid {grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 1rem 0 1px;}
+    .proof-grid {grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 1.4rem 0 2rem;}
     .proof-card {background: var(--macro-panel); border: 1px solid var(--macro-line); border-radius: 14px; padding: 1rem 1.05rem 1.1rem;}
     .proof-value {font-size: 1.45rem; color: var(--macro-sand); font-weight: 650;}
     .proof-label {color: var(--macro-muted); font-size: .72rem; line-height: 1.35; margin-top: .25rem;}
-    .process-grid {grid-template-columns: repeat(4, minmax(0, 1fr));}
+    .process-grid {grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0 0 2.2rem;}
     .process-card {background: var(--macro-panel); border: 1px solid var(--macro-line); border-radius: 14px; padding: 1.25rem 1.35rem 1.4rem;}
     .process-step {color: var(--macro-teal); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .68rem; letter-spacing: .1em; text-transform: uppercase;}
     .process-title {font-size: 1.05rem; font-weight: 620; margin: .5rem 0;}
@@ -247,7 +264,7 @@ st.markdown(
         padding: 1.6rem 1.7rem;
         border: 1px solid var(--macro-line);
         background: linear-gradient(120deg, rgba(53, 195, 173, .07), rgba(12, 29, 41, .8));
-        margin-top: 1.2rem;
+        margin: .5rem 0 2rem;
         border-radius: 16px;
     }
     .builder-name {font-size: 1.55rem; font-weight: 650; letter-spacing: -.035em; margin: .35rem 0 .55rem;}
@@ -255,7 +272,8 @@ st.markdown(
     .builder-links {display: flex; justify-content: flex-end; gap: .7rem; flex-wrap: wrap;}
     .builder-links a {border: 1px solid var(--macro-line); padding: .62rem .8rem; text-decoration: none; font-size: .8rem;}
     [data-testid="stDataFrame"] {border: 1px solid var(--macro-line); border-radius: 14px; overflow: hidden; background: var(--macro-panel);}
-    [data-testid="stExpander"] {border: 1px solid var(--macro-line); border-radius: 12px; background: rgba(12, 29, 41, .55);}
+    [data-testid="stExpander"] {border: 1px solid var(--macro-line); border-radius: 12px; background: rgba(12, 29, 41, .55); margin: .75rem 0;}
+    [data-testid="stDownloadButton"] {margin: 1.25rem 0 2.6rem;}
     [data-testid="stDownloadButton"] button {
         background: var(--macro-teal);
         color: #04120f;
@@ -276,6 +294,7 @@ st.markdown(
         .path-cell {padding: .65rem .35rem; font-size: .78rem;}
         .builder-links {justify-content: flex-start;}
         .market-cell {border-right: 0; border-bottom: 1px solid var(--macro-line);}
+        .decision-card:not(:last-child)::after {content: "↓"; right: auto; left: 50%; top: auto; bottom: -1.42rem; transform: translateX(-50%);}
         .market-cell:last-child {border-bottom: 0;}
         .commodity-card {min-height: 0;}
     }
@@ -356,25 +375,25 @@ if series and base_scenario and trade:
     invalidation_value = thresholds.get("invalidation_reference", {}).get("value", 5.16)
     decision_cards = (
         (
-            ui("Most expected outcome", "Cenário mais esperado"),
+            ui("1 / Starting point", "1 / Ponto de partida"),
             ui("BRAZIL CUTS / U.S. RAISES", "BRASIL CORTA / EUA SOBEM"),
             ui("Markets currently point to a small Brazilian rate cut and a small U.S. rate increase.", "Os mercados apontam para um pequeno corte no Brasil e uma pequena alta nos EUA."),
             "",
         ),
         (
-            ui("Why the real may weaken", "Por que o real pode enfraquecer"),
+            ui("2 / Market mechanism", "2 / Mecanismo de mercado"),
             ui("THE REAL LOSES SOME SUPPORT", "O REAL PERDE PARTE DO APOIO"),
             ui(f"Brazil's rate lead over the U.S. would fall to about {base_brief.get('differential', '9.88 pp').split('to')[-1].strip()}.", "A vantagem de juros do Brasil sobre os EUA cairia para cerca de 9,88 pontos percentuais."),
             "",
         ),
         (
-            ui("When I would act", "Quando eu agiria"),
+            ui("3 / Confirmation", "3 / Confirmação"),
             ui(f"ONLY ABOVE {entry_value:.2f}", f"SÓ ACIMA DE {entry_value:.2f}"),
             ui("I would buy dollars against reais only after USD/BRL breaks above its recent range.", "Eu só compraria dólares se o USD/BRL rompesse a máxima recente."),
             "signal",
         ),
         (
-            ui("When the idea is wrong", "Quando a ideia está errada"),
+            ui("4 / Risk control", "4 / Controle de risco"),
             ui(f"BELOW {invalidation_value:.2f} TWICE", f"ABAIXO DE {invalidation_value:.2f} DUAS VEZES"),
             ui("I would abandon the idea if the price move fails or Brazil keeps its rate lead.", "Eu abandonaria a ideia se o movimento falhar ou se o Brasil mantiver sua vantagem de juros."),
             "",
