@@ -92,13 +92,8 @@ def build_brief_context(payload: dict[str, Any]) -> dict[str, Any]:
 
     market_metrics = [
         {
-            "label": "Official USD/BRL reference",
+            "label": "One U.S. dollar",
             "value": f"{ptax['value']:.4f} BRL per USD",
-            "date": _format_date(ptax["latest_observation_date"]),
-        },
-        {
-            "label": "Real move - 5 observations",
-            "value": f"{brl_usd_five_day:+.2f}%",
             "date": _format_date(ptax["latest_observation_date"]),
         },
         {
@@ -107,19 +102,14 @@ def build_brief_context(payload: dict[str, Any]) -> dict[str, Any]:
             "date": _format_date(series["selic_target"]["latest_observation_date"]),
         },
         {
-            "label": "Comparable U.S. rate",
-            "value": f"{series['fed_target_range']['midpoint']:.3f}% p.a.",
-            "date": _format_date(series["fed_target_range"]["latest_observation_date"]),
-        },
-        {
             "label": "Brazil's rate advantage",
             "value": f"{differential['value']:.3f} pp",
             "date": _format_date(differential["latest_observation_date"]),
         },
         {
-            "label": "U.S. 10-year minus 2-year yield",
-            "value": f"{curve['value']:+.2f} pp",
-            "date": _format_date(curve["latest_observation_date"]),
+            "label": "U.S. two-year government yield",
+            "value": f"{us_2y['value']:.2f}%",
+            "date": _format_date(us_2y["latest_observation_date"]),
         },
     ]
 
@@ -135,6 +125,12 @@ def build_brief_context(payload: dict[str, Any]) -> dict[str, Any]:
             f"Brazil's interest-rate advantage over the U.S. narrowed {abs(differential['one_month_change_pp']):.2f} "
             "percentage point over one month."
         ),
+    ]
+
+    context_checks = [
+        "A small Brazilian cut and a small U.S. increase are already expected; the surprise and the guidance matter more than the headline decision.",
+        "Brazilian fiscal news, U.S. inflation and jobs data, export prices and global risk appetite can overpower the rate story.",
+        "The price trigger is therefore essential: do not take the risk unless USD/BRL first confirms the view.",
     ]
 
     scenario_rows = []
@@ -175,14 +171,13 @@ def build_brief_context(payload: dict[str, Any]) -> dict[str, Any]:
 
     bottom_line = [
         (
-            f"The trade activates only after a daily PTAX midpoint closes above "
-            f"{thresholds.entry:.2f} with US 2Y near/above {us_2y['value']:.2f}% or no widening "
-            "in the Brazil-US policy differential."
+            f"Enter only after the official USD/BRL reference closes above {thresholds.entry:.2f} "
+            f"while the U.S. two-year yield stays near or above {us_2y['value']:.2f}%. "
+            "This tests whether price agrees with the rate story."
         ),
         (
-            f"Abandon the view on two post-entry PTAX midpoints below {thresholds.invalidation:.2f}, "
-            "a failure of the differential to narrow, materially lower US 2Y, or the "
-            f"{trade['invalidating_scenario'].lower()} outcome."
+            f"Leave after two closes below {thresholds.invalidation:.2f}, or if Brazil's rate advantage "
+            "does not narrow. Fiscal news, export prices and global risk can still overpower the setup."
         ),
     ]
 
@@ -201,11 +196,12 @@ def build_brief_context(payload: dict[str, Any]) -> dict[str, Any]:
         "snapshot_display": _format_timestamp(snapshot["retrieved_at"]),
         "market_metrics": market_metrics,
         "what_changed": what_changed,
+        "context_checks": context_checks,
         "scenario_rows": scenario_rows,
         "trade": {
             "direction": "Buy USD / sell BRL after confirmation",
             "status": "NO LIVE POSITION - WAITING FOR CONFIRMATION",
-            "thesis": "If Brazil cuts rates while the U.S. raises them, Brazil becomes relatively less attractive and the real may weaken. I would act only after the currency confirms that view.",
+            "thesis": "If Brazil cuts rates while the U.S. raises them, holding reais becomes slightly less attractive. Because much of that path is already expected, I would act only after price confirms it; fiscal news, export prices and global risk can still dominate.",
             "entry": entry_text,
             "latest_reference": latest_reference,
             "invalidation": invalidation_text,
@@ -293,11 +289,11 @@ def _draw_section_heading(pdf: Canvas, text: str, y: float) -> float:
 
 
 def _draw_metric_cards(pdf: Canvas, metrics: list[dict[str, str]], y_top: float) -> float:
-    gap = 5.0
-    card_width = (CONTENT_WIDTH - (2 * gap)) / 3
-    card_height = 37.0
+    gap = 7.0
+    card_width = (CONTENT_WIDTH - gap) / 2
+    card_height = 42.0
     for index, metric in enumerate(metrics):
-        row, column = divmod(index, 3)
+        row, column = divmod(index, 2)
         x = MARGIN + column * (card_width + gap)
         y = y_top - row * (card_height + 5) - card_height
         pdf.setFillColor(PALE)
@@ -307,13 +303,13 @@ def _draw_metric_cards(pdf: Canvas, metrics: list[dict[str, str]], y_top: float)
         pdf.rect(x, y, 2.2, card_height, fill=1, stroke=0)
         pdf.setFillColor(MUTED)
         pdf.setFont("Helvetica", 6.4)
-        pdf.drawString(x + 7, y + 26, _ascii_hyphens(metric["label"]))
+        pdf.drawString(x + 8, y + 29, _ascii_hyphens(metric["label"]))
         pdf.setFillColor(INK)
-        pdf.setFont("Helvetica-Bold", 9.5)
-        pdf.drawString(x + 7, y + 14, _ascii_hyphens(metric["value"]))
+        pdf.setFont("Helvetica-Bold", 10.5)
+        pdf.drawString(x + 8, y + 15, _ascii_hyphens(metric["value"]))
         pdf.setFillColor(MUTED)
         pdf.setFont("Helvetica", 6.2)
-        pdf.drawRightString(x + card_width - 6, y + 5, metric["date"])
+        pdf.drawRightString(x + card_width - 7, y + 6, metric["date"])
     return y_top - (2 * card_height) - 10
 
 
@@ -321,19 +317,18 @@ def _draw_bullets(pdf: Canvas, bullets: Iterable[str], y: float, width: float) -
     for bullet in bullets:
         pdf.setFillColor(ACCENT)
         pdf.circle(MARGIN + 2.5, y + 2.2, 1.2, fill=1, stroke=0)
-        y = _draw_wrapped(pdf, bullet, MARGIN + 9, y, width - 9, size=7.15, leading=8.5)
-        y -= 1.5
+        y = _draw_wrapped(pdf, bullet, MARGIN + 9, y, width - 9, size=7.4, leading=8.9)
+        y -= 2.0
     return y
 
 
 def _draw_scenario_table(pdf: Canvas, rows: list[dict[str, str]], y_top: float) -> float:
     columns = [
-        ("Outcome", "scenario", 74.0),
-        ("Brazil decision", "copom", 83.0),
-        ("U.S. decision", "fomc", 87.0),
-        ("Rate advantage", "differential", 77.0),
-        ("Likely effect on the real", "brl_usd_pressure", 92.0),
-        ("What would confirm it", "confirmation", CONTENT_WIDTH - 413.0),
+        ("Outcome", "scenario", 91.0),
+        ("Brazil decision", "copom", 95.0),
+        ("U.S. decision", "fomc", 100.0),
+        ("Rate advantage", "differential", 96.0),
+        ("Likely effect on the real", "brl_usd_pressure", CONTENT_WIDTH - 382.0),
     ]
     header_height = 22.0
     pdf.setFillColor(ACCENT)
@@ -377,9 +372,9 @@ def _draw_scenario_table(pdf: Canvas, rows: list[dict[str, str]], y_top: float) 
 
 
 def _measure_label_value(label: str, value: str, width: float) -> float:
-    label_width = 66.0
-    lines = _wrap(value, width - label_width - 12, "Helvetica", 7.15)
-    return max(9.0, len(lines) * 8.2)
+    label_width = 74.0
+    lines = _wrap(value, width - label_width - 12, "Helvetica", 7.5)
+    return max(10.0, len(lines) * 8.8)
 
 
 def _draw_label_value(
@@ -390,9 +385,9 @@ def _draw_label_value(
     y: float,
     width: float,
 ) -> float:
-    label_width = 66.0
+    label_width = 74.0
     pdf.setFillColor(ACCENT)
-    pdf.setFont("Helvetica-Bold", 7.15)
+    pdf.setFont("Helvetica-Bold", 7.5)
     pdf.drawString(x, y, _ascii_hyphens(label))
     return _draw_wrapped(
         pdf,
@@ -400,8 +395,8 @@ def _draw_label_value(
         x + label_width,
         y,
         width - label_width,
-        size=7.15,
-        leading=8.2,
+        size=7.5,
+        leading=8.8,
     )
 
 
@@ -419,7 +414,7 @@ def _draw_paper_trade(pdf: Canvas, trade: dict[str, Any], y_top: float) -> float
         ),
     ]
     row_height = sum(_measure_label_value(label, value, content_width) + 2 for label, value in rows)
-    risks_height = sum(max(8.2, len(_wrap(risk, content_width - 10, "Helvetica", 6.9)) * 7.8) for risk in trade["risks"])
+    risks_height = sum(max(8.8, len(_wrap(risk, content_width - 10, "Helvetica", 7.15)) * 8.3) for risk in trade["risks"])
     box_height = 31 + row_height + risks_height + 13
     y_bottom = y_top - box_height
     pdf.setFillColor(PALE)
@@ -439,7 +434,7 @@ def _draw_paper_trade(pdf: Canvas, trade: dict[str, Any], y_top: float) -> float
         y -= 2
 
     pdf.setFillColor(ACCENT)
-    pdf.setFont("Helvetica-Bold", 7.15)
+    pdf.setFont("Helvetica-Bold", 7.5)
     pdf.drawString(MARGIN + 8, y, "Principal risks:")
     y -= 8
     for index, risk in enumerate(trade["risks"], start=1):
@@ -449,8 +444,8 @@ def _draw_paper_trade(pdf: Canvas, trade: dict[str, Any], y_top: float) -> float
             MARGIN + 16,
             y,
             content_width - 8,
-            size=6.9,
-            leading=7.8,
+            size=7.15,
+            leading=8.3,
         )
     return y_bottom
 
@@ -510,7 +505,9 @@ def render_market_brief_pdf(context: dict[str, Any], output_path: str | Path) ->
     y = _draw_bullets(pdf, context["what_changed"], y, CONTENT_WIDTH)
     y = _draw_section_heading(pdf, "Three ways the meetings could go", y - 1)
     y = _draw_scenario_table(pdf, context["scenario_rows"], y)
-    y = _draw_section_heading(pdf, "One conditional idea", y - 9)
+    y = _draw_section_heading(pdf, "What can overturn the view", y - 8)
+    y = _draw_bullets(pdf, context["context_checks"], y, CONTENT_WIDTH)
+    y = _draw_section_heading(pdf, "One conditional idea", y - 5)
     y = _draw_paper_trade(pdf, context["trade"], y)
     y = _draw_section_heading(pdf, "Decision rule", y - 9)
     for sentence in context["bottom_line"]:
@@ -550,6 +547,7 @@ def render_market_brief_markdown(context: dict[str, Any]) -> str:
         for item in context["market_metrics"]
     )
     changes = "\n".join(f"- {item}" for item in context["what_changed"])
+    context_checks = "\n".join(f"- {item}" for item in context["context_checks"])
     scenarios = "\n".join(
         "| {scenario} | {copom} | {fomc} | {differential} | {brl_usd_pressure} | {confirmation} |".format(
             **row
@@ -589,6 +587,10 @@ def render_market_brief_markdown(context: dict[str, Any]) -> str:
 {scenarios}
 
 Directional reactions are likely initial pressure only, all else equal, and remain subject to broader risk sentiment.
+
+## What can overturn the view
+
+{context_checks}
 
 ## One conditional paper trade
 

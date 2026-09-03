@@ -14,12 +14,10 @@ CME FedWatch (2026-09-01T02:07:02-05:00): 68.2% 25 bp hike / 31.8% hold. B3 DI1 
 
 | Metric | Value | Observation date |
 |---|---:|---|
-| Official USD/BRL reference | 5.1567 BRL per USD | 01 Sep 2026 |
-| Real move - 5 observations | -0.16% | 01 Sep 2026 |
+| One U.S. dollar | 5.1567 BRL per USD | 01 Sep 2026 |
 | Brazil's main interest rate | 14.00% p.a. | 01 Sep 2026 |
-| Comparable U.S. rate | 3.625% p.a. | 01 Sep 2026 |
 | Brazil's rate advantage | 10.375 pp | 01 Sep 2026 |
-| U.S. 10-year minus 2-year yield | +0.41 pp | 31 Aug 2026 |
+| U.S. two-year government yield | 4.34% | 31 Aug 2026 |
 
 ## What changed
 
@@ -37,11 +35,17 @@ CME FedWatch (2026-09-01T02:07:02-05:00): 68.2% 25 bp hike / 31.8% hold. B3 DI1 
 
 Directional reactions are likely initial pressure only, all else equal, and remain subject to broader risk sentiment.
 
+## What can overturn the view
+
+- A small Brazilian cut and a small U.S. increase are already expected; the surprise and the guidance matter more than the headline decision.
+- Brazilian fiscal news, U.S. inflation and jobs data, export prices and global risk appetite can overpower the rate story.
+- The price trigger is therefore essential: do not take the risk unless USD/BRL first confirms the view.
+
 ## One conditional paper trade
 
 ### Buy USD / sell BRL after confirmation - conditional, no current position
 
-**Thesis:** If Brazil cuts rates while the U.S. raises them, Brazil becomes relatively less attractive and the real may weaken. I would act only after the currency confirms that view.
+**Thesis:** If Brazil cuts rates while the U.S. raises them, holding reais becomes slightly less attractive. Because much of that path is already expected, I would act only after price confirms it; fiscal news, export prices and global risk can still dominate.
 
 **Entry trigger:** Wait for USD/BRL to close above 5.22, the top of its recent range. Until then, there is no trade.
 
@@ -63,7 +67,7 @@ Directional reactions are likely initial pressure only, all else equal, and rema
 
 ## Bottom line
 
-The trade activates only after a daily PTAX midpoint closes above 5.22 with US 2Y near/above 4.34% or no widening in the Brazil-US policy differential. Abandon the view on two post-entry PTAX midpoints below 5.16, a failure of the differential to narrow, materially lower US 2Y, or the hawkish relative to expectations outcome.
+Enter only after the official USD/BRL reference closes above 5.22 while the U.S. two-year yield stays near or above 4.34%. This tests whether price agrees with the rate story. Leave after two closes below 5.16, or if Brazil's rate advantage does not narrow. Fiscal news, export prices and global risk can still overpower the setup.
 
 ## Sources and limitations
 

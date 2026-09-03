@@ -150,8 +150,7 @@ st.markdown(
         border-radius: 16px;
         overflow: hidden;
     }
-    .market-cell {padding: 1rem 1.1rem 1.15rem 0; border-right: 1px solid var(--macro-line);}
-    .market-cell:not(:first-child) {padding-left: 1.1rem;}
+    .market-cell {padding: 1rem 1.1rem 1.15rem; border-right: 1px solid var(--macro-line);}
     .market-cell:last-child {border-right: 0;}
     .market-label {
         color: var(--macro-muted);
@@ -231,7 +230,7 @@ st.markdown(
     .evidence-list {margin: .4rem 0 0; padding-left: 1.15rem; color: #c8d5d6;}
     .evidence-list li {margin-bottom: .65rem; line-height: 1.5;}
     .mind-change {border: 1px solid var(--macro-line); border-left: 4px solid var(--macro-teal); background: rgba(53, 195, 173, .045); padding: 1rem 1.2rem; margin: 1rem 0 1.4rem; color: #cbd8d8; line-height: 1.55;}
-    .proof-grid {grid-template-columns: repeat(5, minmax(0, 1fr)); margin: 1rem 0 1px;}
+    .proof-grid {grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 1rem 0 1px;}
     .proof-card {background: var(--macro-panel); border: 1px solid var(--macro-line); border-radius: 14px; padding: 1rem 1.05rem 1.1rem;}
     .proof-value {font-size: 1.45rem; color: var(--macro-sand); font-weight: 650;}
     .proof-label {color: var(--macro-muted); font-size: .72rem; line-height: 1.35; margin-top: .25rem;}
@@ -276,7 +275,7 @@ st.markdown(
         .path-table {grid-template-columns: 1fr repeat(5, minmax(3rem, 1fr)); overflow-x: auto;}
         .path-cell {padding: .65rem .35rem; font-size: .78rem;}
         .builder-links {justify-content: flex-start;}
-        .market-cell {border-right: 0; border-bottom: 1px solid var(--macro-line); padding-left: 0 !important;}
+        .market-cell {border-right: 0; border-bottom: 1px solid var(--macro-line);}
         .market-cell:last-child {border-bottom: 0;}
         .commodity-card {min-height: 0;}
     }
@@ -299,6 +298,14 @@ thresholds = research.get("trade_threshold_calculations", {})
 base_scenario = next((item for item in scenarios if item.get("name") == "Base case"), {})
 trade = paper_trades[0] if len(paper_trades) == 1 else {}
 
+language_left, language_right = st.columns([8, 2])
+with language_right:
+    portuguese = st.toggle("🇧🇷 Português", value=False, key="portuguese")
+
+
+def ui(english: str, portuguese_text: str) -> str:
+    return portuguese_text if portuguese else english
+
 st.markdown(
     '<div class="identity-bar"><div><span class="identity-name">Romeo Mugnier de Almeida</span>'
     '<span>EPFL · São Paulo / Lausanne</span></div><div class="identity-links">'
@@ -307,24 +314,28 @@ st.markdown(
     'target="_blank" rel="noopener noreferrer">LinkedIn</a></div></div>',
     unsafe_allow_html=True,
 )
-st.markdown('<div class="macro-kicker">Brazil rates / FX / commodities</div>', unsafe_allow_html=True)
-st.title("Brazil macro, from policy to price.")
 st.markdown(
-    '<div class="macro-intro">A clear view of what Brazilian interest rates, U.S. rates and '
-    'export prices could mean for the real.</div>',
+    f'<div class="macro-kicker">{ui("Brazil rates / FX / commodities", "Juros / câmbio / commodities")}</div>',
+    unsafe_allow_html=True,
+)
+st.title(ui("Brazil macro, from policy to price.", "Brasil: da política econômica aos preços."))
+st.markdown(
+    f'<div class="macro-intro">{ui("A clear view of what Brazilian interest rates, U.S. rates and export prices could mean for the real.", "Uma visão clara de como os juros no Brasil e nos EUA e os preços das exportações podem afetar o real.")}</div>',
     unsafe_allow_html=True,
 )
 st.caption(
-    f"Research snapshot: {snapshot_label(retrieved)} · live refresh is optional · "
-    "every published figure links back to a reviewable source"
+    ui(
+        f"Research snapshot: {snapshot_label(retrieved)} · live refresh is optional · every published figure links back to a reviewable source",
+        f"Dados salvos em {snapshot_label(retrieved)} · cada número pode ser conferido na fonte",
+    )
 )
 
 if series:
     tape = (
-        ("Brazil interest rate", f"{series.get('selic_target', {}).get('value', 0):.2f}%", "Selic target"),
-        ("One U.S. dollar", f"{series.get('ptax_usd_brl_midpoint', {}).get('value', 0):.4f}", "Brazilian reais"),
-        ("Brazil's rate lead", f"{series.get('brazil_us_policy_differential', {}).get('value', 0):.2f} pp", "above the U.S."),
-        ("U.S. two-year rate", f"{series.get('us_2_year_treasury', {}).get('value', 0):.2f}%", "government bond"),
+        (ui("Brazil interest rate", "Juro no Brasil"), f"{series.get('selic_target', {}).get('value', 0):.2f}%", ui("Selic target", "Meta Selic")),
+        (ui("One U.S. dollar", "Um dólar"), f"{series.get('ptax_usd_brl_midpoint', {}).get('value', 0):.4f}", ui("Brazilian reais", "reais")),
+        (ui("Brazil's rate lead", "Vantagem de juros do Brasil"), f"{series.get('brazil_us_policy_differential', {}).get('value', 0):.2f} pp", ui("above the U.S.", "acima dos EUA")),
+        (ui("U.S. two-year rate", "Juro de dois anos nos EUA"), f"{series.get('us_2_year_treasury', {}).get('value', 0):.2f}%", ui("government bond", "título público")),
     )
     st.markdown(
         '<div class="market-strip">'
@@ -337,35 +348,35 @@ if series:
         unsafe_allow_html=True,
     )
 
-st.header("The short version")
-st.caption("What I expect, why it matters, when I would act and when I would admit the idea is wrong.")
+st.header(ui("The short version", "Resumo"))
+st.caption(ui("What I expect, why it matters, when I would act and when I would admit the idea is wrong.", "O cenário esperado, por que importa, quando eu agiria e quando admitiria que a ideia está errada."))
 if series and base_scenario and trade:
     base_brief = base_scenario.get("brief_summary", {})
     entry_value = thresholds.get("entry_trigger", {}).get("value", 5.22)
     invalidation_value = thresholds.get("invalidation_reference", {}).get("value", 5.16)
     decision_cards = (
         (
-            "Most expected outcome",
-            "BRAZIL CUTS / U.S. RAISES",
-            "Markets currently point to a small Brazilian rate cut and a small U.S. rate increase.",
+            ui("Most expected outcome", "Cenário mais esperado"),
+            ui("BRAZIL CUTS / U.S. RAISES", "BRASIL CORTA / EUA SOBEM"),
+            ui("Markets currently point to a small Brazilian rate cut and a small U.S. rate increase.", "Os mercados apontam para um pequeno corte no Brasil e uma pequena alta nos EUA."),
             "",
         ),
         (
-            "Why the real may weaken",
-            "THE REAL LOSES SOME SUPPORT",
-            f"Brazil's rate lead over the U.S. would fall to about {base_brief.get('differential', '9.88 pp').split('to')[-1].strip()}.",
+            ui("Why the real may weaken", "Por que o real pode enfraquecer"),
+            ui("THE REAL LOSES SOME SUPPORT", "O REAL PERDE PARTE DO APOIO"),
+            ui(f"Brazil's rate lead over the U.S. would fall to about {base_brief.get('differential', '9.88 pp').split('to')[-1].strip()}.", "A vantagem de juros do Brasil sobre os EUA cairia para cerca de 9,88 pontos percentuais."),
             "",
         ),
         (
-            "When I would act",
-            f"ONLY ABOVE {entry_value:.2f}",
-            "I would buy dollars against reais only after USD/BRL breaks above its recent range.",
+            ui("When I would act", "Quando eu agiria"),
+            ui(f"ONLY ABOVE {entry_value:.2f}", f"SÓ ACIMA DE {entry_value:.2f}"),
+            ui("I would buy dollars against reais only after USD/BRL breaks above its recent range.", "Eu só compraria dólares se o USD/BRL rompesse a máxima recente."),
             "signal",
         ),
         (
-            "When the idea is wrong",
-            f"BELOW {invalidation_value:.2f} TWICE",
-            "I would abandon the idea if the price move fails or Brazil keeps its rate lead.",
+            ui("When the idea is wrong", "Quando a ideia está errada"),
+            ui(f"BELOW {invalidation_value:.2f} TWICE", f"ABAIXO DE {invalidation_value:.2f} DUAS VEZES"),
+            ui("I would abandon the idea if the price move fails or Brazil keeps its rate lead.", "Eu abandonaria a ideia se o movimento falhar ou se o Brasil mantiver sua vantagem de juros."),
             "",
         ),
     )
@@ -383,7 +394,7 @@ if series and base_scenario and trade:
 else:
     st.info("The saved decision frame is temporarily unavailable.")
 
-st.header("Why these numbers matter")
+st.header(ui("Why these numbers matter", "Por que esses números importam"))
 if series:
     selic = series["selic_target"]["value"]
     gap = series["brazil_us_policy_differential"]["value"]
@@ -391,24 +402,20 @@ if series:
     ipca = series["focus_ipca"]
     briefs = (
         (
-            "Rates",
-            f"Brazil's main interest rate is {selic:.1f}%, about {gap:.1f} percentage points above "
-            "the comparable U.S. rate. That attracts capital, but also reflects persistent inflation risk.",
+            ui("Rates", "Juros"),
+            ui(f"Brazil's main interest rate is {selic:.1f}%, about {gap:.1f} percentage points above the comparable U.S. rate. That attracts capital, but also reflects persistent inflation risk.", f"O principal juro brasileiro está em {selic:.1f}%, cerca de {gap:.1f} pontos acima do juro americano comparável. Isso atrai capital, mas também reflete risco de inflação."),
         ),
         (
-            "Currency",
-            f"USD/BRL PTAX is {fx['value']:.2f}; BRL weakened {abs(fx['one_month_change_percent']):.1f}% "
-            "over the month in the saved official data.",
+            ui("Currency", "Câmbio"),
+            ui(f"USD/BRL PTAX is {fx['value']:.2f}; BRL weakened {abs(fx['one_month_change_percent']):.1f}% over the month in the saved official data.", f"O dólar de referência está em {fx['value']:.2f}; o real caiu {abs(fx['one_month_change_percent']):.1f}% no mês nos dados oficiais salvos."),
         ),
         (
-            "Inflation",
-            f"Economists surveyed by Brazil's central bank expect 2026 inflation near "
-            f"{ipca['selected_value']:.1f}%, slightly lower than one month earlier.",
+            ui("Inflation", "Inflação"),
+            ui(f"Economists surveyed by Brazil's central bank expect 2026 inflation near {ipca['selected_value']:.1f}%, slightly lower than one month earlier.", f"Economistas consultados pelo Banco Central esperam inflação perto de {ipca['selected_value']:.1f}% em 2026, um pouco abaixo do mês anterior."),
         ),
         (
-            "Commodities",
-            "Oil, iron ore, soybeans and sugar affect Brazil's export income and therefore help shape "
-            "the outlook for the real and inflation.",
+            ui("Commodities", "Commodities"),
+            ui("Oil, iron ore, soybeans and sugar affect Brazil's export income and therefore help shape the outlook for the real and inflation.", "Petróleo, minério, soja e açúcar afetam a receita de exportação e, portanto, o real e a inflação."),
         ),
     )
     st.markdown(
@@ -424,26 +431,19 @@ if series:
 else:
     st.info("The saved market snapshot is temporarily unavailable.")
 
-st.header("Why interest rates matter for the real")
+st.header(ui("Why interest rates matter for the real", "Por que os juros importam para o real"))
 if series:
     left, right = st.columns([1, 1.7])
     with left:
-        st.metric("Selic target", f"{series['selic_target']['value']:.1f}%")
+        st.metric(ui("Selic target", "Meta Selic"), f"{series['selic_target']['value']:.1f}%")
         st.metric(
-            "Brazil–U.S. rate gap",
+            ui("Brazil–U.S. rate gap", "Diferença Brasil–EUA"),
             f"{series['brazil_us_policy_differential']['value']:.1f} pp",
         )
     with right:
-        st.subheader("The simple link")
-        st.write(
-            "Brazil pays much higher interest than the U.S. That can support the real because investors "
-            "earn more by holding Brazilian assets. The trade-off is that rates are high because inflation "
-            "is still uncomfortable."
-        )
-        st.write(
-            "The saved Focus survey shows 2026 inflation expectations easing over the latest month, "
-            "but still above the central bank's target."
-        )
+        st.subheader(ui("The simple link", "A relação, de forma simples"))
+        st.write(ui("Brazil pays much higher interest than the U.S. That can support the real because investors earn more by holding Brazilian assets. The trade-off is that rates are high because inflation is still uncomfortable.", "O Brasil paga juros muito maiores que os EUA. Isso pode apoiar o real porque investidores ganham mais ao manter ativos brasileiros. Em contrapartida, os juros estão altos porque a inflação ainda preocupa."))
+        st.write(ui("The saved Focus survey shows 2026 inflation expectations easing over the latest month, but still above the central bank's target.", "A pesquisa Focus mostra que a inflação esperada para 2026 caiu no último mês, mas ainda está acima da meta do Banco Central."))
 
     focus_selic = series["focus_selic"]
     focus_ipca = series["focus_ipca"]
@@ -452,12 +452,12 @@ if series:
         & set(focus_ipca.get("values_by_reference_year", {}))
     )
     if years:
-        st.subheader("What economists expect next")
-        path_cells = ['<div class="path-cell year">REFERENCE</div>']
+        st.subheader(ui("What economists expect next", "O que os economistas esperam"))
+        path_cells = [f'<div class="path-cell year">{ui("FORECAST", "PREVISÃO")}</div>']
         path_cells.extend(f'<div class="path-cell year">{escape(year)}</div>' for year in years)
         for label, values in (
-            ("Brazil interest rate", focus_selic["values_by_reference_year"]),
-            ("Inflation", focus_ipca["values_by_reference_year"]),
+            (ui("Brazil interest rate", "Juro no Brasil"), focus_selic["values_by_reference_year"]),
+            (ui("Inflation", "Inflação"), focus_ipca["values_by_reference_year"]),
         ):
             path_cells.append(f'<div class="path-cell label">{escape(label)}</div>')
             path_cells.extend(
@@ -465,24 +465,23 @@ if series:
             )
         st.markdown('<div class="path-table">' + "".join(path_cells) + "</div>", unsafe_allow_html=True)
         st.caption(
-            f"Median forecasts from economists surveyed by Brazil's central bank · latest observation "
-            f"{focus_selic['latest_observation_date']}"
+            ui(f"Median forecasts from economists surveyed by Brazil's central bank · latest observation {focus_selic['latest_observation_date']}", f"Medianas da pesquisa do Banco Central · última observação {focus_selic['latest_observation_date']}")
         )
 
     copom_anchor = pricing_audit.get("copom", {})
     fomc_anchor = pricing_audit.get("fomc", {})
     if copom_anchor and fomc_anchor:
-        st.subheader("What markets expect in September")
+        st.subheader(ui("What markets expect in September", "O que o mercado espera em setembro"))
         pricing_cards = (
             (
-                "Brazil / B3 interest-rate futures",
-                "Close to a 0.25-point cut",
-                "This estimate comes from market prices around Brazil's September central-bank meeting.",
+                ui("Brazil / B3 interest-rate futures", "Brasil / futuros de juros da B3"),
+                ui("Close to a 0.25-point cut", "Quase um corte de 0,25 ponto"),
+                ui("This estimate comes from market prices around Brazil's September central-bank meeting.", "Estimativa baseada nos preços de mercado ao redor da reunião de setembro."),
             ),
             (
-                "United States / CME FedWatch",
-                f"{fomc_anchor.get('hike_25bp_probability_percent', 0):.1f}% chance of a 0.25% rise",
-                "CME's official tool gave this outcome the highest weight in the saved observation.",
+                ui("United States / CME FedWatch", "Estados Unidos / CME FedWatch"),
+                ui(f"{fomc_anchor.get('hike_25bp_probability_percent', 0):.1f}% chance of a 0.25% rise", f"{fomc_anchor.get('hike_25bp_probability_percent', 0):.1f}% de chance de alta de 0,25 ponto"),
+                ui("CME's official tool gave this outcome the highest weight in the saved observation.", "A ferramenta oficial da CME atribuiu o maior peso a esse resultado."),
             ),
         )
         st.markdown(
@@ -497,21 +496,18 @@ if series:
             unsafe_allow_html=True,
         )
 
-st.header("The real against the dollar")
+st.header(ui("The real against the dollar", "O real frente ao dólar"))
 if series:
     fx = series["ptax_usd_brl_midpoint"]
     left, right = st.columns([1, 1.7])
     with left:
         st.metric("USD/BRL", f"{fx['value']:.2f}")
-        st.caption(f"PTAX · {fx['latest_observation_date']}")
+        st.caption(f"{ui('Official reference', 'Referência oficial')} · {fx['latest_observation_date']}")
     with right:
-        st.subheader("What changed")
+        st.subheader(ui("What changed", "O que mudou"))
         move = fx["one_month_change_percent"]
         verb = "weakened" if move > 0 else "strengthened"
-        st.write(
-            f"BRL {verb} about {abs(move):.1f}% against USD over the past month. "
-            "The move is best read alongside Brazil's still-large rate advantage."
-        )
+        st.write(ui(f"BRL {verb} about {abs(move):.1f}% against USD over the past month. The move is best read alongside Brazil's still-large rate advantage.", f"O real caiu cerca de {abs(move):.1f}% frente ao dólar no último mês. O movimento deve ser lido junto com a ainda grande vantagem de juros do Brasil."))
 
     observed_range = fx.get("twenty_observation_range", {})
     if observed_range:
@@ -520,24 +516,23 @@ if series:
         current_position = bounded_position(float(fx["value"]), low, high)
         entry_value = float(thresholds.get("entry_trigger", {}).get("value", high))
         entry_position = bounded_position(entry_value, low, high)
-        st.subheader("Where USD/BRL sits in its recent range")
+        st.subheader(ui("Where USD/BRL sits in its recent range", "Onde o dólar está na faixa recente"))
         st.markdown(
             f'<div class="range-box"><div class="brief-label">PTAX range / saved observations</div>'
             f'<div class="range-track"><div class="range-fill" style="width:{current_position:.1f}%"></div>'
             f'<div class="range-dot" style="left:{current_position:.1f}%"></div>'
             f'<div class="range-trigger" style="left:{entry_position:.1f}%"></div></div>'
-            f'<div class="range-labels"><span>LOW {low:.4f}</span><span>CURRENT {float(fx["value"]):.4f}</span>'
-            f'<span>HIGH {high:.4f}</span></div><div class="range-caption">The orange marker is the '
-            f'level where I would consider the idea. Until USD/BRL closes above {entry_value:.2f}, there is no '
-            f'trade.</div></div>',
+            f'<div class="range-labels"><span>{ui("LOW", "MÍNIMA")} {low:.4f}</span><span>{ui("CURRENT", "ATUAL")} {float(fx["value"]):.4f}</span>'
+            f'<span>{ui("HIGH", "MÁXIMA")} {high:.4f}</span></div><div class="range-caption">'
+            f'{ui(f"The orange marker is where I would consider the idea. Until USD/BRL closes above {entry_value:.2f}, there is no trade.", f"A marca laranja indica onde eu consideraria a ideia. Até o dólar fechar acima de {entry_value:.2f}, não há operação.")}</div></div>',
             unsafe_allow_html=True,
         )
 
-st.header("Brazil's export backdrop")
-st.write(
-    "Brazil earns dollars by exporting products such as oil, iron ore, soybeans and sugar. "
-    "Their prices can therefore affect the real, company earnings and inflation."
-)
+st.header(ui("Brazil's export backdrop", "O cenário das exportações brasileiras"))
+st.write(ui(
+    "Brazil earns dollars by exporting products such as oil, iron ore, soybeans and sugar. Their prices can therefore affect the real, company earnings and inflation.",
+    "O Brasil recebe dólares ao exportar petróleo, minério de ferro, soja e açúcar. Por isso, esses preços podem afetar o real, os lucros das empresas e a inflação.",
+))
 if commodities:
     commodity_cards = []
     for item in commodities.values():
@@ -555,17 +550,15 @@ if commodities:
 else:
     st.info("The saved commodity snapshot is temporarily unavailable.")
 
-st.header("Three ways the September meetings could go")
-st.caption(
-    "Three simple stories: Brazil stays tougher, follows the expected path or cuts faster."
-)
+st.header(ui("Three ways the September meetings could go", "Três caminhos para as reuniões de setembro"))
+st.caption(ui("Three simple stories: Brazil stays tougher, follows the expected path or cuts faster.", "Três histórias simples: o Brasil mantém juros altos, segue o esperado ou corta mais rápido."))
 if len(scenarios) == 3:
     scenario_rows = []
     scenario_cards = []
     friendly_scenarios = {
-        "Hawkish relative to expectations": ("Brazil stays tougher", "The real would probably strengthen"),
-        "Base case": ("Most expected path", "The real would probably weaken slightly"),
-        "Dovish relative to expectations": ("Brazil cuts faster", "The real would probably weaken more"),
+        "Hawkish relative to expectations": (ui("Brazil stays tougher", "Brasil mantém juros altos"), ui("The real would probably strengthen", "O real provavelmente se fortaleceria")),
+        "Base case": (ui("Most expected path", "Caminho mais esperado"), ui("The real would probably weaken slightly", "O real provavelmente enfraqueceria um pouco")),
+        "Dovish relative to expectations": (ui("Brazil cuts faster", "Brasil corta mais rápido"), ui("The real would probably weaken more", "O real provavelmente enfraqueceria mais")),
     }
     for scenario in scenarios:
         brief = scenario.get("brief_summary", {})
@@ -573,10 +566,15 @@ if len(scenarios) == 3:
         friendly_name, friendly_direction = friendly_scenarios.get(
             scenario.get("name", ""), (scenario.get("name", ""), brief.get("brl_usd_pressure", ""))
         )
+        friendly_differentials = {
+            "Hawkish relative to expectations": ui("Likely unchanged near 10.38 pp", "Perto de 10,38 p.p."),
+            "Base case": ui("Likely narrows 50 bp to 9.88 pp", "Cai 0,50 ponto para 9,88 p.p."),
+            "Dovish relative to expectations": ui("Likely narrows 75 bp to 9.63 pp", "Cai 0,75 ponto para 9,63 p.p."),
+        }
         scenario_cards.append(
             f'<article class="{card_class}"><div class="scenario-name">{escape(str(friendly_name))}</div>'
             f'<div class="scenario-direction">{escape(str(friendly_direction))}</div>'
-            f'<div class="scenario-diff">{escape(str(brief.get("differential", "")))}</div></article>'
+            f'<div class="scenario-diff">{escape(str(friendly_differentials.get(scenario.get("name", ""), brief.get("differential", ""))))}</div></article>'
         )
         scenario_rows.append(
             {
@@ -589,7 +587,7 @@ if len(scenarios) == 3:
             }
         )
     st.markdown('<div class="scenario-strip">' + "".join(scenario_cards) + "</div>", unsafe_allow_html=True)
-    with st.expander("See the exact decisions, evidence and risks"):
+    with st.expander(ui("See the exact decisions, evidence and risks", "Ver decisões, evidências e riscos em detalhe")):
         st.dataframe(scenario_rows, hide_index=True, width="stretch")
         for scenario in scenarios:
             st.markdown(f"#### {scenario.get('name', 'Scenario')}")
@@ -610,7 +608,37 @@ if len(scenarios) == 3:
 else:
     st.info("The saved three-scenario comparison is temporarily unavailable.")
 
-st.subheader("A paper trade - only if the market confirms it")
+st.subheader(ui("What the numbers cannot decide", "O que os números não decidem sozinhos"))
+market_context = (
+    (
+        ui("What is already priced", "O que já está no preço"),
+        ui("A small Brazilian cut and a small U.S. increase are already expected. The reaction depends on the surprise, not only the decision.", "Um pequeno corte no Brasil e uma pequena alta nos EUA já são esperados. A reação depende da surpresa, não apenas da decisão."),
+    ),
+    (
+        ui("Policy tone", "Tom dos bancos centrais"),
+        ui("Guidance about what comes next can matter more than the rate change announced on the day.", "A mensagem sobre os próximos passos pode importar mais do que a mudança de juros anunciada no dia."),
+    ),
+    (
+        ui("News that can overpower it", "Notícias que podem dominar"),
+        ui("Brazilian fiscal news, U.S. inflation and jobs data, export prices and global risk appetite can reverse the currency move.", "Notícias fiscais no Brasil, inflação e emprego nos EUA, preços das exportações e o apetite global por risco podem inverter o movimento do câmbio."),
+    ),
+    (
+        ui("Why price confirmation matters", "Por que esperar confirmação"),
+        ui("Waiting for USD/BRL to break its recent range tests whether the market agrees before taking the risk.", "Esperar o dólar romper a faixa recente testa se o mercado concorda antes de assumir o risco."),
+    ),
+)
+st.markdown(
+    '<div class="brief-grid">'
+    + "".join(
+        f'<article class="brief-card"><div class="brief-label">{escape(label)}</div>'
+        f'<div class="brief-copy">{escape(copy)}</div></article>'
+        for label, copy in market_context
+    )
+    + "</div>",
+    unsafe_allow_html=True,
+)
+
+st.subheader(ui("A paper trade - only if the market confirms it", "Uma operação simulada - só com confirmação do mercado"))
 if len(paper_trades) == 1:
     trade = paper_trades[0]
     entry_value = float(thresholds.get("entry_trigger", {}).get("value", 5.22))
@@ -618,20 +646,18 @@ if len(paper_trades) == 1:
     review_low = float(thresholds.get("review_zone", {}).get("low", 5.35))
     review_high = float(thresholds.get("review_zone", {}).get("high", 5.36))
     st.markdown(
-        f'<div class="trade-card"><div class="trade-kicker">Conditional / no position at snapshot</div>'
-        f'<div class="trade-title">Buy dollars only above {entry_value:.2f}</div>'
-        f'<div class="trade-thesis">If Brazil cuts interest rates while the U.S. raises them, holding reais '
-        f'becomes slightly less attractive. I would act only if USD/BRL rises above its recent range, confirming '
-        f'that the market is moving that way.</div></div>',
+        f'<div class="trade-card"><div class="trade-kicker">{ui("Conditional / no position at snapshot", "Condicional / sem posição no momento")}</div>'
+        f'<div class="trade-title">{ui(f"Buy dollars only above {entry_value:.2f}", f"Comprar dólares só acima de {entry_value:.2f}")}</div>'
+        f'<div class="trade-thesis">{ui("If Brazil cuts interest rates while the U.S. raises them, holding reais becomes slightly less attractive. Because much of that path is already expected, I would act only if price confirms it; fiscal news, export prices and global risk can still dominate.", "Se o Brasil cortar juros enquanto os EUA os elevam, manter reais fica um pouco menos atraente. Como boa parte desse caminho já é esperada, eu só agiria se o preço confirmasse; notícias fiscais, exportações e o risco global ainda podem dominar.")}</div></div>',
         unsafe_allow_html=True,
     )
     trade_details = (
-        ("Wait for confirmation", f"Do nothing at the current reference. Consider the trade only after USD/BRL closes above {entry_value:.2f}."),
-        ("Admit it is wrong", f"Leave the trade after two closes below {invalidation_value:.2f}, or if the expected rate moves do not happen."),
-        ("Reassess the reward", f"Review the position around {review_low:.2f}-{review_high:.2f}; do not treat that range as a guaranteed target."),
+        (ui("Wait for confirmation", "Esperar confirmação"), ui(f"Do nothing at the current reference. Consider the trade only after USD/BRL closes above {entry_value:.2f}.", f"Não fazer nada no preço atual. Considerar a operação apenas após um fechamento acima de {entry_value:.2f}.")),
+        (ui("Admit it is wrong", "Admitir quando está errada"), ui(f"Leave the trade after two closes below {invalidation_value:.2f}, or if the expected rate moves do not happen.", f"Sair após dois fechamentos abaixo de {invalidation_value:.2f}, ou se os movimentos de juros esperados não ocorrerem.")),
+        (ui("Reassess the reward", "Reavaliar o retorno"), ui(f"Review the position around {review_low:.2f}-{review_high:.2f}; do not treat that range as a guaranteed target.", f"Reavaliar a posição perto de {review_low:.2f}-{review_high:.2f}; essa faixa não é um alvo garantido.")),
         (
-            "Why September matters",
-            "Brazil's and the U.S. central banks announce their decisions on the same two days, creating a clear test of the idea.",
+            ui("Why September matters", "Por que setembro importa"),
+            ui("Brazil's and the U.S. central banks announce their decisions on the same two days, creating a clear test of the idea.", "Os bancos centrais do Brasil e dos EUA anunciam suas decisões nos mesmos dois dias, criando um teste claro da ideia."),
         ),
     )
     st.markdown(
@@ -644,15 +670,15 @@ if len(paper_trades) == 1:
         unsafe_allow_html=True,
     )
     st.caption(
-        "Educational exercise only: no real money, no claimed performance and no position at the saved snapshot."
+        ui("Educational exercise only: no real money, no claimed performance and no position at the saved snapshot.", "Exercício educacional: sem dinheiro real, sem desempenho alegado e sem posição no momento dos dados.")
     )
     evidence_col, risk_col = st.columns(2)
     with evidence_col:
-        st.markdown("#### Why the idea is plausible")
+        st.markdown(ui("#### Why the idea is plausible", "#### Por que a ideia é plausível"))
         evidence_items = (
-            "The dollar rose about 1.6% against the real over the latest month in the saved data.",
-            "Brazil's interest-rate lead over the U.S. already narrowed by 0.25 percentage point.",
-            "If the expected September decisions happen, that lead narrows by another 0.50 point.",
+            ui("The dollar rose about 1.6% against the real over the latest month in the saved data.", "O dólar subiu cerca de 1,6% frente ao real no último mês dos dados salvos."),
+            ui("Brazil's interest-rate lead over the U.S. already narrowed by 0.25 percentage point.", "A vantagem de juros do Brasil sobre os EUA já caiu 0,25 ponto."),
+            ui("If the expected September decisions happen, that lead narrows by another 0.50 point.", "Se as decisões esperadas ocorrerem, essa vantagem cai mais 0,50 ponto."),
         )
         if evidence_items:
             st.markdown(
@@ -661,14 +687,14 @@ if len(paper_trades) == 1:
                 + "</ul>",
                 unsafe_allow_html=True,
             )
-        st.markdown("#### Catalyst")
-        st.write("The Brazilian and U.S. central-bank decisions on 15-16 September.")
+        st.markdown(ui("#### Catalyst", "#### Catalisador"))
+        st.write(ui("The Brazilian and U.S. central-bank decisions on 15-16 September.", "As decisões dos bancos centrais do Brasil e dos EUA em 15-16 de setembro."))
     with risk_col:
-        st.markdown("#### What could go wrong")
+        st.markdown(ui("#### What could go wrong", "#### O que pode dar errado"))
         risk_items = (
-            "Brazil keeps rates unchanged or signals that high rates will last longer.",
-            "The U.S. does not raise rates or signals lower rates ahead.",
-            "Better fiscal news, stronger exports or a global rally strengthens the real instead.",
+            ui("Brazil keeps rates unchanged or signals that high rates will last longer.", "O Brasil mantém os juros ou indica que ficarão altos por mais tempo."),
+            ui("The U.S. does not raise rates or signals lower rates ahead.", "Os EUA não elevam os juros ou sinalizam cortes à frente."),
+            ui("Better fiscal news, stronger exports or a global rally strengthens the real instead.", "Notícias fiscais melhores, exportações fortes ou uma alta global fortalecem o real."),
         )
         if risk_items:
             st.markdown(
@@ -678,12 +704,12 @@ if len(paper_trades) == 1:
                 unsafe_allow_html=True,
             )
     st.markdown(
-        '<div class="mind-change"><strong>What would make me change my mind</strong><br>'
-        + f'USD/BRL fails to stay above {entry_value:.2f}; Brazil keeps its rate lead; or new fiscal, export or global-market evidence strengthens the real.'
+        f'<div class="mind-change"><strong>{ui("What would make me change my mind", "O que me faria mudar de opinião")}</strong><br>'
+        + ui(f'USD/BRL fails to stay above {entry_value:.2f}; Brazil keeps its rate lead; or new fiscal, export or global-market evidence strengthens the real.', f'O dólar não se mantém acima de {entry_value:.2f}; o Brasil mantém sua vantagem de juros; ou novas informações fiscais, de exportação ou globais fortalecem o real.')
         + "</div>",
         unsafe_allow_html=True,
     )
-    with st.expander("See the calculations and full trade rules"):
+    with st.expander(ui("See the calculations and full trade rules", "Ver cálculos e regras completas")):
         st.markdown("**Original thesis**")
         st.write(trade.get("thesis", "Unavailable"))
         st.markdown("**Entry rule**")
@@ -702,23 +728,22 @@ except OSError:
     brief_bytes = b""
 if brief_bytes:
     st.download_button(
-        "Download the one-page market brief (PDF)",
+        ui("Download the one-page market brief (PDF)", "Baixar o relatório de uma página (PDF)"),
         data=brief_bytes,
         file_name=brief_path.name,
         mime="application/pdf",
     )
 
-st.header("How I approached the question")
-st.write(
-    "Start with public evidence. Compare a few plausible outcomes. Form one view. Decide what would prove it "
-    "wrong before acting. The calculations come afterward so anyone can check the reasoning."
-)
+st.header(ui("How I approached the question", "Como analisei a questão"))
+st.write(ui(
+    "Start with public evidence. Compare a few plausible outcomes. Form one view. Decide what would prove it wrong before acting. The calculations come afterward so anyone can check the reasoning.",
+    "Começar com dados públicos. Comparar alguns resultados plausíveis. Formar uma visão. Decidir antes o que provaria que ela está errada. Os cálculos vêm depois, para que qualquer pessoa possa conferir o raciocínio.",
+))
 proof_items = (
-    (str(len(series)), "macro series"),
-    (str(len(commodities)), "commodity benchmarks"),
-    (str(len(scenarios)), "decision scenarios"),
-    ("1", "conditional trade"),
-    ("30", "automated tests passing"),
+    (str(len(series)), ui("market series", "séries de mercado")),
+    (str(len(commodities)), ui("export benchmarks", "referências de exportação")),
+    (str(len(scenarios)), ui("decision scenarios", "cenários")),
+    ("1", ui("conditional trade", "operação condicional")),
 )
 st.markdown(
     '<div class="proof-grid">'
@@ -761,7 +786,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-with st.expander("Data and method"):
+with st.expander(ui("Data and method", "Dados e método")):
     st.write(
         "For readers who want to check the work: the page uses a saved copy of public data so it can be "
         "reproduced even when a source is temporarily unavailable. Commodity observations keep their real "
@@ -786,7 +811,7 @@ with st.expander("Data and method"):
                 f"{item['latest_observation_date']} · [source]({source})"
             )
 
-with st.expander("Official source links"):
+with st.expander(ui("Official source links", "Fontes oficiais")):
     if source_registry:
         for source in source_registry:
             st.markdown(f"- [{source.get('label', 'Official source')}]({source.get('url', '')})")
