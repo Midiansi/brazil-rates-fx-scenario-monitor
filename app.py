@@ -203,6 +203,21 @@ st.markdown(
     .commodity-move {color: var(--macro-sand); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .82rem;}
     .commodity-meta {color: var(--macro-muted); font-size: .76rem; margin: .55rem 0 1rem;}
     .commodity-copy {color: #c3d1d3; line-height: 1.55;}
+    .commodity-crosscheck {
+        margin: .25rem 0 2.4rem;
+        padding: 1.45rem 1.55rem 1.55rem;
+        border: 1px solid var(--macro-line);
+        border-left: 4px solid var(--macro-teal);
+        border-radius: 16px;
+        background: linear-gradient(110deg, rgba(53, 195, 173, .07), rgba(12, 29, 41, .76));
+    }
+    .crosscheck-title {font-size: 1.2rem; font-weight: 650; letter-spacing: -.025em; margin: .3rem 0 .45rem;}
+    .crosscheck-intro {color: #d4dfde; line-height: 1.55; max-width: 900px;}
+    .crosscheck-grid {display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; margin: 1.15rem 0;}
+    .crosscheck-cell {padding: .9rem 1rem; border: 1px solid var(--macro-line); border-radius: 12px; background: rgba(7, 19, 29, .42);}
+    .crosscheck-label {color: var(--macro-sand); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .69rem; letter-spacing: .08em; text-transform: uppercase;}
+    .crosscheck-copy {color: #bdcbcd; font-size: .86rem; line-height: 1.5; margin-top: .45rem;}
+    .crosscheck-verdict {color: var(--macro-ink); line-height: 1.55; padding-top: .9rem; border-top: 1px solid var(--macro-line);}
     .path-table {
         display: grid;
         grid-template-columns: 1.05fr repeat(5, minmax(0, 1fr));
@@ -289,7 +304,8 @@ st.markdown(
         h1 {font-size: 3.25rem !important;}
         .identity-bar {align-items: flex-start; flex-direction: column; margin-bottom: 2rem;}
         .market-strip, .decision-grid, .brief-grid, .commodity-grid, .scenario-strip,
-        .trade-detail-grid, .pricing-grid, .proof-grid, .process-grid, .builder-card {grid-template-columns: 1fr;}
+        .trade-detail-grid, .pricing-grid, .proof-grid, .process-grid, .builder-card,
+        .crosscheck-grid {grid-template-columns: 1fr;}
         .path-table {grid-template-columns: 1fr repeat(5, minmax(3rem, 1fr)); overflow-x: auto;}
         .path-cell {padding: .65rem .35rem; font-size: .78rem;}
         .builder-links {justify-content: flex-start;}
@@ -566,6 +582,41 @@ if commodities:
             f'<div class="commodity-copy">{escape(str(item["channel"]))}</div></article>'
         )
     st.markdown('<div class="commodity-grid">' + "".join(commodity_cards) + "</div>", unsafe_allow_html=True)
+    higher_count = sum(str(item.get("signal", "")).lower() == "higher" for item in commodities.values())
+    lower_count = sum(str(item.get("signal", "")).lower() == "lower" for item in commodities.values())
+    st.markdown(
+        '<section class="commodity-crosscheck"><div class="macro-kicker">'
+        + ui("Commodity cross-check for the trade", "Teste de commodities para a operação")
+        + '</div><div class="crosscheck-title">'
+        + ui("Higher export prices can help the real—but the inflation channel can push the other way.", "Preços de exportação mais altos podem ajudar o real, mas a inflação pode agir no sentido oposto.")
+        + '</div><div class="crosscheck-intro">'
+        + ui(
+            f"In the saved observations, {higher_count} benchmarks are higher and {lower_count} lower than their previous readings. The dates and frequencies differ, so this is a cross-check—not a single commodity index.",
+            f"Nos dados salvos, {higher_count} referências estão em alta e {lower_count} em baixa frente à leitura anterior. As datas e frequências diferem; isto é um teste de coerência, não um índice único.",
+        )
+        + '</div><div class="crosscheck-grid">'
+        + '<div class="crosscheck-cell"><div class="crosscheck-label">'
+        + ui("External support", "Apoio externo")
+        + '</div><div class="crosscheck-copy">'
+        + ui("Broad, sustained strength in oil, iron ore, soy and sugar can increase export dollars and support BRL.", "Uma alta ampla e persistente de petróleo, minério, soja e açúcar pode elevar as receitas em dólares e apoiar o real.")
+        + '</div></div><div class="crosscheck-cell"><div class="crosscheck-label">'
+        + ui("Inflation tension", "Tensão inflacionária")
+        + '</div><div class="crosscheck-copy">'
+        + ui("Oil, food and ethanol channels can raise domestic prices, making faster BCB rate cuts less likely.", "Petróleo, alimentos e etanol podem pressionar preços domésticos e reduzir a chance de cortes mais rápidos do Banco Central.")
+        + '</div></div><div class="crosscheck-cell"><div class="crosscheck-label">'
+        + ui("Global demand", "Demanda global")
+        + '</div><div class="crosscheck-copy">'
+        + ui("Iron ore and soy also reveal demand conditions—especially in China—that can outweigh the rate story.", "Minério e soja também revelam condições de demanda, especialmente na China, que podem superar o efeito dos juros.")
+        + '</div></div></div><div class="crosscheck-verdict"><strong>'
+        + ui("Trade implication: ", "Implicação para a operação: ")
+        + '</strong>'
+        + ui(
+            "A broad commodity rally would weaken the long-USD/short-BRL case. Falling export prices alongside firm U.S. yields would strengthen it. Mixed signals reinforce the decision to wait for USD/BRL confirmation.",
+            "Uma alta ampla das commodities enfraqueceria a tese de compra de dólar. Queda das exportações com juros americanos firmes a fortaleceria. Sinais mistos reforçam a necessidade de esperar a confirmação do USD/BRL.",
+        )
+        + '</div></section>',
+        unsafe_allow_html=True,
+    )
 else:
     st.info("The saved commodity snapshot is temporarily unavailable.")
 

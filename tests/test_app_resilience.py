@@ -12,6 +12,7 @@ def test_app_renders_without_any_network(monkeypatch) -> None:
     assert not app.exception
     assert any("Why these numbers matter" in header.value for header in app.header)
     assert any("Brazil's export backdrop" in header.value for header in app.header)
+    assert any("Commodity cross-check for the trade" in markdown.value for markdown in app.markdown)
     assert any("Three ways the September meetings could go" in header.value for header in app.header)
     assert any("A paper trade" in header.value for header in app.subheader)
     assert any("live refresh is optional" in caption.value for caption in app.caption)
