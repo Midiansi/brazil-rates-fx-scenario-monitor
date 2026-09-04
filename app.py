@@ -27,13 +27,29 @@ def signed(value: float, digits: int = 1) -> str:
     return f"{value:+.{digits}f}"
 
 
-def snapshot_label(value: str) -> str:
+def snapshot_label(value: str, portuguese: bool = False) -> str:
     """Turn an ISO snapshot timestamp into a compact, human-readable label."""
 
     try:
         parsed = datetime.fromisoformat(value)
     except (TypeError, ValueError):
-        return value or "unavailable"
+        return value or ("indisponível" if portuguese else "unavailable")
+    if portuguese:
+        months = (
+            "jan",
+            "fev",
+            "mar",
+            "abr",
+            "mai",
+            "jun",
+            "jul",
+            "ago",
+            "set",
+            "out",
+            "nov",
+            "dez",
+        )
+        return f"{parsed.day} {months[parsed.month - 1]} {parsed.year}, {parsed:%H:%M} BRT"
     return parsed.strftime("%d %b %Y, %H:%M BRT").lstrip("0")
 
 
@@ -341,6 +357,202 @@ with language_right:
 def ui(english: str, portuguese_text: str) -> str:
     return portuguese_text if portuguese else english
 
+
+SCENARIO_PT = {
+    "Hawkish relative to expectations": {
+        "name": "Mais restritivo que o esperado",
+        "copom_outcome_and_guidance": (
+            "O Copom mantém a meta Selic em 14,00% e ressalta que novos cortes exigem "
+            "reancoragem mais clara, preservando uma orientação restritiva e dependente dos dados."
+        ),
+        "fomc_outcome_and_guidance": (
+            "O FOMC mantém a faixa em 3,50%-3,75% em vez de elevar os juros, mas preserva "
+            "linguagem firme sobre estabilidade de preços e a opção de apertar a política mais adiante."
+        ),
+        "difference_from_current_expectations": (
+            "A manutenção pelo Copom é mais restritiva do que os cerca de 21,8 pontos-base de corte "
+            "embutidos na curva da B3; a manutenção pelo FOMC é mais branda do que os 68,2% atribuídos "
+            "a uma alta de 0,25 p.p. na observação salva do CME FedWatch. Em conjunto, deixam o "
+            "diferencial de juros do Brasil 0,50 p.p. maior que no cenário-base."
+        ),
+        "confirmation_signals": [
+            "A mediana Focus para a Selic de 2026 volta de 13,75% em direção à meta inalterada de 14,00%.",
+            "A PTAX do USD/BRL rompe aproximadamente 5,09 para baixo, mínima da faixa salva de 20 observações, enquanto o juro americano de dois anos cai a partir de 4,34%.",
+        ],
+        "principal_risk": (
+            "Uma aversão global a risco ou um choque nos preços das commodities pode enfraquecer o real mesmo "
+            "com um resultado mais favorável nos juros relativos."
+        ),
+        "brief_summary": {
+            "copom": "Mantém 14,00%; viés restritivo",
+            "fomc": "Mantém 3,50%-3,75%; orientação firme",
+            "differential": "Deve permanecer perto de 10,38 p.p.",
+            "brl_usd_pressure": "Provável alta do real / queda do USD/BRL",
+            "confirmation": "Focus Selic rumo a 14,00%; PTAX abaixo de 5,09 com juro americano de dois anos em queda",
+        },
+    },
+    "Base case": {
+        "name": "Cenário-base",
+        "copom_outcome_and_guidance": (
+            "O Copom corta 0,25 p.p., para 13,75%, em linha com a mediana Focus para a Selic de 2026, "
+            "e mantém orientação cautelosa, restritiva e dependente da reancoragem das expectativas de inflação."
+        ),
+        "fomc_outcome_and_guidance": (
+            "O FOMC eleva a faixa-alvo em 0,25 p.p., para 3,75%-4,00%, e ressalta que as decisões "
+            "seguintes dependerão dos dados de inflação e emprego, sem antecipar outro movimento."
+        ),
+        "difference_from_current_expectations": (
+            "O corte de 0,25 p.p. pelo Copom é compatível com os cerca de 21,8 pontos-base de redução "
+            "embutidos na curva da B3. A alta de 0,25 p.p. pelo FOMC é o resultado de maior peso na "
+            "observação salva do CME FedWatch, com 68,2%; não se infere uma probabilidade conjunta."
+        ),
+        "confirmation_signals": [
+            "As metas oficiais passam a 13,75% no Brasil e a um ponto médio de 3,875% nos EUA, produzindo um diferencial perto de 9,88 p.p.",
+            "A PTAX do USD/BRL fecha acima de aproximadamente 5,22, máxima da faixa salva de 20 observações, enquanto o juro americano de dois anos permanece perto ou acima de 4,34%.",
+        ],
+        "principal_risk": (
+            "Os dois movimentos podem já estar refletidos nos juros e no câmbio, deixando o apetite "
+            "global por risco, as commodities ou as notícias fiscais como fatores dominantes."
+        ),
+        "brief_summary": {
+            "copom": "Corta 0,25 p.p., para 13,75%; cauteloso",
+            "fomc": "Eleva 0,25 p.p., para 3,75%-4,00%; dependente dos dados",
+            "differential": "Deve cair 0,50 p.p., para 9,88 p.p.",
+            "brl_usd_pressure": "Provável queda do real / alta do USD/BRL",
+            "confirmation": "Metas implicam 9,88 p.p.; PTAX acima de 5,22 com juro americano de dois anos firme",
+        },
+    },
+    "Dovish relative to expectations": {
+        "name": "Mais brando que o esperado",
+        "copom_outcome_and_guidance": (
+            "O Copom corta 0,50 p.p., para 13,50%, e sinaliza que novos cortes graduais serão possíveis "
+            "se as expectativas de inflação continuarem melhorando."
+        ),
+        "fomc_outcome_and_guidance": (
+            "O FOMC eleva a faixa-alvo em 0,25 p.p., para 3,75%-4,00%, e mantém um viés de aperto "
+            "mais firme porque a inflação continua elevada."
+        ),
+        "difference_from_current_expectations": (
+            "O corte de 0,50 p.p. pelo Copom entrega cerca de 28 pontos-base a mais de redução do que "
+            "a curva da B3 embute e termina abaixo da mediana Focus para a Selic de 2026. Com a alta "
+            "americana alinhada à CME, o resultado é mais brando para o Brasil em relação aos EUA."
+        ),
+        "confirmation_signals": [
+            "A mediana Focus para a Selic de 2026 cai abaixo de 13,75% sem nova alta da mediana do IPCA de 2026, atualmente em 5,0062%.",
+            "A PTAX do USD/BRL supera aproximadamente 5,22 e o juro americano de dois anos sobe a partir de 4,34%.",
+        ],
+        "principal_risk": (
+            "Um corte maior do Copom pode ser interpretado como erro de credibilidade, elevando o prêmio "
+            "de risco e os juros curtos locais em vez de produzir uma redução ordenada."
+        ),
+        "brief_summary": {
+            "copom": "Corta 0,50 p.p., para 13,50%; viés de redução",
+            "fomc": "Eleva 0,25 p.p., para 3,75%-4,00%; viés firme",
+            "differential": "Deve cair 0,75 p.p., para 9,63 p.p.",
+            "brl_usd_pressure": "Provável queda do real / alta do USD/BRL",
+            "confirmation": "Focus Selic abaixo de 13,75%; PTAX acima de 5,22 com juro americano de dois anos em alta",
+        },
+    },
+}
+
+TRADE_PT = {
+    "thesis": (
+        "Entrar apenas após um rompimento confirmado do USD/BRL, pois o cenário-base alinhado ao mercado "
+        "reduz o diferencial de juros entre Brasil e EUA, enquanto os movimentos recentes da PTAX, da "
+        "Focus Selic e do juro americano de dois anos já apontam na mesma direção."
+    ),
+    "entry_logic": (
+        "Sem posição no nível de 5,1567. Considerar a operação simulada apenas após a PTAX diária fechar "
+        "acima de aproximadamente 5,22, máxima arredondada das últimas 20 observações válidas (5,2233), "
+        "com o juro americano de dois anos perto ou acima de 4,34% ou sem abertura do diferencial de juros."
+    ),
+    "invalidation_condition": (
+        "Após a entrada, invalidar se a PTAX registrar dois pontos médios diários consecutivos abaixo de "
+        "aproximadamente 5,16, ponto médio arredondado da faixa salva de 20 observações (5,1569), ou se o "
+        "diferencial de juros entre Brasil e EUA não diminuir e permanecer perto ou acima de 10,375 p.p."
+    ),
+    "profit_taking_logic": (
+        "Somar a máxima não arredondada da faixa salva de 20 observações (5,2233) à sua amplitude não "
+        "arredondada (0,1328) resulta em 5,3561; por isso, usar 5,35-5,36 como zona de reavaliação, não "
+        "como alvo garantido, e rever antes se os juros ou os dados posteriores às reuniões mudarem."
+    ),
+}
+
+COMMODITY_PT = {
+    "brent": {
+        "label": "Petróleo",
+        "benchmark": "Petróleo Brent",
+        "frequency": "Diária",
+        "signal": "em alta",
+        "channel": "O Brasil é um grande produtor de petróleo; o preço afeta receitas de exportação e dos produtores, enquanto os combustíveis também podem influenciar a inflação doméstica.",
+    },
+    "iron_ore": {
+        "label": "Minério de ferro",
+        "benchmark": "Preço global do minério de ferro - FMI",
+        "frequency": "Mensal",
+        "signal": "em baixa",
+        "channel": "O minério de ferro é uma exportação importante do Brasil. Mudanças na demanda global podem alterar a entrada de dólares e o cenário externo para o real.",
+    },
+    "soybeans": {
+        "label": "Soja",
+        "benchmark": "Preço global da soja - FMI",
+        "frequency": "Trimestral",
+        "signal": "em alta",
+        "channel": "As exportações de soja geram receitas relevantes em moeda estrangeira para o Brasil, com o momento dos fluxos influenciado pela safra e pela temporada de exportação.",
+    },
+    "sugar": {
+        "label": "Açúcar",
+        "benchmark": "Preço mundial do açúcar nº 11 - FMI",
+        "frequency": "Mensal",
+        "signal": "em alta",
+        "channel": "As usinas brasileiras podem direcionar a cana para açúcar ou etanol, conectando o mercado de exportação à economia doméstica dos combustíveis.",
+    },
+}
+
+SERIES_PT = {
+    "focus_selic": ("Mediana Focus para a Selic anual", "% ao ano"),
+    "focus_ipca": ("Mediana Focus para o IPCA anual", "% de variação anual"),
+    "ptax_usd_brl_midpoint": ("Ponto médio da PTAX USD/BRL", "reais por dólar"),
+    "selic_target": ("Meta Selic do Banco Central", "% ao ano"),
+    "fed_target_range": ("Faixa-alvo dos juros americanos e ponto médio calculado", "% ao ano"),
+    "brazil_us_policy_differential": ("Meta Selic menos o ponto médio dos juros americanos", "pontos percentuais"),
+    "us_2_year_treasury": ("Juro do título público americano de dois anos", "% ao ano"),
+    "us_10_year_treasury": ("Juro do título público americano de dez anos", "% ao ano"),
+}
+
+SOURCE_PT = {
+    "BCB 2026 Copom calendar": "Calendário do Copom de 2026 - Banco Central",
+    "BCB August 2026 Copom statement": "Comunicado do Copom de agosto de 2026 - Banco Central",
+    "BCB August 2026 Copom minutes": "Ata do Copom de agosto de 2026 - Banco Central",
+    "BCB Focus Expectations OData": "Expectativas Focus OData - Banco Central",
+    "BCB PTAX OData": "PTAX OData - Banco Central",
+    "BCB SGS 432 Selic target": "Meta Selic, série SGS 432 - Banco Central",
+    "Federal Reserve 2026 FOMC calendar": "Calendário do FOMC de 2026 - Federal Reserve",
+    "Federal Reserve July 2026 FOMC statement": "Comunicado do FOMC de julho de 2026 - Federal Reserve",
+    "Federal Reserve July 2026 FOMC minutes": "Ata do FOMC de julho de 2026 - Federal Reserve",
+    "FRED federal-funds target lower limit": "Limite inferior da faixa dos juros americanos - FRED",
+    "FRED federal-funds target upper limit": "Limite superior da faixa dos juros americanos - FRED",
+    "FRED US 2-year Treasury yield": "Juro do título americano de dois anos - FRED",
+    "FRED US 10-year Treasury yield": "Juro do título americano de dez anos - FRED",
+    "CME FedWatch - September 2026 meeting pricing": "CME FedWatch - preços para a reunião de setembro de 2026",
+    "CME FedWatch methodology": "Metodologia do CME FedWatch",
+    "B3 daily-file search - BVBG.187.01 derivatives report": "Consulta de arquivos diários da B3 - relatório de derivativos BVBG.187.01",
+    "B3 DI1 contract specification": "Especificação do contrato DI1 - B3",
+}
+
+
+def localized_scenario(scenario: dict[str, Any]) -> dict[str, Any]:
+    if not portuguese:
+        return scenario
+    translation = SCENARIO_PT.get(str(scenario.get("name", "")))
+    return translation if translation else scenario
+
+
+def localized_commodity(key: str, item: dict[str, Any]) -> dict[str, Any]:
+    if not portuguese:
+        return item
+    return {**item, **COMMODITY_PT.get(key, {})}
+
 st.markdown(
     '<div class="identity-bar"><div><span class="identity-name">Romeo Mugnier de Almeida</span>'
     '<span>EPFL · São Paulo / Lausanne</span></div><div class="identity-links">'
@@ -361,7 +573,7 @@ st.markdown(
 st.caption(
     ui(
         f"Research snapshot: {snapshot_label(retrieved)} · live refresh is optional · every published figure links back to a reviewable source",
-        f"Dados salvos em {snapshot_label(retrieved)} · cada número pode ser conferido na fonte",
+        f"Dados salvos em {snapshot_label(retrieved, True)} · cada número pode ser conferido na fonte",
     )
 )
 
@@ -369,7 +581,7 @@ if series:
     tape = (
         (ui("Brazil interest rate", "Juro no Brasil"), f"{series.get('selic_target', {}).get('value', 0):.2f}%", ui("Selic target", "Meta Selic")),
         (ui("One U.S. dollar", "Um dólar"), f"{series.get('ptax_usd_brl_midpoint', {}).get('value', 0):.4f}", ui("Brazilian reais", "reais")),
-        (ui("Brazil's rate lead", "Vantagem de juros do Brasil"), f"{series.get('brazil_us_policy_differential', {}).get('value', 0):.2f} pp", ui("above the U.S.", "acima dos EUA")),
+        (ui("Brazil's rate lead", "Vantagem de juros do Brasil"), f"{series.get('brazil_us_policy_differential', {}).get('value', 0):.2f} {ui('pp', 'p.p.')}", ui("above the U.S.", "acima dos EUA")),
         (ui("U.S. two-year rate", "Juro de dois anos nos EUA"), f"{series.get('us_2_year_treasury', {}).get('value', 0):.2f}%", ui("government bond", "título público")),
     )
     st.markdown(
@@ -427,7 +639,7 @@ if series and base_scenario and trade:
         unsafe_allow_html=True,
     )
 else:
-    st.info("The saved decision frame is temporarily unavailable.")
+    st.info(ui("The saved decision frame is temporarily unavailable.", "O quadro de decisão salvo está temporariamente indisponível."))
 
 st.header(ui("Why these numbers matter", "Por que esses números importam"))
 if series:
@@ -464,7 +676,7 @@ if series:
         unsafe_allow_html=True,
     )
 else:
-    st.info("The saved market snapshot is temporarily unavailable.")
+    st.info(ui("The saved market snapshot is temporarily unavailable.", "Os dados de mercado salvos estão temporariamente indisponíveis."))
 
 st.header(ui("Why interest rates matter for the real", "Por que os juros importam para o real"))
 if series:
@@ -473,7 +685,7 @@ if series:
         st.metric(ui("Selic target", "Meta Selic"), f"{series['selic_target']['value']:.1f}%")
         st.metric(
             ui("Brazil–U.S. rate gap", "Diferença Brasil–EUA"),
-            f"{series['brazil_us_policy_differential']['value']:.1f} pp",
+            f"{series['brazil_us_policy_differential']['value']:.1f} {ui('pp', 'p.p.')}",
         )
     with right:
         st.subheader(ui("The simple link", "A relação, de forma simples"))
@@ -553,7 +765,7 @@ if series:
         entry_position = bounded_position(entry_value, low, high)
         st.subheader(ui("Where USD/BRL sits in its recent range", "Onde o dólar está na faixa recente"))
         st.markdown(
-            f'<div class="range-box"><div class="brief-label">PTAX range / saved observations</div>'
+            f'<div class="range-box"><div class="brief-label">{ui("PTAX range / saved observations", "Faixa da PTAX / observações salvas")}</div>'
             f'<div class="range-track"><div class="range-fill" style="width:{current_position:.1f}%"></div>'
             f'<div class="range-dot" style="left:{current_position:.1f}%"></div>'
             f'<div class="range-trigger" style="left:{entry_position:.1f}%"></div></div>'
@@ -570,11 +782,12 @@ st.write(ui(
 ))
 if commodities:
     commodity_cards = []
-    for item in commodities.values():
+    for key, original_item in commodities.items():
+        item = localized_commodity(key, original_item)
         previous = float(item["previous"])
         change = (float(item["latest"]) / previous - 1) * 100 if previous else 0.0
         commodity_cards.append(
-            f'<article class="commodity-card"><div class="commodity-label">External channel</div>'
+            f'<article class="commodity-card"><div class="commodity-label">{ui("External channel", "Canal externo")}</div>'
             f'<div class="commodity-title">{escape(str(item["label"]))}</div>'
             f'<div class="commodity-move">{escape(str(item["signal"]))} / {signed(change)}%</div>'
             f'<div class="commodity-meta">{escape(str(item["benchmark"]))} · '
@@ -586,7 +799,7 @@ if commodities:
     lower_count = sum(str(item.get("signal", "")).lower() == "lower" for item in commodities.values())
     st.markdown(
         '<section class="commodity-crosscheck"><div class="macro-kicker">'
-        + ui("Commodity cross-check for the trade", "Teste de commodities para a operação")
+        + ui("Commodity cross-check for the trade", "Teste das commodities para a operação")
         + '</div><div class="crosscheck-title">'
         + ui("Higher export prices can help the real—but the inflation channel can push the other way.", "Preços de exportação mais altos podem ajudar o real, mas a inflação pode agir no sentido oposto.")
         + '</div><div class="crosscheck-intro">'
@@ -612,13 +825,13 @@ if commodities:
         + '</strong>'
         + ui(
             "A broad commodity rally would weaken the long-USD/short-BRL case. Falling export prices alongside firm U.S. yields would strengthen it. Mixed signals reinforce the decision to wait for USD/BRL confirmation.",
-            "Uma alta ampla das commodities enfraqueceria a tese de compra de dólar. Queda das exportações com juros americanos firmes a fortaleceria. Sinais mistos reforçam a necessidade de esperar a confirmação do USD/BRL.",
+            "Uma alta ampla das commodities enfraqueceria a tese de compra de dólar. Queda dos preços de exportação com juros americanos firmes a fortaleceria. Sinais mistos reforçam a necessidade de esperar a confirmação do USD/BRL.",
         )
         + '</div></section>',
         unsafe_allow_html=True,
     )
 else:
-    st.info("The saved commodity snapshot is temporarily unavailable.")
+    st.info(ui("The saved commodity snapshot is temporarily unavailable.", "Os dados salvos de commodities estão temporariamente indisponíveis."))
 
 st.header(ui("Three ways the September meetings could go", "Três caminhos para as reuniões de setembro"))
 st.caption(ui("Three simple stories: Brazil stays tougher, follows the expected path or cuts faster.", "Três histórias simples: o Brasil mantém juros altos, segue o esperado ou corta mais rápido."))
@@ -632,6 +845,8 @@ if len(scenarios) == 3:
     }
     for scenario in scenarios:
         brief = scenario.get("brief_summary", {})
+        display_scenario = localized_scenario(scenario)
+        display_brief = display_scenario.get("brief_summary", brief)
         card_class = "scenario-card base" if scenario.get("name") == "Base case" else "scenario-card"
         friendly_name, friendly_direction = friendly_scenarios.get(
             scenario.get("name", ""), (scenario.get("name", ""), brief.get("brl_usd_pressure", ""))
@@ -648,35 +863,36 @@ if len(scenarios) == 3:
         )
         scenario_rows.append(
             {
-                "Scenario": scenario.get("name", ""),
-                "Copom": brief.get("copom", ""),
-                "FOMC": brief.get("fomc", ""),
-                "Brazil-US differential": brief.get("differential", ""),
-                "Likely initial FX pressure": brief.get("brl_usd_pressure", ""),
-                "Confirmation": brief.get("confirmation", ""),
+                ui("Scenario", "Cenário"): display_scenario.get("name", ""),
+                "Copom": display_brief.get("copom", ""),
+                "FOMC": display_brief.get("fomc", ""),
+                ui("Brazil-US differential", "Diferencial Brasil-EUA"): display_brief.get("differential", ""),
+                ui("Likely initial FX pressure", "Provável pressão inicial no câmbio"): display_brief.get("brl_usd_pressure", ""),
+                ui("Confirmation", "Confirmação"): display_brief.get("confirmation", ""),
             }
         )
     st.markdown('<div class="scenario-strip">' + "".join(scenario_cards) + "</div>", unsafe_allow_html=True)
     with st.expander(ui("See the exact decisions, evidence and risks", "Ver decisões, evidências e riscos em detalhe")):
         st.dataframe(scenario_rows, hide_index=True, width="stretch")
         for scenario in scenarios:
-            st.markdown(f"#### {scenario.get('name', 'Scenario')}")
+            display_scenario = localized_scenario(scenario)
+            st.markdown(f"#### {display_scenario.get('name', ui('Scenario', 'Cenário'))}")
             scenario_left, scenario_right = st.columns(2)
             with scenario_left:
-                st.markdown("**Policy path**")
-                st.write(scenario.get("copom_outcome_and_guidance", "Unavailable"))
-                st.write(scenario.get("fomc_outcome_and_guidance", "Unavailable"))
-                st.markdown("**Why it differs from pricing**")
-                st.write(scenario.get("difference_from_current_expectations", "Unavailable"))
+                st.markdown(ui("**Policy path**", "**Caminho dos juros**"))
+                st.write(display_scenario.get("copom_outcome_and_guidance", ui("Unavailable", "Indisponível")))
+                st.write(display_scenario.get("fomc_outcome_and_guidance", ui("Unavailable", "Indisponível")))
+                st.markdown(ui("**Why it differs from pricing**", "**Por que difere dos preços de mercado**"))
+                st.write(display_scenario.get("difference_from_current_expectations", ui("Unavailable", "Indisponível")))
             with scenario_right:
-                st.markdown("**What should confirm it**")
-                for signal in scenario.get("confirmation_signals", []):
+                st.markdown(ui("**What should confirm it**", "**O que deve confirmar o cenário**"))
+                for signal in display_scenario.get("confirmation_signals", []):
                     st.markdown(f"- {signal}")
-                st.markdown("**Principal risk**")
-                st.write(scenario.get("principal_risk", "Unavailable"))
+                st.markdown(ui("**Principal risk**", "**Principal risco**"))
+                st.write(display_scenario.get("principal_risk", ui("Unavailable", "Indisponível")))
             st.divider()
 else:
-    st.info("The saved three-scenario comparison is temporarily unavailable.")
+    st.info(ui("The saved three-scenario comparison is temporarily unavailable.", "A comparação dos três cenários está temporariamente indisponível."))
 
 st.subheader(ui("What the numbers cannot decide", "O que os números não decidem sozinhos"))
 market_context = (
@@ -780,16 +996,17 @@ if len(paper_trades) == 1:
         unsafe_allow_html=True,
     )
     with st.expander(ui("See the calculations and full trade rules", "Ver cálculos e regras completas")):
-        st.markdown("**Original thesis**")
-        st.write(trade.get("thesis", "Unavailable"))
-        st.markdown("**Entry rule**")
-        st.write(trade.get("entry_logic", "Unavailable"))
-        st.markdown("**Invalidation rule**")
-        st.write(trade.get("invalidation_condition", "Unavailable"))
-        st.markdown("**Review-zone calculation**")
-        st.write(trade.get("profit_taking_logic", "Unavailable"))
+        display_trade = TRADE_PT if portuguese else trade
+        st.markdown(ui("**Original thesis**", "**Tese original**"))
+        st.write(display_trade.get("thesis", ui("Unavailable", "Indisponível")))
+        st.markdown(ui("**Entry rule**", "**Regra de entrada**"))
+        st.write(display_trade.get("entry_logic", ui("Unavailable", "Indisponível")))
+        st.markdown(ui("**Invalidation rule**", "**Regra de invalidação**"))
+        st.write(display_trade.get("invalidation_condition", ui("Unavailable", "Indisponível")))
+        st.markdown(ui("**Review-zone calculation**", "**Cálculo da zona de reavaliação**"))
+        st.write(display_trade.get("profit_taking_logic", ui("Unavailable", "Indisponível")))
 else:
-    st.info("The saved conditional paper trade is temporarily unavailable.")
+    st.info(ui("The saved conditional paper trade is temporarily unavailable.", "A operação simulada condicional está temporariamente indisponível."))
 
 brief_path = ROOT / "outputs" / "Brazil_Rates_FX_Trade_Brief.pdf"
 try:
@@ -826,10 +1043,10 @@ st.markdown(
     unsafe_allow_html=True,
 )
 process_items = (
-    ("01 / Evidence", "Use primary sources", "Start with central-bank and exchange data, and keep every date visible."),
-    ("02 / Scenarios", "Separate the paths", "Ask what changes if Brazil stays tougher, follows expectations or cuts faster."),
-    ("03 / Decision", "Wait for confirmation", "Set the entry, exit and risks before any trade would begin."),
-    ("04 / Challenge", "Try to break it", "Check the numbers, test the rules and keep the page working when a data feed fails."),
+    (ui("01 / Evidence", "01 / Evidências"), ui("Use primary sources", "Usar fontes primárias"), ui("Start with central-bank and exchange data, and keep every date visible.", "Começar com dados de bancos centrais e bolsas e manter todas as datas visíveis.")),
+    (ui("02 / Scenarios", "02 / Cenários"), ui("Separate the paths", "Separar os caminhos"), ui("Ask what changes if Brazil stays tougher, follows expectations or cuts faster.", "Perguntar o que muda se o Brasil mantiver os juros, seguir as expectativas ou cortar mais rápido.")),
+    (ui("03 / Decision", "03 / Decisão"), ui("Wait for confirmation", "Esperar confirmação"), ui("Set the entry, exit and risks before any trade would begin.", "Definir entrada, saída e riscos antes de qualquer operação começar.")),
+    (ui("04 / Challenge", "04 / Teste"), ui("Try to break it", "Tentar refutar"), ui("Check the numbers, test the rules and keep the page working when a data feed fails.", "Conferir os números, testar as regras e manter a página funcionando quando uma fonte falhar.")),
 )
 st.markdown(
     '<div class="process-grid">'
@@ -843,25 +1060,21 @@ st.markdown(
     unsafe_allow_html=True,
 )
 st.markdown(
-    '<div class="builder-card"><div><div class="macro-kicker">Project author</div>'
+    f'<div class="builder-card"><div><div class="macro-kicker">{ui("Project author", "Autor do projeto")}</div>'
     '<div class="builder-name">Romeo Mugnier de Almeida</div>'
-    '<div class="builder-copy">EPFL Mechanical Engineering student based between São Paulo and Lausanne. '
-    'I built this project to show how I approach an ambiguous market question: find the primary data, '
-    'separate expectations from outcomes, define a decision rule and state in advance what would prove the '
-    'view wrong. Every conclusion is linked to saved evidence and a rule that another reader can check.</div>'
+    f'<div class="builder-copy">{ui("EPFL Mechanical Engineering student based between São Paulo and Lausanne. I built this project to show how I approach an ambiguous market question: find the primary data, separate expectations from outcomes, define a decision rule and state in advance what would prove the view wrong. Every conclusion is linked to saved evidence and a rule that another reader can check.", "Estudante de Engenharia Mecânica na EPFL, entre São Paulo e Lausanne. Construí este projeto para mostrar como analiso uma pergunta de mercado ambígua: buscar os dados primários, separar expectativas de resultados, definir uma regra de decisão e declarar antecipadamente o que provaria que a visão está errada. Cada conclusão está ligada a evidências salvas e a uma regra que outra pessoa pode conferir.")}</div>'
     '</div><div class="builder-links">'
     '<a href="https://github.com/Midiansi/brazil-rates-fx-scenario-monitor" target="_blank" '
-    'rel="noopener noreferrer">Inspect the code</a><a href="https://linkedin.com/in/romeomugnier" '
-    'target="_blank" rel="noopener noreferrer">LinkedIn profile</a></div></div>',
+    f'rel="noopener noreferrer">{ui("Inspect the code", "Ver o código")}</a><a href="https://linkedin.com/in/romeomugnier" '
+    f'target="_blank" rel="noopener noreferrer">{ui("LinkedIn profile", "Perfil no LinkedIn")}</a></div></div>',
     unsafe_allow_html=True,
 )
 
 with st.expander(ui("Data and method", "Dados e método")):
-    st.write(
-        "For readers who want to check the work: the page uses a saved copy of public data so it can be "
-        "reproduced even when a source is temporarily unavailable. Commodity observations keep their real "
-        "publication dates rather than being forced into a false like-for-like index."
-    )
+    st.write(ui(
+        "For readers who want to check the work: the page uses a saved copy of public data so it can be reproduced even when a source is temporarily unavailable. Commodity observations keep their real publication dates rather than being forced into a false like-for-like index.",
+        "Para quem quiser conferir o trabalho: a página usa uma cópia salva de dados públicos para continuar reproduzível mesmo quando uma fonte está temporariamente indisponível. As observações de commodities mantêm suas datas reais de publicação, sem serem forçadas a formar um índice artificialmente comparável.",
+    ))
     if series:
         for key in (
             "focus_selic",
@@ -874,26 +1087,33 @@ with st.expander(ui("Data and method", "Dados e método")):
             "us_10_year_treasury",
         ):
             item = series[key]
-            value = item.get("selected_value", item.get("value", item.get("midpoint", "See source")))
+            value = item.get("selected_value", item.get("value", item.get("midpoint", ui("See source", "Ver fonte"))))
             source = item.get("source_url", item.get("lower_source_url", ""))
+            label, unit = SERIES_PT.get(key, (item["label"], item["unit"])) if portuguese else (item["label"], item["unit"])
             st.markdown(
-                f"- **{item['label']}**: {value} {item['unit']} · "
-                f"{item['latest_observation_date']} · [source]({source})"
+                f"- **{label}**: {value} {unit} · "
+                f"{item['latest_observation_date']} · [{ui('source', 'fonte')}]({source})"
             )
 
 with st.expander(ui("Official source links", "Fontes oficiais")):
     if source_registry:
         for source in source_registry:
-            st.markdown(f"- [{source.get('label', 'Official source')}]({source.get('url', '')})")
-    for item in commodities.values():
+            source_label = source.get("label", ui("Official source", "Fonte oficial"))
+            if portuguese:
+                source_label = SOURCE_PT.get(str(source_label), source_label)
+            st.markdown(f"- [{source_label}]({source.get('url', '')})")
+    for key, original_item in commodities.items():
+        item = localized_commodity(key, original_item)
         source_url = item.get("source_url", "")
         if source_url:
-            st.markdown(f"- [{item.get('label', 'Commodity source')}]({source_url})")
+            st.markdown(f"- [{item.get('label', ui('Commodity source', 'Fonte de commodities'))}]({source_url})")
     if not source_registry and not commodities:
-        st.write("Official source links are temporarily unavailable.")
+        st.write(ui("Official source links are temporarily unavailable.", "Os links das fontes oficiais estão temporariamente indisponíveis."))
 
 st.divider()
 st.caption(
-    f"Built by Romeo Mugnier de Almeida · research snapshot {snapshot_label(retrieved)} · "
-    "educational analysis, not investment advice"
+    ui(
+        f"Built by Romeo Mugnier de Almeida · research snapshot {snapshot_label(retrieved)} · educational analysis, not investment advice",
+        f"Criado por Romeo Mugnier de Almeida · dados salvos em {snapshot_label(retrieved, True)} · análise educacional, não é recomendação de investimento",
+    )
 )
