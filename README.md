@@ -14,6 +14,8 @@ The opening view answers four questions in plain English: what Brazilian rates i
 
 The portfolio adds four economically relevant Brazil exposures: Brent crude, iron ore, soybeans and sugar. Their publication frequencies are labelled explicitly rather than forcing daily, monthly and quarterly observations into a misleading synchronized dashboard. The section explains the transmission channels to export receipts, BRL, inflation and monetary policy.
 
+The following equity-research bridge makes the limit of those signals explicit: a commodity move is not a stock thesis. It lays out the next questions for a producer - revenue and volume exposure, cost-curve position and margins, balance sheet and capital allocation, valuation, catalysts and downside - without presenting unfinished company research as a recommendation.
+
 The reviewable commodity input is `research/commodity_snapshot.json`. The macro/scenario input remains `research/data_snapshot.json`.
 
 ## Performance architecture

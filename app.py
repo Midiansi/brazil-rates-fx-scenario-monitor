@@ -833,6 +833,55 @@ if commodities:
 else:
     st.info(ui("The saved commodity snapshot is temporarily unavailable.", "Os dados salvos de commodities estão temporariamente indisponíveis."))
 
+st.header(ui("From a commodity move to an investment case", "Do movimento da commodity à tese de investimento"))
+st.write(ui(
+    "A commodity price move is only the starting point. Before judging a producer as an investment, I would test how much of that move reaches its revenue, margins, cash flow and valuation.",
+    "O movimento do preço de uma commodity é apenas o ponto de partida. Antes de avaliar uma produtora como investimento, eu testaria quanto desse movimento chega à receita, às margens, ao caixa e à avaliação da empresa.",
+))
+equity_questions = (
+    (
+        ui("1 / Revenue exposure", "1 / Exposição da receita"),
+        ui("What does the company actually sell?", "O que a empresa realmente vende?"),
+        ui("Check production volumes, product mix, realized prices, hedging and the currencies in which revenue is earned.", "Analisar volumes produzidos, mix de produtos, preços realizados, proteção financeira e as moedas em que a receita é recebida."),
+    ),
+    (
+        ui("2 / Margin and cost curve", "2 / Margem e curva de custos"),
+        ui("Does a higher price become higher profit?", "Um preço maior vira lucro maior?"),
+        ui("Compare operating costs, energy and freight exposure, FX sensitivity and the producer's position on the industry cost curve.", "Comparar custos operacionais, exposição a energia e frete, sensibilidade cambial e a posição da produtora na curva de custos do setor."),
+    ),
+    (
+        ui("3 / Balance sheet", "3 / Balanço patrimonial"),
+        ui("Can the company use the cash well?", "A empresa consegue usar bem o caixa?"),
+        ui("Review leverage, liquidity, capital spending and the discipline behind dividends, buybacks and new projects.", "Revisar endividamento, liquidez, investimentos e a disciplina por trás de dividendos, recompras e novos projetos."),
+    ),
+    (
+        ui("4 / Valuation and decision", "4 / Avaliação e decisão"),
+        ui("Is the opportunity already in the price?", "A oportunidade já está no preço?"),
+        ui("Value the business under normalized and downside assumptions, then identify the catalyst and the evidence that would invalidate the thesis.", "Avaliar o negócio com premissas normalizadas e adversas, depois identificar o catalisador e a evidência que invalidaria a tese."),
+    ),
+)
+st.markdown(
+    '<div class="brief-grid">'
+    + "".join(
+        f'<article class="brief-card"><div class="brief-label">{escape(step)}</div>'
+        f'<div class="process-title">{escape(question)}</div><div class="brief-copy">{escape(answer)}</div></article>'
+        for step, question, answer in equity_questions
+    )
+    + "</div>",
+    unsafe_allow_html=True,
+)
+st.markdown(
+    '<div class="mind-change"><strong>'
+    + ui("Research discipline: ", "Disciplina de análise: ")
+    + "</strong>"
+    + ui(
+        "The dashboard identifies macro and commodity signals; a stock recommendation would still require company filings, management evidence, competitive analysis and a valuation with a margin of safety.",
+        "O painel identifica sinais macroeconômicos e de commodities; uma recomendação de ação ainda exigiria demonstrações financeiras, evidências da administração, análise competitiva e uma avaliação com margem de segurança.",
+    )
+    + "</div>",
+    unsafe_allow_html=True,
+)
+
 st.header(ui("Three ways the September meetings could go", "Três caminhos para as reuniões de setembro"))
 st.caption(ui("Three simple stories: Brazil stays tougher, follows the expected path or cuts faster.", "Três histórias simples: o Brasil mantém juros altos, segue o esperado ou corta mais rápido."))
 if len(scenarios) == 3:
@@ -1062,7 +1111,7 @@ st.markdown(
 st.markdown(
     f'<div class="builder-card"><div><div class="macro-kicker">{ui("Project author", "Autor do projeto")}</div>'
     '<div class="builder-name">Romeo Mugnier de Almeida</div>'
-    f'<div class="builder-copy">{ui("EPFL Mechanical Engineering student based between São Paulo and Lausanne. I built this project to show how I approach an ambiguous market question: find the primary data, separate expectations from outcomes, define a decision rule and state in advance what would prove the view wrong. Every conclusion is linked to saved evidence and a rule that another reader can check.", "Estudante de Engenharia Mecânica na EPFL, entre São Paulo e Lausanne. Construí este projeto para mostrar como analiso uma pergunta de mercado ambígua: buscar os dados primários, separar expectativas de resultados, definir uma regra de decisão e declarar antecipadamente o que provaria que a visão está errada. Cada conclusão está ligada a evidências salvas e a uma regra que outra pessoa pode conferir.")}</div>'
+    f'<div class="builder-copy">{ui("EPFL Mechanical Engineering student based between São Paulo and Lausanne. I built this project to show how I approach an ambiguous market question: find primary data, separate expectations from outcomes, trace commodity signals into company-level questions and state in advance what would prove a view wrong. Every conclusion is linked to evidence and a rule another reader can check.", "Estudante de Engenharia Mecânica na EPFL, entre São Paulo e Lausanne. Construí este projeto para mostrar como analiso uma pergunta de mercado ambígua: buscar dados primários, separar expectativas de resultados, transformar sinais de commodities em perguntas sobre empresas e declarar antecipadamente o que provaria que uma visão está errada. Cada conclusão está ligada a evidências e a uma regra que outra pessoa pode conferir.")}</div>'
     '</div><div class="builder-links">'
     '<a href="https://github.com/Midiansi/brazil-rates-fx-scenario-monitor" target="_blank" '
     f'rel="noopener noreferrer">{ui("Inspect the code", "Ver o código")}</a><a href="https://linkedin.com/in/romeomugnier" '
