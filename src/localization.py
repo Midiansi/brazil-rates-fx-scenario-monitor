@@ -303,3 +303,215 @@ SOURCE_FR = {
     "B3 daily-file search - BVBG.187.01 derivatives report": "Fichiers quotidiens B3 - rapport sur les dérivés",
     "B3 DI1 contract specification": "Spécification du contrat de taux DI1 - B3",
 }
+
+
+SCENARIO_PT = {
+    "Hawkish relative to expectations": {
+        "name": "Mais restritivo que o esperado",
+        "copom_outcome_and_guidance": (
+            "O Copom mantém a meta Selic em 14,00% e ressalta que novos cortes exigem "
+            "reancoragem mais clara, preservando uma orientação restritiva e dependente dos dados."
+        ),
+        "fomc_outcome_and_guidance": (
+            "O FOMC mantém a faixa em 3,50%-3,75% em vez de elevar os juros, mas preserva "
+            "linguagem firme sobre estabilidade de preços e a opção de apertar a política mais adiante."
+        ),
+        "difference_from_current_expectations": (
+            "A manutenção pelo Copom é mais restritiva do que os cerca de 21,8 pontos-base de corte "
+            "embutidos na curva da B3; a manutenção pelo FOMC é mais branda do que os 68,2% atribuídos "
+            "a uma alta de 0,25 p.p. na observação salva do CME FedWatch. Em conjunto, deixam o "
+            "diferencial de juros do Brasil 0,50 p.p. maior que no cenário-base."
+        ),
+        "confirmation_signals": [
+            "A mediana Focus para a Selic de 2026 volta de 13,75% em direção à meta inalterada de 14,00%.",
+            "A PTAX do USD/BRL rompe aproximadamente 5,09 para baixo, mínima da faixa salva de 20 observações, enquanto o juro americano de dois anos cai a partir de 4,34%.",
+        ],
+        "principal_risk": (
+            "Uma aversão global a risco ou um choque nos preços das commodities pode enfraquecer o real mesmo "
+            "com um resultado mais favorável nos juros relativos."
+        ),
+        "brief_summary": {
+            "copom": "Mantém 14,00%; viés restritivo",
+            "fomc": "Mantém 3,50%-3,75%; orientação firme",
+            "differential": "Deve permanecer perto de 10,38 p.p.",
+            "brl_usd_pressure": "Provável alta do real / queda do USD/BRL",
+            "confirmation": "Focus Selic rumo a 14,00%; PTAX abaixo de 5,09 com juro americano de dois anos em queda",
+        },
+    },
+    "Base case": {
+        "name": "Cenário-base",
+        "copom_outcome_and_guidance": (
+            "O Copom corta 0,25 p.p., para 13,75%, em linha com a mediana Focus para a Selic de 2026, "
+            "e mantém orientação cautelosa, restritiva e dependente da reancoragem das expectativas de inflação."
+        ),
+        "fomc_outcome_and_guidance": (
+            "O FOMC eleva a faixa-alvo em 0,25 p.p., para 3,75%-4,00%, e ressalta que as decisões "
+            "seguintes dependerão dos dados de inflação e emprego, sem antecipar outro movimento."
+        ),
+        "difference_from_current_expectations": (
+            "O corte de 0,25 p.p. pelo Copom é compatível com os cerca de 21,8 pontos-base de redução "
+            "embutidos na curva da B3. A alta de 0,25 p.p. pelo FOMC é o resultado de maior peso na "
+            "observação salva do CME FedWatch, com 68,2%; não se infere uma probabilidade conjunta."
+        ),
+        "confirmation_signals": [
+            "As metas oficiais passam a 13,75% no Brasil e a um ponto médio de 3,875% nos EUA, produzindo um diferencial perto de 9,88 p.p.",
+            "A PTAX do USD/BRL fecha acima de aproximadamente 5,22, máxima da faixa salva de 20 observações, enquanto o juro americano de dois anos permanece perto ou acima de 4,34%.",
+        ],
+        "principal_risk": (
+            "Os dois movimentos podem já estar refletidos nos juros e no câmbio, deixando o apetite "
+            "global por risco, as commodities ou as notícias fiscais como fatores dominantes."
+        ),
+        "brief_summary": {
+            "copom": "Corta 0,25 p.p., para 13,75%; cauteloso",
+            "fomc": "Eleva 0,25 p.p., para 3,75%-4,00%; dependente dos dados",
+            "differential": "Deve cair 0,50 p.p., para 9,88 p.p.",
+            "brl_usd_pressure": "Provável queda do real / alta do USD/BRL",
+            "confirmation": "Metas implicam 9,88 p.p.; PTAX acima de 5,22 com juro americano de dois anos firme",
+        },
+    },
+    "Dovish relative to expectations": {
+        "name": "Mais brando que o esperado",
+        "copom_outcome_and_guidance": (
+            "O Copom corta 0,50 p.p., para 13,50%, e sinaliza que novos cortes graduais serão possíveis "
+            "se as expectativas de inflação continuarem melhorando."
+        ),
+        "fomc_outcome_and_guidance": (
+            "O FOMC eleva a faixa-alvo em 0,25 p.p., para 3,75%-4,00%, e mantém um viés de aperto "
+            "mais firme porque a inflação continua elevada."
+        ),
+        "difference_from_current_expectations": (
+            "O corte de 0,50 p.p. pelo Copom entrega cerca de 28 pontos-base a mais de redução do que "
+            "a curva da B3 embute e termina abaixo da mediana Focus para a Selic de 2026. Com a alta "
+            "americana alinhada à CME, o resultado é mais brando para o Brasil em relação aos EUA."
+        ),
+        "confirmation_signals": [
+            "A mediana Focus para a Selic de 2026 cai abaixo de 13,75% sem nova alta da mediana do IPCA de 2026, atualmente em 5,0062%.",
+            "A PTAX do USD/BRL supera aproximadamente 5,22 e o juro americano de dois anos sobe a partir de 4,34%.",
+        ],
+        "principal_risk": (
+            "Um corte maior do Copom pode ser interpretado como erro de credibilidade, elevando o prêmio "
+            "de risco e os juros curtos locais em vez de produzir uma redução ordenada."
+        ),
+        "brief_summary": {
+            "copom": "Corta 0,50 p.p., para 13,50%; viés de redução",
+            "fomc": "Eleva 0,25 p.p., para 3,75%-4,00%; viés firme",
+            "differential": "Deve cair 0,75 p.p., para 9,63 p.p.",
+            "brl_usd_pressure": "Provável queda do real / alta do USD/BRL",
+            "confirmation": "Focus Selic abaixo de 13,75%; PTAX acima de 5,22 com juro americano de dois anos em alta",
+        },
+    },
+}
+
+TRADE_PT = {
+    "thesis": (
+        "Entrar apenas após um rompimento confirmado do USD/BRL, pois o cenário-base alinhado ao mercado "
+        "reduz o diferencial de juros entre Brasil e EUA, enquanto os movimentos recentes da PTAX, da "
+        "Focus Selic e do juro americano de dois anos já apontam na mesma direção."
+    ),
+    "entry_logic": (
+        "Sem posição no nível de 5,1567. Considerar a operação simulada apenas após a PTAX diária fechar "
+        "acima de aproximadamente 5,22, máxima arredondada das últimas 20 observações válidas (5,2233), "
+        "com o juro americano de dois anos perto ou acima de 4,34% ou sem abertura do diferencial de juros."
+    ),
+    "invalidation_condition": (
+        "Após a entrada, invalidar se a PTAX registrar dois pontos médios diários consecutivos abaixo de "
+        "aproximadamente 5,16, ponto médio arredondado da faixa salva de 20 observações (5,1569), ou se o "
+        "diferencial de juros entre Brasil e EUA não diminuir e permanecer perto ou acima de 10,375 p.p."
+    ),
+    "profit_taking_logic": (
+        "Somar a máxima não arredondada da faixa salva de 20 observações (5,2233) à sua amplitude não "
+        "arredondada (0,1328) resulta em 5,3561; por isso, usar 5,35-5,36 como zona de reavaliação, não "
+        "como alvo garantido, e rever antes se os juros ou os dados posteriores às reuniões mudarem."
+    ),
+}
+
+COMMODITY_PT = {
+    "brent": {
+        "label": "Petróleo",
+        "benchmark": "Petróleo Brent",
+        "frequency": "Diária",
+        "signal": "em alta",
+        "channel": "O Brasil é um grande produtor de petróleo; o preço afeta receitas de exportação e dos produtores, enquanto os combustíveis também podem influenciar a inflação doméstica.",
+    },
+    "iron_ore": {
+        "label": "Minério de ferro",
+        "benchmark": "Preço global do minério de ferro - FMI",
+        "frequency": "Mensal",
+        "signal": "em baixa",
+        "channel": "O minério de ferro é uma exportação importante do Brasil. Mudanças na demanda global podem alterar a entrada de dólares e o cenário externo para o real.",
+    },
+    "soybeans": {
+        "label": "Soja",
+        "benchmark": "Preço global da soja - FMI",
+        "frequency": "Trimestral",
+        "signal": "em alta",
+        "channel": "As exportações de soja geram receitas relevantes em moeda estrangeira para o Brasil, com o momento dos fluxos influenciado pela safra e pela temporada de exportação.",
+    },
+    "sugar": {
+        "label": "Açúcar",
+        "benchmark": "Preço mundial do açúcar nº 11 - FMI",
+        "frequency": "Mensal",
+        "signal": "em alta",
+        "channel": "As usinas brasileiras podem direcionar a cana para açúcar ou etanol, conectando o mercado de exportação à economia doméstica dos combustíveis.",
+    },
+}
+
+SERIES_PT = {
+    "focus_selic": ("Mediana Focus para a Selic anual", "% ao ano"),
+    "focus_ipca": ("Mediana Focus para o IPCA anual", "% de variação anual"),
+    "ptax_usd_brl_midpoint": ("Ponto médio da PTAX USD/BRL", "reais por dólar"),
+    "selic_target": ("Meta Selic do Banco Central", "% ao ano"),
+    "fed_target_range": ("Faixa-alvo dos juros americanos e ponto médio calculado", "% ao ano"),
+    "brazil_us_policy_differential": ("Meta Selic menos o ponto médio dos juros americanos", "pontos percentuais"),
+    "us_2_year_treasury": ("Juro do título público americano de dois anos", "% ao ano"),
+    "us_10_year_treasury": ("Juro do título público americano de dez anos", "% ao ano"),
+}
+
+SOURCE_PT = {
+    "BCB 2026 Copom calendar": "Calendário do Copom de 2026 - Banco Central",
+    "BCB August 2026 Copom statement": "Comunicado do Copom de agosto de 2026 - Banco Central",
+    "BCB August 2026 Copom minutes": "Ata do Copom de agosto de 2026 - Banco Central",
+    "BCB Focus Expectations OData": "Expectativas Focus OData - Banco Central",
+    "BCB PTAX OData": "PTAX OData - Banco Central",
+    "BCB SGS 432 Selic target": "Meta Selic, série SGS 432 - Banco Central",
+    "Federal Reserve 2026 FOMC calendar": "Calendário do FOMC de 2026 - Federal Reserve",
+    "Federal Reserve July 2026 FOMC statement": "Comunicado do FOMC de julho de 2026 - Federal Reserve",
+    "Federal Reserve July 2026 FOMC minutes": "Ata do FOMC de julho de 2026 - Federal Reserve",
+    "FRED federal-funds target lower limit": "Limite inferior da faixa dos juros americanos - FRED",
+    "FRED federal-funds target upper limit": "Limite superior da faixa dos juros americanos - FRED",
+    "FRED US 2-year Treasury yield": "Juro do título americano de dois anos - FRED",
+    "FRED US 10-year Treasury yield": "Juro do título americano de dez anos - FRED",
+    "CME FedWatch - September 2026 meeting pricing": "CME FedWatch - preços para a reunião de setembro de 2026",
+    "CME FedWatch methodology": "Metodologia do CME FedWatch",
+    "B3 daily-file search - BVBG.187.01 derivatives report": "Consulta de arquivos diários da B3 - relatório de derivativos BVBG.187.01",
+    "B3 DI1 contract specification": "Especificação do contrato DI1 - B3",
+}
+
+
+UI_FR["The saved pricing suggested a small Brazilian rate cut and a small U.S. rate increase."] = "Les prix enregistrés suggéraient une légère baisse des taux brésiliens et une légère hausse des taux américains."
+
+UI_FR["Saved base case"] = "Scénario central enregistré"
+
+
+def _natural_french(value):
+    if isinstance(value, str):
+        return value.replace("d'une commodity", "d'une matière première").replace("d’une commodity", "d’une matière première").replace("commodities", "matières premières").replace("commodity", "matière première")
+    if isinstance(value, dict):
+        return {key: _natural_french(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [_natural_french(item) for item in value]
+    return value
+
+UI_FR = _natural_french(UI_FR)
+COMMODITY_FR = _natural_french(COMMODITY_FR)
+SCENARIO_FR = _natural_french(SCENARIO_FR)
+TRADE_FR = _natural_french(TRADE_FR)
+
+TRADE_FR.update({
+ 'entry_logic': "Aucune position à la référence enregistrée de 5,1567. Envisager l'opération fictive uniquement après un point médian PTAX quotidien au-dessus d'environ 5,22, sommet arrondi des 20 dernières observations valides (5,2233), avec le taux américain à deux ans proche ou au-dessus de 4,34 % ou un écart de taux qui ne s'élargit pas.",
+ 'invalidation_condition': "Après l'entrée, invalider si la PTAX affiche deux points médians quotidiens consécutifs sous environ 5,16, milieu arrondi de la fourchette enregistrée (5,1569), ou si l'écart Brésil–États-Unis ne diminue pas et reste proche ou au-dessus de 10,375 points, le Copom ne baissant pas ses taux et la Fed ne les relevant pas.",
+ 'profit_taking_logic': "Ajouter le sommet non arrondi (5,2233) à l'amplitude non arrondie (0,1328) donne 5,3561. Utiliser 5,35–5,36 comme zone de réexamen, pas comme objectif garanti ; réexaminer plus tôt si les données après les réunions inversent la confirmation de l'écart de taux ou du taux américain à deux ans.",
+})
+UI_FR['SAVED REFERENCE'] = 'RÉFÉRENCE ENREGISTRÉE'
+
+UI_FR["For readers who want to check the work: the page uses a saved copy of public data so it can be reproduced even when a source is temporarily unavailable. Commodity observations keep their actual observation periods rather than being forced into a false like-for-like index."] = "Pour vérifier le travail : la page utilise une copie enregistrée des données publiques, reproductible même si une source devient indisponible. Les matières premières conservent leurs véritables périodes de référence, sans former un indice artificiellement comparable."

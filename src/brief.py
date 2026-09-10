@@ -633,11 +633,19 @@ def generate_market_brief(
     snapshot_path: str | Path,
     pdf_path: str | Path,
     markdown_path: str | Path,
+    language: str = "en",
 ) -> dict[str, Any]:
     snapshot = load_research_snapshot(snapshot_path)
     context = build_brief_context(snapshot)
     markdown_destination = Path(markdown_path)
     markdown_destination.parent.mkdir(parents=True, exist_ok=True)
     markdown_destination.write_text(render_market_brief_markdown(context), encoding="utf-8")
-    render_market_brief_pdf(context, pdf_path)
+    import json
+    from src.print_brief import render_research_pdf
+    commodity_path = Path(snapshot_path).parent / "commodity_snapshot.json"
+    try:
+        commodities = json.loads(commodity_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        commodities = {}
+    render_research_pdf(snapshot, commodities, pdf_path, language)
     return context

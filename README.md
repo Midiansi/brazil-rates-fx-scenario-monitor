@@ -1,64 +1,73 @@
 # Brazil Macro
 
-A source-grounded Streamlit market brief connecting Brazilian rates, BRL and commodities. The public site is designed for a fast first read: synthesis first, evidence second, methodology third.
+A source-grounded Streamlit research portfolio connecting Brazilian rates, U.S. rates, the real and commodity exports. English, Portuguese and French versions cover the entire page and downloadable brief.
 
-**Live site:** https://brasilmacro.streamlit.app/
+Public site: https://brasilmacro.streamlit.app/ — local changes are not deployed automatically by this repository's application code.
 
-## What changed
+## Reading the project
 
-The production entrypoint now renders entirely from checked-in, reviewable snapshots. No BCB or FRED request sits on the first-paint path. A visitor sees the full brief immediately after the Streamlit session connects; live source checks are an optional action in the deeper-data section.
+The first screen states the conditional view and its limitations. Navigation leads to three saved scenarios, a disciplined paper trade, commodity transmission channels and the underlying evidence. Detailed scenarios, trade calculations, research process and sources remain available in expanders.
 
-The opening view answers four questions in plain English: what Brazilian rates imply, what BRL has done, where inflation expectations stand, and whether the latest available commodity observations are broadly supportive or mixed. Exact values, dates, frequencies and source detail remain available below.
+This is a fixed September 2026 research case, not a live market terminal. Macro inputs were retrieved on 2 September 2026 at 00:40 UTC (1 September, 21:40 Brasília). Commodity observations have their own dates and frequencies. The page calculates the age of the saved research but does not refresh prices, monitor trade activation or claim execution/performance.
 
-## Commodities
+The original market thesis and snapshot values are preserved. The paper trade requires a daily PTAX midpoint above the rounded 5.22 reference, with the U.S. two-year yield near/above 4.34% **or** the policy differential not widening. After entry, two consecutive PTAX midpoints below 5.16, **or** a differential that fails to narrow and stays near/above 10.375 percentage points, invalidate the idea. 5.35–5.36 is a review zone. The exact range high is 5.2233; the rounded trigger is slightly lower. PTAX is not an executable spot quote, and costs/position sizing are not modelled.
 
-The portfolio adds four economically relevant Brazil exposures: Brent crude, iron ore, soybeans and sugar. Their publication frequencies are labelled explicitly rather than forcing daily, monthly and quarterly observations into a misleading synchronized dashboard. The section explains the transmission channels to export receipts, BRL, inflation and monetary policy.
+## Sources and limitations
 
-The following equity-research bridge makes the limit of those signals explicit: a commodity move is not a stock thesis. It lays out the next questions for a producer - revenue and volume exposure, cost-curve position and margins, balance sheet and capital allocation, valuation, catalysts and downside - without presenting unfinished company research as a recommendation.
+- BCB: Focus survey, PTAX, Selic and Copom publications.
+- Federal Reserve/FRED: policy targets, Treasury yields and FOMC publications.
+- EIA/IMF via FRED: Brent, iron ore, soybeans and sugar. Monthly/quarterly dates label observation periods, not publication days.
+- B3: saved DI futures decomposition. This is an analytical estimate that ignores term premia and assumes no other policy change in the contract window; it is not a B3-published Copom probability.
+- CME: saved 1 September FedWatch observation, retained after the original final refresh failed. The 68.2% figure is historical, not current pricing. No joint probability is assigned.
 
-The reviewable commodity input is `research/commodity_snapshot.json`. The macro/scenario input remains `research/data_snapshot.json`.
+Official links identify the underlying sources; they do not guarantee that a current webpage reproduces a historical observation. Original B3/CME captures are not bundled, so those historical inputs should be checked against archived exchange evidence before external discussion. The saved research and official-source registry remain in `research/`.
 
-## Performance architecture
+## Local use
 
-1. `app.py` imports the production portfolio view in `portfolio_app.py`.
-2. Local JSON snapshots are parsed before any network-capable code is invoked.
-3. `src/portfolio.py` converts those snapshots into presentation data and deterministic plain-language synthesis.
-4. Live BCB/FRED requests are isolated behind an explicit **Check official sources now** button.
-5. When requested, the eight independent macro feeds run concurrently with `ThreadPoolExecutor` and remain cached for one hour.
-6. Production dependencies are limited to pandas, Plotly, Requests and Streamlit; test/report packages are no longer installed by Streamlit Community Cloud.
-
-This removes the previous `Loading official market data…` spinner and the sequential eight-request critical path. Streamlit Community Cloud hibernation can still delay the server/session itself; application code cannot eliminate that hosting-level wake-up latency.
-
-## Source discipline
-
-Primary macro data comes from Banco Central do Brasil and Federal Reserve/FRED series. Commodity benchmarks use EIA/IMF series distributed through FRED. Every commodity observation records its source, date, unit and frequency. The UI does not imply that differently timed observations are contemporaneous, and deterministic copy avoids unsupported causal claims.
-
-## Run locally
+Python 3.11 is the Community Cloud/CI target. The production entrypoint is `app.py`.
 
 ```bash
 python3.11 -m venv .venv
 source .venv/bin/activate
-python -m pip install -r requirements.txt
-streamlit run app.py
+python -m pip install -r requirements-dev.txt
+python -m streamlit run app.py --server.address 127.0.0.1 --server.port 8501
 ```
 
-## Tests
+Open http://127.0.0.1:8501. For production installation, only `requirements.txt` is needed.
+
+## Performance and resilience
+
+The first render and language changes use local JSON and pre-generated PDF files only. The application itself uses Streamlit and the standard library; it neither imports the optional historical data-fetch/chart modules nor generates PDFs during a rerun. No market-feed network requests are made by the production entrypoint. Small local file reads deliberately avoid a cache that could retain an older saved snapshot after edits.
+
+Missing or malformed snapshot files yield localized unavailable states. Invalid individual macro series and commodity records are excluded without suppressing unrelated content. Missing PDFs omit the download button. Standard HTML provides the scenario cards, semantic forecast table and range visual, with no heavy charting dependencies or animation. The forecast table has a keyboard-focusable horizontal scroll area on narrow screens.
+
+Community Cloud hibernation can still delay server startup; application changes cannot remove hosting wake-up time.
+
+## Downloadable research brief
 
 ```bash
-python -m pip install -r requirements-dev.txt
+python scripts/generate_market_brief.py
+```
+
+This produces three searchable, print-friendly, three-page PDFs in `outputs/`, one in each language. Page 1 gives the view and scenarios; page 2 covers trade rules and commodities; page 3 preserves limitations, scenario risks and source links. The PDFs are saved outputs and never update themselves. ReportLab and pypdf are development dependencies only. The original English Markdown research companion remains available.
+
+## Validation
+
+```bash
 python -m pytest -q
 ```
 
-CI is defined in `.github/workflows/test.yml`. The resilience tests assert that first render makes zero HTTP requests and still displays the market brief and commodities section.
+Tests cover analytics, source parsing, snapshot research rules, startup without network requests, complete static French translation coverage, language switching, partial/malformed input failures, observation periods and all three PDFs. CI uses Python 3.11. Browser review additionally checks navigation, expanded content, keyboard access and responsive widths in each language.
 
-## Project structure
+## Files
 
-- `app.py` — production Streamlit entrypoint
-- `src/portfolio.py` — local-first snapshot conversion and deterministic synthesis
-- `src/data.py` — validated BCB/FRED parsers and fetchers
-- `src/analytics.py` — rate, curve and change calculations
-- `research/data_snapshot.json` — reviewable macro/scenario snapshot
-- `research/commodity_snapshot.json` — reviewable commodity snapshot
-- `tests/` — calculation, parsing, resilience and portfolio tests
+- `app.py`: production page, layout and interactions.
+- `src/editorial.py`: shared localized copy, period formatting and safe snapshot validation.
+- `src/localization.py`: detailed English-to-French and Portuguese research translations.
+- `src/print_brief.py`: localized print layout.
+- `src/brief.py`: preserved research calculations and brief-generation interface.
+- `src/data.py`, `src/analytics.py`, `src/research.py`: existing data parsers, calculations and research validation.
+- `research/`: original saved inputs and substantive research.
+- `tests/`: automated regression checks.
 
-**Educational analysis — not investment advice.**
+Educational research; not investment advice.

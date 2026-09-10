@@ -14,7 +14,7 @@ from src.brief import generate_market_brief
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Generate the saved one-page Brazil Rates & FX Trade Brief."
+        description="Generate the saved Brazil Macro research brief in English, Portuguese and French."
     )
     parser.add_argument(
         "--snapshot",
@@ -36,7 +36,9 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    generate_market_brief(args.snapshot, args.pdf, args.markdown)
+    for language in ("en", "pt", "fr"):
+        path = args.pdf if language == "en" else args.pdf.with_name(args.pdf.stem + "_" + language.upper() + args.pdf.suffix)
+        generate_market_brief(args.snapshot, path, args.markdown, language)
     print(f"Generated {args.pdf}")
     print(f"Generated {args.markdown}")
 

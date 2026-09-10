@@ -101,7 +101,7 @@ def test_french_view_translates_primary_and_deep_content() -> None:
         "Canal externe",
         "Pétrole",
         "Minerai de fer",
-        "Du mouvement d'une commodity à une thèse d'investissement",
+        "Du mouvement d'une matière première à une thèse d'investissement",
         "Exposition du chiffre",
         "Marges et courbe de coûts",
         "Plus restrictif que prévu",
