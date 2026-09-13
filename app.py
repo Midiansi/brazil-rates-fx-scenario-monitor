@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import importlib
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 from html import escape
@@ -9,7 +10,25 @@ from typing import Any
 
 import streamlit as st
 
-from src.localization import COMMODITY_FR, SCENARIO_FR, SERIES_FR, SOURCE_FR, TRADE_FR, UI_FR, COMMODITY_PT, SCENARIO_PT, SERIES_PT, SOURCE_PT, TRADE_PT
+from src import localization as _localization
+
+# Streamlit reruns app.py in a long-lived process.  After a deployment that
+# adds translation tables, Python can otherwise retain the older imported
+# module and raise ImportError until the container is manually rebooted.
+if not hasattr(_localization, "COMMODITY_PT"):
+    _localization = importlib.reload(_localization)
+
+COMMODITY_FR = _localization.COMMODITY_FR
+SCENARIO_FR = _localization.SCENARIO_FR
+SERIES_FR = _localization.SERIES_FR
+SOURCE_FR = _localization.SOURCE_FR
+TRADE_FR = _localization.TRADE_FR
+UI_FR = _localization.UI_FR
+COMMODITY_PT = _localization.COMMODITY_PT
+SCENARIO_PT = _localization.SCENARIO_PT
+SERIES_PT = _localization.SERIES_PT
+SOURCE_PT = _localization.SOURCE_PT
+TRADE_PT = _localization.TRADE_PT
 from src.editorial import copy_for, format_period, snapshot_age, sanitize_snapshot, safe_url, source_url_for
 
 
