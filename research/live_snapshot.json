@@ -190,6 +190,15 @@
       "value": 0.39000000000000057
     }
   },
-  "source_failures": [],
+  "source_failures": [
+    "brent",
+    "fed_lower",
+    "fed_upper",
+    "iron_ore",
+    "soybeans",
+    "sugar",
+    "us_10y",
+    "us_2y"
+  ],
   "updated_at": "2026-09-13T19:58:14Z"
 }
