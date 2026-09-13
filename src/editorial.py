@@ -8,7 +8,7 @@ COPY = {
 'en': {
  'takeaway_label':'THE VIEW · CONDITIONAL, NOT ACTIVE',
  'takeaway':"A smaller Brazil–U.S. rate gap could weaken the real. My saved view is to wait: consider buying USD only above 5.22, with rates confirmation. Stronger commodity exports could overturn the idea.",
- 'age':'Saved {days} days ago · observation periods differ · this page does not track whether the trade has since triggered.',
+ 'age':'Data file updated {days} days ago · individual observation dates and frequencies are shown below.',
  'navigation':'Explore the research', 'nav':['Scenarios', 'Paper trade', 'Commodities', 'Evidence'],
  'assumptions':'Assumed decisions', 'watch':'Evidence to watch', 'entry':'Entry / confirmation', 'invalidation':'Invalidation / after entry', 'review':'Review zone / not a target', 'catalyst':'Catalyst / timing',
  'meeting':'Both meetings run on 15–16 September 2026; decisions are scheduled for 16 September. Reassess the idea after the announcements and their guidance.',
@@ -33,7 +33,7 @@ COPY = {
 'pt': {
  'takeaway_label':'A VISÃO · CONDICIONAL, SEM POSIÇÃO',
  'takeaway':'Uma diferença menor entre os juros do Brasil e dos EUA pode enfraquecer o real. Minha visão salva é esperar: considerar a compra de dólar só acima de 5.22, com confirmação dos juros. Exportações de commodities mais fortes podem invalidar a ideia.',
- 'age':'Dados salvos há {days} dias · os períodos de observação diferem · esta página não acompanha se o gatilho foi atingido depois.',
+ 'age':'Arquivo de dados atualizado há {days} dias · as datas e frequências de cada observação aparecem abaixo.',
  'navigation':'Explorar a análise', 'nav':['Cenários','Operação simulada','Commodities','Evidências'],
  'assumptions':'Decisões assumidas', 'watch':'Evidências a acompanhar', 'entry':'Entrada / confirmação', 'invalidation':'Invalidação / após a entrada', 'review':'Zona de reavaliação / não é alvo', 'catalyst':'Catalisador / prazo',
  'meeting':'As duas reuniões ocorrem em 15–16 de setembro de 2026; as decisões estão previstas para 16 de setembro. Reavaliar a ideia após os anúncios e a orientação dos bancos centrais.',
@@ -58,7 +58,7 @@ COPY = {
 'fr': {
  'takeaway_label':'LA VUE · CONDITIONNELLE, SANS POSITION',
  'takeaway':"Un écart de taux Brésil–États-Unis plus faible pourrait peser sur le real. Ma position dans cette étude est d'attendre : envisager un achat de dollars seulement au-dessus de 5.22, avec confirmation des taux. Des exportations de matières premières plus fortes pourraient invalider l'idée.",
- 'age':"Données enregistrées il y a {days} jours · les périodes d'observation diffèrent · cette page ne suit pas un éventuel déclenchement ultérieur.",
+ 'age':"Fichier de données actualisé il y a {days} jours · les dates et fréquences de chaque observation figurent ci-dessous.",
  'navigation':"Explorer l'analyse", 'nav':['Scénarios','Opération fictive','Matières premières','Données'],
  'assumptions':'Décisions supposées', 'watch':'Signaux à suivre', 'entry':'Entrée / confirmation', 'invalidation':"Invalidation / après l'entrée", 'review':"Zone de réexamen / pas un objectif", 'catalyst':'Catalyseur / calendrier',
  'meeting':"Les deux réunions ont lieu les 15–16 septembre 2026 ; les décisions sont prévues le 16 septembre. Réexaminer l'idée après les annonces et les indications des banques centrales.",

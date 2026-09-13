@@ -101,7 +101,7 @@ def fetch_selic_target(start_date: date, end_date: date) -> pd.DataFrame:
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def fetch_fred_series(series_id: str, start_date: date) -> pd.DataFrame:
-    allowed={"DFEDTARL","DFEDTARU","DGS2","DGS10","DCOILBRENTEU","PIORECRUSDM","PSOYBUSDM","PSUGAISAUSDM"}
+    allowed={"DFEDTARL","DFEDTARU","DGS2","DGS10","DCOILBRENTEU","PIORECRUSDM","PSOYBUSDQ","PSUGAISAUSDM"}
     if series_id not in allowed: raise ValueError(f"Unsupported FRED series: {series_id}.")
     try:
         response=requests.get(FRED_GRAPH_URL,params={"id":series_id,"cosd":start_date.strftime("%Y-%m-%d")},headers=HEADERS,timeout=REQUEST_TIMEOUT); response.raise_for_status()

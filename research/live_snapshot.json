@@ -1,0 +1,195 @@
+{
+  "commodities": {
+    "brent": {
+      "benchmark": "Brent crude",
+      "channel": "Brazil is a major oil producer, so crude prices matter for export and producer revenues; fuel costs can also feed into the domestic inflation discussion.",
+      "frequency": "Daily",
+      "label": "Oil",
+      "latest": 109.51,
+      "latest_date": "2026-09-09",
+      "previous": 106.12,
+      "previous_date": "2026-09-08",
+      "series_id": "DCOILBRENTEU",
+      "signal": "higher",
+      "source": "U.S. Energy Information Administration via FRED",
+      "source_url": "https://fred.stlouisfed.org/series/DCOILBRENTEU",
+      "unit": "USD per barrel"
+    },
+    "iron_ore": {
+      "benchmark": "IMF global iron-ore price",
+      "channel": "Iron ore is a large Brazilian export. Changes in global demand can therefore alter export income and the external backdrop for BRL.",
+      "frequency": "Monthly",
+      "label": "Iron ore",
+      "latest": 101.595652173913,
+      "latest_date": "2026-07-01",
+      "previous": 103.7909090909091,
+      "previous_date": "2026-06-01",
+      "series_id": "PIORECRUSDM",
+      "signal": "lower",
+      "source": "International Monetary Fund via FRED",
+      "source_url": "https://fred.stlouisfed.org/series/PIORECRUSDM",
+      "unit": "USD per metric ton"
+    },
+    "soybeans": {
+      "benchmark": "IMF global soybean price",
+      "channel": "Soy exports generate large foreign-currency receipts for Brazil, with timing shaped by the harvest and export season.",
+      "frequency": "Quarterly",
+      "label": "Soybeans",
+      "latest": 426.3281568183153,
+      "latest_date": "2026-04-01",
+      "previous": 406.4395857681243,
+      "previous_date": "2026-01-01",
+      "series_id": "PSOYBUSDQ",
+      "signal": "higher",
+      "source": "International Monetary Fund via FRED",
+      "source_url": "https://fred.stlouisfed.org/series/PSOYBUSDQ",
+      "unit": "USD per metric ton"
+    },
+    "sugar": {
+      "benchmark": "IMF Sugar No. 11 world price",
+      "channel": "Brazilian mills can shift cane between sugar and ethanol, linking the export market to domestic fuel economics.",
+      "frequency": "Monthly",
+      "label": "Sugar",
+      "latest": 14.81227272727273,
+      "latest_date": "2026-07-01",
+      "previous": 13.90772727272727,
+      "previous_date": "2026-06-01",
+      "series_id": "PSUGAISAUSDM",
+      "signal": "higher",
+      "source": "International Monetary Fund via FRED",
+      "source_url": "https://fred.stlouisfed.org/series/PSUGAISAUSDM",
+      "unit": "US cents per pound"
+    }
+  },
+  "note": "Refreshed automatically from official BCB and FRED feeds. A failed source keeps its last good value.",
+  "series": {
+    "brazil_us_policy_differential": {
+      "additional_source_url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json",
+      "five_business_day_change_pp": 0.0,
+      "is_stale_at_retrieval": false,
+      "label": "Selic target minus federal-funds target-range midpoint",
+      "latest_observation_date": "2026-09-13",
+      "one_month_change_pp": 0.0,
+      "source_url": "https://fred.stlouisfed.org/series/DFEDTARU",
+      "staleness_note": "Derived from the latest common official policy-rate observation.",
+      "unit": "percentage points",
+      "value": 10.375
+    },
+    "fed_target_range": {
+      "is_stale_at_retrieval": false,
+      "label": "Federal-funds target range and calculated midpoint",
+      "latest_observation_date": "2026-09-13",
+      "lower": 3.5,
+      "lower_source_url": "https://fred.stlouisfed.org/series/DFEDTARL",
+      "midpoint": 3.625,
+      "staleness_note": "Latest official target-limit observations available through FRED.",
+      "unit": "% p.a.",
+      "upper": 3.75,
+      "upper_source_url": "https://fred.stlouisfed.org/series/DFEDTARU"
+    },
+    "focus_ipca": {
+      "is_stale_at_retrieval": false,
+      "label": "Focus annual IPCA median",
+      "latest_observation_date": "2026-09-04",
+      "selected_1_month_change_pp": -0.026500000000000412,
+      "selected_5_business_day_change_pp": -0.006199999999999761,
+      "selected_reference_year": 2026,
+      "selected_value": 5.0,
+      "source_url": "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/",
+      "staleness_note": "Latest usable observation returned by the official BCB Focus endpoint.",
+      "unit": "% annual change",
+      "values_by_reference_year": {
+        "2026": 5.0,
+        "2027": 4.288,
+        "2028": 3.8,
+        "2029": 3.5,
+        "2030": 3.5
+      }
+    },
+    "focus_selic": {
+      "is_stale_at_retrieval": false,
+      "label": "Focus annual Selic median",
+      "latest_observation_date": "2026-09-04",
+      "selected_1_month_change_pp": 0.0,
+      "selected_5_business_day_change_pp": 0.0,
+      "selected_reference_year": 2026,
+      "selected_value": 13.75,
+      "source_url": "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/",
+      "staleness_note": "Latest usable observation returned by the official BCB Focus endpoint.",
+      "unit": "% p.a.",
+      "values_by_reference_year": {
+        "2026": 13.75,
+        "2027": 12.0,
+        "2028": 10.5,
+        "2029": 10.0,
+        "2030": 10.0
+      }
+    },
+    "ptax_usd_brl_midpoint": {
+      "buying_rate": 5.0912,
+      "five_business_day_change_percent": -0.08634392354638365,
+      "is_stale_at_retrieval": false,
+      "label": "USD/BRL PTAX midpoint",
+      "latest_observation_date": "2026-09-11",
+      "latest_observation_timestamp": "2026-09-11T13:07:22.532196",
+      "one_month_change_percent": -0.7156507156507064,
+      "selling_rate": 5.0918,
+      "source_url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/",
+      "staleness_note": "Latest closing PTAX returned by the official BCB endpoint.",
+      "twenty_observation_range": {
+        "end_date": "2026-09-11",
+        "high": 5.2233,
+        "low": 5.0853,
+        "midpoint": 5.1543,
+        "start_date": "2026-08-14",
+        "width": 0.1379999999999999
+      },
+      "unit": "BRL per USD",
+      "value": 5.0915
+    },
+    "selic_target": {
+      "is_stale_at_retrieval": false,
+      "label": "BCB Selic target",
+      "latest_observation_date": "2026-09-13",
+      "source_url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json",
+      "staleness_note": "Latest effective target returned by BCB SGS series 432.",
+      "unit": "% p.a.",
+      "value": 14.0
+    },
+    "us_10_year_treasury": {
+      "five_business_day_change_pp": 0.16000000000000014,
+      "is_stale_at_retrieval": false,
+      "label": "US 10-year Treasury constant-maturity yield",
+      "latest_observation_date": "2026-09-10",
+      "one_month_change_pp": 0.23000000000000043,
+      "source_url": "https://fred.stlouisfed.org/series/DGS10",
+      "staleness_note": "Latest usable official Treasury observation available through FRED.",
+      "unit": "% p.a.",
+      "value": 4.95
+    },
+    "us_2_year_treasury": {
+      "five_business_day_change_pp": 0.16999999999999993,
+      "is_stale_at_retrieval": false,
+      "label": "US 2-year Treasury constant-maturity yield",
+      "latest_observation_date": "2026-09-10",
+      "one_month_change_pp": 0.3099999999999996,
+      "source_url": "https://fred.stlouisfed.org/series/DGS2",
+      "staleness_note": "Latest usable official Treasury observation available through FRED.",
+      "unit": "% p.a.",
+      "value": 4.56
+    },
+    "us_2s10s": {
+      "additional_source_url": "https://fred.stlouisfed.org/series/DGS2",
+      "five_business_day_change_pp": -0.009999999999999787,
+      "is_stale_at_retrieval": false,
+      "label": "US 2s10s curve slope (10-year minus 2-year)",
+      "latest_observation_date": "2026-09-10",
+      "source_url": "https://fred.stlouisfed.org/series/DGS10",
+      "staleness_note": "Derived from the latest common Treasury observation.",
+      "unit": "percentage points",
+      "value": 0.39000000000000057
+    }
+  },
+  "source_failures": [],
+  "updated_at": "2026-09-13T19:58:14Z"
+}

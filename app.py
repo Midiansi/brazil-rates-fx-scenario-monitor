@@ -387,12 +387,29 @@ st.markdown(
 
 research = read_json("data_snapshot.json")
 commodity_snapshot = read_json("commodity_snapshot.json")
+live_snapshot = read_json("live_snapshot.json")
+
+# Keep the first paint network-free: a scheduled GitHub job writes a tiny
+# last-known-good snapshot, and the app only overlays values that passed the
+# same lightweight validation as the original research case.
+if live_snapshot.get("series"):
+    research["series"] = {**research.get("series", {}), **live_snapshot["series"]}
+live_commodities = sanitize_snapshot(
+    "commodity_snapshot.json", {"commodities": live_snapshot.get("commodities", {})}
+).get("commodities", {})
+if live_commodities:
+    commodity_snapshot["commodities"] = {
+        **commodity_snapshot.get("commodities", {}),
+        **live_commodities,
+    }
 series = research.get("series", {})
 scenarios = research.get("scenarios", [])
 paper_trades = research.get("paper_trades", [])
 source_registry = research.get("source_registry", [])
 commodities = commodity_snapshot.get("commodities", {})
-retrieved = research.get("retrieved_at_brasilia", research.get("retrieved_at", "unavailable"))
+case_retrieved = research.get("retrieved_at_brasilia", research.get("retrieved_at", "unavailable"))
+data_updated = live_snapshot.get("updated_at", research.get("retrieved_at", "unavailable"))
+retrieved = data_updated
 pricing_audit = research.get("scenario_label_audit", {})
 thresholds = research.get("trade_threshold_calculations", {})
 base_scenario = next((item for item in scenarios if item.get("name") == "Base case"), {})
@@ -458,16 +475,16 @@ st.markdown(
 )
 st.caption(
     ui(
-        f"Research snapshot: {snapshot_label(retrieved)} · fixed data; no automatic updates",
-        f"Dados salvos em {snapshot_label(retrieved, True)} · sem atualização automática",
-        f"Données enregistrées le {snapshot_label(retrieved, french=True)} · sans mise à jour automatique",
+        f"Official data updated: {snapshot_label(data_updated)} · refreshed automatically on weekdays · the decision case remains dated {snapshot_label(case_retrieved)}",
+        f"Dados oficiais atualizados em {snapshot_label(data_updated, True)} · atualização automática em dias úteis · o estudo de decisão permanece datado de {snapshot_label(case_retrieved, True)}",
+        f"Données officielles actualisées le {snapshot_label(data_updated, french=True)} · mise à jour automatique en semaine · l'étude de décision reste datée du {snapshot_label(case_retrieved, french=True)}",
     )
 )
 
 
 if trade and base_scenario and series.get("ptax_usd_brl_midpoint"):
     st.markdown(f'<div class="takeaway"><strong>{c["takeaway_label"]}</strong>{c["takeaway"]}</div>', unsafe_allow_html=True)
-age = snapshot_age(research.get("retrieved_at", ""))
+age = snapshot_age(data_updated)
 if age is not None:
     st.caption(c["age"].format(days=age))
 st.markdown('<nav class="jump-nav" aria-label="'+c["navigation"]+'">' + ''.join(f'<a href="#{target}">{label}</a>' for target, label in zip(("scenarios", "paper-trade", "commodities", "evidence"), c["nav"])) + '</nav>', unsafe_allow_html=True)
@@ -534,8 +551,8 @@ else:
     st.info(ui("The saved decision frame is temporarily unavailable.", "O quadro de decisão salvo está temporariamente indisponível."))
 
 st.markdown('<div id="scenarios"></div>', unsafe_allow_html=True)
-st.header(ui("Three ways the September meetings could go", "Três caminhos para as reuniões de setembro"))
-st.caption(ui("Three simple stories: Brazil stays tougher, follows the expected path or cuts faster.", "Três histórias simples: o Brasil mantém juros altos, segue o esperado ou corta mais rápido."))
+st.header(ui("September 2026 scenario case", "Estudo de cenários de setembro de 2026"))
+st.caption(ui("Three paths set before the meetings: Brazil stays tougher, follows the expected path or cuts faster.", "Três caminhos definidos antes das reuniões: o Brasil mantém juros altos, segue o esperado ou corta mais rápido."))
 st.caption(c["scenario_note"])
 st.caption(c["meeting"])
 if len(scenarios) == 3:
@@ -802,7 +819,7 @@ if all(k in series for k in ("selic_target", "brazil_us_policy_differential", "f
     copom_anchor = pricing_audit.get("copom", {})
     fomc_anchor = pricing_audit.get("fomc", {})
     if copom_anchor and fomc_anchor:
-        st.subheader(ui("What markets expect in September", "O que o mercado espera em setembro"))
+        st.subheader(ui("Pricing used in the saved case", "Preços usados no estudo salvo"))
         pricing_cards = (
             (
                 ui("Brazil / B3 interest-rate futures", "Brasil / futuros de juros da B3"),
@@ -853,11 +870,11 @@ if "ptax_usd_brl_midpoint" in series:
         entry_position = bounded_position(entry_value, low, high)
         st.subheader(ui("Where USD/BRL sits in its recent range", "Onde o dólar está na faixa recente"))
         st.markdown(
-            f'<div class="range-box"><div class="brief-label">{ui("PTAX range / saved observations", "Faixa da PTAX / observações salvas")}</div>'
+            f'<div class="range-box"><div class="brief-label">{ui("PTAX range / latest 20 observations", "Faixa da PTAX / 20 observações mais recentes")}</div>'
             f'<div class="range-track"><div class="range-fill" style="width:{current_position:.1f}%"></div>'
             f'<div class="range-dot" style="left:{current_position:.1f}%"></div>'
             f'<div class="range-trigger" style="left:{entry_position:.1f}%"></div></div>'
-            f'<div class="range-labels"><span>{ui("LOW", "MÍNIMA")} {low:.4f}</span><span>{ui("SAVED REFERENCE", "REFERÊNCIA SALVA")} {float(fx["value"]):.4f}</span>'
+            f'<div class="range-labels"><span>{ui("LOW", "MÍNIMA")} {low:.4f}</span><span>{ui("LATEST", "MAIS RECENTE")} {float(fx["value"]):.4f}</span>'
             f'<span>{ui("HIGH", "MÁXIMA")} {high:.4f}</span></div><div class="range-caption">'
             f'{ui(f"The orange marker is where I would consider the idea. Until USD/BRL closes above {entry_value:.2f}, there is no trade.", f"A marca laranja indica onde eu consideraria a ideia. Até o dólar fechar acima de {entry_value:.2f}, não há operação.", f"Le repère orange indique le niveau auquel j’envisagerais l’idée. Tant que l’USD/BRL ne clôture pas au-dessus de {entry_value:.2f}, il n’y a pas d’opération.")}</div></div>',
             unsafe_allow_html=True,
@@ -898,9 +915,9 @@ if commodities:
         + ui("Higher export prices can help the real—but the inflation channel can push the other way.", "Preços de exportação mais altos podem ajudar o real, mas a inflação pode agir no sentido oposto.")
         + '</div><div class="crosscheck-intro">'
         + ui(
-            f"In the saved observations, {higher_count} benchmarks are higher and {lower_count} lower than their previous readings. The dates and frequencies differ, so this is a cross-check—not a single commodity index.",
-            f"Nos dados salvos, {higher_count} referências estão em alta e {lower_count} em baixa frente à leitura anterior. As datas e frequências diferem; isto é um teste de coerência, não um índice único.",
-            f"Dans les observations enregistrées, {higher_count} références sont en hausse et {lower_count} en baisse par rapport à leur lecture précédente. Les dates et fréquences diffèrent : il s'agit d'une vérification, pas d'un indice unique des commodities.",
+            f"In the latest observations, {higher_count} benchmarks are higher and {lower_count} lower than their previous readings. The dates and frequencies differ, so this is a cross-check—not a single commodity index.",
+            f"Nas observações mais recentes, {higher_count} referências estão em alta e {lower_count} em baixa frente à leitura anterior. As datas e frequências diferem; isto é um teste de coerência, não um índice único.",
+            f"Dans les observations les plus récentes, {higher_count} références sont en hausse et {lower_count} en baisse par rapport à leur lecture précédente. Les dates et fréquences diffèrent : il s'agit d'une vérification, pas d'un indice unique des commodities.",
         )
         + '</div><div class="crosscheck-grid">'
         + '<div class="crosscheck-cell"><div class="crosscheck-label">'
@@ -1031,8 +1048,9 @@ with st.expander(ui("Data and method", "Dados e método")):
     st.write(c["limits"])
     st.write(c["pricing_method"])
     st.write(ui(
-        "For readers who want to check the work: the page uses a saved copy of public data so it can be reproduced even when a source is temporarily unavailable. Commodity observations keep their actual observation periods rather than being forced into a false like-for-like index.",
-        "Para quem quiser conferir o trabalho: a página usa uma cópia salva de dados públicos para continuar reproduzível mesmo quando uma fonte está temporariamente indisponível. As observações de commodities mantêm seus períodos reais de referência, sem serem forçadas a formar um índice artificialmente comparável.",
+        "For readers who want to check the work: a scheduled job checks the official feeds and saves only validated observations. The page reads that tiny local file, so it opens quickly and keeps the last good value when a source is temporarily unavailable. Commodity observations retain their actual periods rather than being forced into a false like-for-like index.",
+        "Para quem quiser conferir o trabalho: uma rotina programada consulta as fontes oficiais e salva apenas observações validadas. A página lê esse pequeno arquivo local, por isso abre rapidamente e mantém o último valor válido quando uma fonte fica temporariamente indisponível. As observações de commodities preservam seus períodos reais, sem formar um índice artificialmente comparável.",
+        "Pour vérifier le travail : une tâche programmée consulte les sources officielles et n'enregistre que les observations validées. La page lit ce petit fichier local, ce qui lui permet de s'ouvrir rapidement et de conserver la dernière valeur fiable lorsqu'une source est indisponible. Les observations sur les commodities gardent leurs périodes réelles au lieu d'être forcées dans un faux indice comparable.",
     ))
     if series:
         for key in (
@@ -1085,8 +1103,8 @@ with st.expander(ui("Official source links", "Fontes oficiais")):
 st.divider()
 st.caption(
     ui(
-        f"Built by Romeo Mugnier de Almeida · research snapshot {snapshot_label(retrieved)} · educational analysis, not investment advice",
-        f"Criado por Romeo Mugnier de Almeida · dados salvos em {snapshot_label(retrieved, True)} · análise educacional, não é recomendação de investimento",
-        f"Créé par Romeo Mugnier de Almeida · données enregistrées le {snapshot_label(retrieved, french=True)} · analyse pédagogique, pas un conseil en investissement",
+        f"Built by Romeo Mugnier de Almeida · official data updated {snapshot_label(data_updated)} · educational analysis, not investment advice",
+        f"Criado por Romeo Mugnier de Almeida · dados oficiais atualizados em {snapshot_label(data_updated, True)} · análise educacional, não é recomendação de investimento",
+        f"Créé par Romeo Mugnier de Almeida · données officielles actualisées le {snapshot_label(data_updated, french=True)} · analyse pédagogique, pas un conseil en investissement",
     )
 )

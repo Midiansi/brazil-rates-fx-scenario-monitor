@@ -1,0 +1,45 @@
+name: refresh market data
+
+on:
+  schedule:
+    # After the Brazilian close and the usual daily U.S. Treasury publication.
+    - cron: '17 22 * * 1-5'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/refresh-market-data.yml'
+      - 'scripts/refresh_market_data.py'
+      - 'src/live_refresh.py'
+      - 'src/data.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-market-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python scripts/refresh_market_data.py
+      - name: Commit a newer snapshot
+        run: |
+          if git diff --quiet -- research/live_snapshot.json; then
+            echo "No new observations."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/live_snapshot.json
+          git commit -m "Refresh official market data"
+          git push

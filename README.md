@@ -1,6 +1,6 @@
 # Brazil Macro
 
-A source-grounded Streamlit research portfolio connecting Brazilian rates, U.S. rates, the real and commodity exports. English, Portuguese and French versions cover the entire page and downloadable brief.
+A source-grounded Streamlit research portfolio connecting Brazilian rates, U.S. rates, the real and commodity exports. English, Portuguese and French versions cover the entire page and downloadable brief. Official market observations refresh automatically without putting network calls in the visitor's render path.
 
 Public site: https://brasilmacro.streamlit.app/ — local changes are not deployed automatically by this repository's application code.
 
@@ -8,7 +8,7 @@ Public site: https://brasilmacro.streamlit.app/ — local changes are not deploy
 
 The first screen states the conditional view and its limitations. Navigation leads to three saved scenarios, a disciplined paper trade, commodity transmission channels and the underlying evidence. Detailed scenarios, trade calculations, research process and sources remain available in expanders.
 
-This is a fixed September 2026 research case, not a live market terminal. Macro inputs were retrieved on 2 September 2026 at 00:40 UTC (1 September, 21:40 Brasília). Commodity observations have their own dates and frequencies. The page calculates the age of the saved research but does not refresh prices, monitor trade activation or claim execution/performance.
+The decision framework is a fixed September 2026 research case, not a live trade recommendation. The prominent market observations are maintained separately in `research/live_snapshot.json` and refreshed from official feeds on weekdays. Commodity observations retain their own dates and frequencies. The page does not claim execution or performance, and the historical paper-trade rules are never silently rewritten by the updater.
 
 The original market thesis and snapshot values are preserved. The paper trade requires a daily PTAX midpoint above the rounded 5.22 reference, with the U.S. two-year yield near/above 4.34% **or** the policy differential not widening. After entry, two consecutive PTAX midpoints below 5.16, **or** a differential that fails to narrow and stays near/above 10.375 percentage points, invalidate the idea. 5.35–5.36 is a review zone. The exact range high is 5.2233; the rounded trigger is slightly lower. PTAX is not an executable spot quote, and costs/position sizing are not modelled.
 
@@ -35,11 +35,13 @@ python -m streamlit run app.py --server.address 127.0.0.1 --server.port 8501
 
 Open http://127.0.0.1:8501. For production installation, only `requirements.txt` is needed.
 
-## Performance and resilience
+## Performance, automatic updates and resilience
 
-The first render and language changes use local JSON and pre-generated PDF files only. The application itself uses Streamlit and the standard library; it neither imports the optional historical data-fetch/chart modules nor generates PDFs during a rerun. No market-feed network requests are made by the production entrypoint. Small local file reads deliberately avoid a cache that could retain an older saved snapshot after edits.
+Every visit and language change uses local JSON and pre-generated PDF files only. No market-feed request or PDF generation occurs in the production entrypoint. This keeps the page responsive even when BCB or FRED is slow.
 
-Missing or malformed snapshot files yield localized unavailable states. Invalid individual macro series and commodity records are excluded without suppressing unrelated content. Missing PDFs omit the download button. Standard HTML provides the scenario cards, semantic forecast table and range visual, with no heavy charting dependencies or animation. The forecast table has a keyboard-focusable horizontal scroll area on narrow screens.
+`.github/workflows/refresh-market-data.yml` runs after the Brazilian close on weekdays and can also be started manually. It calls `scripts/refresh_market_data.py`, validates each official response and commits `research/live_snapshot.json` only when the result changes. A failed feed retains the last good values rather than breaking the page. The original scenario case remains separate and reviewable.
+
+Missing or malformed snapshots yield localized unavailable states. Invalid individual macro series and commodity records are excluded without suppressing unrelated content. Missing PDFs omit the download button. Standard HTML provides the scenario cards, semantic forecast table and range visual, with no heavy charting dependencies or animation. The forecast table has a keyboard-focusable horizontal scroll area on narrow screens.
 
 Community Cloud hibernation can still delay server startup; application changes cannot remove hosting wake-up time.
 
@@ -61,7 +63,9 @@ Tests cover analytics, source parsing, snapshot research rules, startup without 
 
 ## Files
 
-- `app.py`: production page, layout and interactions.
+- `app.py`: network-free production page, layout and interactions.
+- `scripts/refresh_market_data.py`, `src/live_refresh.py`: scheduled official-data refresh and validation.
+- `research/live_snapshot.json`: small last-known-good production data file created by the updater.
 - `src/editorial.py`: shared localized copy, period formatting and safe snapshot validation.
 - `src/localization.py`: detailed English-to-French and Portuguese research translations.
 - `src/print_brief.py`: localized print layout.
