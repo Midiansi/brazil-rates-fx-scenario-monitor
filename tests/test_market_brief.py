@@ -48,16 +48,16 @@ def test_brief_thresholds_match_saved_ptax_range(tmp_path: Path) -> None:
 
     saved_range = payload["series"]["ptax_usd_brl_midpoint"]["twenty_observation_range"]
     assert str(thresholds.entry) == "5.22"
-    assert str(thresholds.invalidation) == "5.16"
-    assert str(thresholds.measured_move) == "5.3561"
-    assert str(thresholds.review_low) == "5.35"
-    assert str(thresholds.review_high) == "5.36"
+    assert str(thresholds.invalidation) == "5.15"
+    assert str(thresholds.measured_move) == "5.3613"
+    assert str(thresholds.review_low) == "5.36"
+    assert str(thresholds.review_high) == "5.37"
     assert float(thresholds.range_high) == saved_range["high"]
     assert f"{thresholds.entry:.2f}" in text
     assert f"{thresholds.invalidation:.2f}" in text
     assert f"{thresholds.range_high:.4f}" in text
     assert f"{thresholds.measured_move:.4f}" in text
-    assert "5.1567" in text and "2026-09-01" in text
+    assert "5.0915" in text and "2026-09-11" in text
 
 
 def test_brief_disclaimer_and_no_missing_placeholders(tmp_path: Path) -> None:

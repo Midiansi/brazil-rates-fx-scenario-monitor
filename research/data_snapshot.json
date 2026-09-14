@@ -1,29 +1,25 @@
 {
   "schema_version": 1,
-  "retrieved_at": "2026-09-02T00:40:27Z",
-  "retrieved_at_brasilia": "2026-09-01T21:40:27-03:00",
-  "snapshot_purpose": "A fixed, reviewable input for the September 2026 Copom/FOMC scenario framework. It is not refreshed by an LLM or silently replaced by live values.",
+  "retrieved_at": "2026-09-13T19:58:14Z",
+  "retrieved_at_brasilia": "2026-09-13T16:58:14-03:00",
+  "snapshot_purpose": "A fixed, reviewable 13 September 2026 thesis for the Copom/FOMC week. It separates the dollar-positive rate signal from the real-positive oil-export signal and waits for price confirmation.",
   "refresh_status": {
-    "completed_at": "2026-09-02T00:40:27Z",
+    "completed_at": "2026-09-13T19:58:14Z",
     "all_automated_series_succeeded": true,
     "source_failures": [
       "CME FedWatch live refresh failed during the final audit because the official interactive tool returned HTTP/2 protocol errors and then timed out. The previously verified 1 September 02:07:02 CT values are retained and explicitly flagged as stale."
     ],
     "stale_series": [
-      "focus_selic",
-      "focus_ipca",
-      "us_2_year_treasury",
-      "us_10_year_treasury",
-      "us_2s10s",
-      "cme_fedwatch"
+      "cme_fedwatch",
+      "b3_di1_pricing"
     ],
-    "note": "All BCB and FRED requests succeeded. Focus and Treasury observations reflect official publication lags. B3's 1 September derivatives file was published at 20:35 Brasilia time and was incorporated. The final CME interactive-tool refresh failed, so its earlier same-day verified observation remains saved and is marked stale."
+    "note": "BCB and FRED observations were refreshed on 13 September. The thesis uses the latest validated official observations while retaining the dated 1 September B3 and CME meeting-pricing anchors, which are explicitly marked as stale."
   },
   "scenario_axis": "The labels describe Brazil's monetary stance relative to the US and to the current exchange-pricing anchors saved below, not a claim that both central banks move in the same hawkish or dovish direction.",
   "scenario_label_audit": {
     "audited_at": "2026-09-02T00:40:27Z",
-    "result": "The three labels are retained. The middle row remains 'Base case' because meeting-specific primary-exchange evidence was obtained for both September decisions; B3 is current to 1 September and CME's saved 1 September observation is stale after a failed final refresh. It is a market-aligned analytical scenario, not a joint-probability forecast.",
-    "current_meeting_specific_pricing_obtained": true,
+    "result": "The three scenario labels are retained, but the 1 September B3 and CME observations are now treated only as dated anchors. The updated thesis therefore relies on current official rates, FX and commodity observations plus price confirmation—not on a claim about live meeting probabilities.",
+    "current_meeting_specific_pricing_obtained": false,
     "probability_policy": "Only CME's published FOMC probabilities are reported. No Copom probability or joint probability is assigned.",
     "fomc": {
       "source": "CME FedWatch",
@@ -77,17 +73,17 @@
       "value": 5.22
     },
     "invalidation_reference": {
-      "raw_range_midpoint": 5.1569,
+      "raw_range_midpoint": 5.1543,
       "calculation": "Round the saved 20-observation range midpoint to two decimals.",
-      "value": 5.16
+      "value": 5.15
     },
     "measured_move_review_zone": {
       "raw_range_high": 5.2233,
-      "range_width": 0.1328,
-      "unrounded_measured_move": 5.3561,
+      "range_width": 0.138,
+      "unrounded_measured_move": 5.3613,
       "calculation": "Add one unrounded saved range width to the unrounded saved range high, then bracket the result to the adjacent lower and upper cents.",
-      "lower": 5.35,
-      "upper": 5.36
+      "lower": 5.36,
+      "upper": 5.37
     }
   },
   "event_context": {
@@ -146,7 +142,7 @@
     "focus_selic": {
       "label": "Focus annual Selic median",
       "unit": "% p.a.",
-      "latest_observation_date": "2026-08-28",
+      "latest_observation_date": "2026-09-04",
       "selected_reference_year": 2026,
       "selected_value": 13.75,
       "values_by_reference_year": {
@@ -157,117 +153,117 @@
         "2030": 10.0
       },
       "selected_5_business_day_change_pp": 0.0,
-      "selected_1_month_change_pp": -0.25,
+      "selected_1_month_change_pp": 0.0,
       "source_url": "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoAnuais",
-      "is_stale_at_retrieval": true,
-      "staleness_note": "28 August was the latest observation returned on 1 September; no 31 August or 1 September Focus observation was returned, so no value was filled or fabricated."
+      "is_stale_at_retrieval": false,
+      "staleness_note": "Latest usable observation returned by the official BCB Focus endpoint at the 13 September refresh."
     },
     "focus_ipca": {
       "label": "Focus annual IPCA median",
       "unit": "% annual change",
-      "latest_observation_date": "2026-08-28",
+      "latest_observation_date": "2026-09-04",
       "selected_reference_year": 2026,
-      "selected_value": 5.0062,
+      "selected_value": 5.0,
       "values_by_reference_year": {
-        "2026": 5.0062,
-        "2027": 4.28,
+        "2026": 5.0,
+        "2027": 4.288,
         "2028": 3.8,
         "2029": 3.5,
         "2030": 3.5
       },
-      "selected_5_business_day_change_pp": -0.0102,
-      "selected_1_month_change_pp": -0.0899,
+      "selected_5_business_day_change_pp": -0.0062,
+      "selected_1_month_change_pp": -0.0265,
       "source_url": "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoAnuais",
-      "is_stale_at_retrieval": true,
-      "staleness_note": "28 August was the latest observation returned on 1 September; no later Focus value was inserted."
+      "is_stale_at_retrieval": false,
+      "staleness_note": "Latest usable observation returned by the official BCB Focus endpoint at the 13 September refresh."
     },
     "ptax_usd_brl_midpoint": {
       "label": "USD/BRL PTAX midpoint",
       "unit": "BRL per USD",
-      "latest_observation_date": "2026-09-01",
-      "latest_observation_timestamp": "2026-09-01T13:06:03.857125-03:00",
-      "buying_rate": 5.1564,
-      "selling_rate": 5.157,
-      "value": 5.1567,
-      "five_business_day_change_percent": 0.1554,
-      "one_month_change_percent": 1.5698,
+      "latest_observation_date": "2026-09-11",
+      "latest_observation_timestamp": "2026-09-11T13:07:22.532196",
+      "buying_rate": 5.0912,
+      "selling_rate": 5.0918,
+      "value": 5.0915,
+      "five_business_day_change_percent": -0.08634392354638365,
+      "one_month_change_percent": -0.7156507156507064,
       "twenty_observation_range": {
-        "start_date": "2026-08-05",
-        "end_date": "2026-09-01",
-        "low": 5.0905,
+        "start_date": "2026-08-14",
+        "end_date": "2026-09-11",
+        "low": 5.0853,
         "high": 5.2233,
-        "midpoint": 5.1569,
-        "width": 0.1328
+        "midpoint": 5.1543,
+        "width": 0.138
       },
       "source_url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/",
       "is_stale_at_retrieval": false,
-      "staleness_note": "The source returned a same-day closing PTAX observation."
+      "staleness_note": "Latest closing PTAX returned by the official BCB endpoint at the 13 September refresh."
     },
     "selic_target": {
       "label": "BCB Selic target",
       "unit": "% p.a.",
-      "latest_observation_date": "2026-09-01",
+      "latest_observation_date": "2026-09-13",
       "value": 14.0,
       "source_url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json",
       "is_stale_at_retrieval": false,
-      "staleness_note": "The source returned a same-day effective target."
+      "staleness_note": "Latest effective target returned by BCB SGS series 432."
     },
     "fed_target_range": {
       "label": "Federal-funds target range and calculated midpoint",
       "unit": "% p.a.",
-      "latest_observation_date": "2026-09-01",
+      "latest_observation_date": "2026-09-13",
       "lower": 3.5,
       "upper": 3.75,
       "midpoint": 3.625,
       "lower_source_url": "https://fred.stlouisfed.org/series/DFEDTARL",
       "upper_source_url": "https://fred.stlouisfed.org/series/DFEDTARU",
       "is_stale_at_retrieval": false,
-      "staleness_note": "Both target-limit series returned same-day observations."
+      "staleness_note": "Latest official target-limit observations available through FRED."
     },
     "brazil_us_policy_differential": {
       "label": "Selic target minus federal-funds target-range midpoint",
       "unit": "percentage points",
-      "latest_observation_date": "2026-09-01",
+      "latest_observation_date": "2026-09-13",
       "value": 10.375,
       "five_business_day_change_pp": 0.0,
-      "one_month_change_pp": -0.25,
+      "one_month_change_pp": 0.0,
       "source_url": "https://fred.stlouisfed.org/series/DFEDTARU",
       "additional_source_url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json",
       "is_stale_at_retrieval": false,
-      "staleness_note": "Derived from same-day official target-rate observations."
+      "staleness_note": "Derived from the latest common official policy-rate observation."
     },
     "us_2_year_treasury": {
       "label": "US 2-year Treasury constant-maturity yield",
       "unit": "% p.a.",
-      "latest_observation_date": "2026-08-31",
-      "value": 4.34,
-      "five_business_day_change_pp": 0.1,
-      "one_month_change_pp": 0.06,
+      "latest_observation_date": "2026-09-10",
+      "value": 4.56,
+      "five_business_day_change_pp": 0.17,
+      "one_month_change_pp": 0.31,
       "source_url": "https://fred.stlouisfed.org/series/DGS2",
-      "is_stale_at_retrieval": true,
-      "staleness_note": "31 August was the latest official observation published by the final 1 September audit; no 1 September observation was yet available."
+      "is_stale_at_retrieval": false,
+      "staleness_note": "Latest usable official Treasury observation available through FRED at the 13 September refresh."
     },
     "us_10_year_treasury": {
       "label": "US 10-year Treasury constant-maturity yield",
       "unit": "% p.a.",
-      "latest_observation_date": "2026-08-31",
-      "value": 4.75,
-      "five_business_day_change_pp": 0.05,
-      "one_month_change_pp": 0.0,
+      "latest_observation_date": "2026-09-10",
+      "value": 4.95,
+      "five_business_day_change_pp": 0.16,
+      "one_month_change_pp": 0.23,
       "source_url": "https://fred.stlouisfed.org/series/DGS10",
-      "is_stale_at_retrieval": true,
-      "staleness_note": "31 August was the latest official observation published by the final 1 September audit; no 1 September observation was yet available."
+      "is_stale_at_retrieval": false,
+      "staleness_note": "Latest usable official Treasury observation available through FRED at the 13 September refresh."
     },
     "us_2s10s": {
       "label": "US 2s10s curve slope (10-year minus 2-year)",
       "unit": "percentage points",
-      "latest_observation_date": "2026-08-31",
-      "value": 0.41,
-      "five_business_day_change_pp": -0.05,
+      "latest_observation_date": "2026-09-10",
+      "value": 0.39,
+      "five_business_day_change_pp": -0.01,
       "source_url": "https://fred.stlouisfed.org/series/DGS10",
       "additional_source_url": "https://fred.stlouisfed.org/series/DGS2",
-      "is_stale_at_retrieval": true,
-      "staleness_note": "Derived only from the latest common published Treasury observation."
+      "is_stale_at_retrieval": false,
+      "staleness_note": "Derived from the latest common Treasury observation at the 13 September refresh."
     }
   },
   "scenarios": [
@@ -282,7 +278,7 @@
       "expected_brazil_us_differential_change": "Unchanged mechanically near 10.38 pp, which is 0.50 pp wider than the base-case post-meeting differential of about 9.88 pp.",
       "confirmation_signals": [
         "The 2026 Focus Selic median revises from 13.75% toward the unchanged 14.00% target.",
-        "USD/BRL PTAX breaks below roughly 5.09, the low of the saved 20-observation range, while the US 2-year yield falls from 4.34%."
+        "USD/BRL PTAX breaks below roughly 5.08, the low of the refreshed 20-observation range, while the US 2-year yield falls from 4.56%."
       ],
       "principal_risk": "A global risk-off or commodity shock could weaken BRL even with a more favorable relative-rate outcome.",
       "brief_summary": {
@@ -290,7 +286,7 @@
         "fomc": "Hold 3.50%-3.75%; firm guidance",
         "differential": "Likely unchanged near 10.38 pp",
         "brl_usd_pressure": "Likely BRL strength / USD-BRL lower",
-        "confirmation": "Focus Selic toward 14.00%; PTAX below 5.09 with US 2Y lower"
+        "confirmation": "PTAX below 5.08 with US 2Y lower"
       }
     },
     {
@@ -304,7 +300,7 @@
       "expected_brazil_us_differential_change": "Narrows by 0.50 pp, from 10.375 pp to about 9.875 pp, combining a 0.25 pp Copom cut with a 0.25 pp FOMC hike.",
       "confirmation_signals": [
         "The official targets move to 13.75% in Brazil and a 3.875% Fed target-range midpoint, producing a differential near 9.88 pp.",
-        "USD/BRL PTAX closes above roughly 5.22, the high of the saved 20-observation range, while the US 2-year yield remains near or above 4.34%."
+        "USD/BRL PTAX closes above roughly 5.22, the high of the refreshed 20-observation range, while the US 2-year yield remains near or above 4.56%."
       ],
       "principal_risk": "The paired moves may already be reflected in rates and FX, leaving global risk appetite, commodities or fiscal news as the dominant driver.",
       "brief_summary": {
@@ -312,7 +308,7 @@
         "fomc": "Hike 25 bp to 3.75%-4.00%; data-dependent",
         "differential": "Likely narrows 50 bp to 9.88 pp",
         "brl_usd_pressure": "Likely BRL weakness / USD-BRL higher",
-        "confirmation": "Targets imply 9.88 pp; PTAX above 5.22 with US 2Y firm"
+        "confirmation": "PTAX above 5.22 with US 2Y near 4.56%"
       }
     },
     {
@@ -326,7 +322,7 @@
       "expected_brazil_us_differential_change": "Narrows by 0.75 pp, from 10.375 pp to about 9.625 pp.",
       "confirmation_signals": [
         "The 2026 Focus Selic median revises below 13.75% without a renewed rise in the 2026 IPCA median from 5.0062%.",
-        "USD/BRL PTAX clears roughly 5.22 and the US 2-year yield rises from 4.34%."
+        "USD/BRL PTAX clears roughly 5.22 and the US 2-year yield remains above 4.56%."
       ],
       "principal_risk": "A larger Copom cut could be read as a credibility error, lifting local risk premia and front-end rates rather than producing the assumed orderly easing reaction.",
       "brief_summary": {
@@ -334,42 +330,42 @@
         "fomc": "Hike 25 bp to 3.75%-4.00%; firm bias",
         "differential": "Likely narrows 75 bp to 9.63 pp",
         "brl_usd_pressure": "Likely BRL weakness / USD-BRL higher",
-        "confirmation": "Focus Selic below 13.75%; PTAX above 5.22 with US 2Y higher"
+        "confirmation": "PTAX above 5.22 with US 2Y above 4.56%"
       }
     }
   ],
   "paper_trades": [
     {
       "direction": "Long USD / short BRL",
-      "thesis": "Enter only on a confirmed upside break in USD/BRL because the exchange-aligned base case narrows the Brazil-US policy differential while recent PTAX, Focus Selic and US 2-year moves already lean in the same direction.",
+      "thesis": "Rates and oil point in opposite directions. Higher US yields and a potentially smaller Brazil-US rate gap favor the dollar, while oil above USD 100 can support Brazil's export income and the real. USD/BRL near its recent low shows that the dollar case is not yet winning, so the trade requires a confirmed break above 5.22.",
       "supporting_evidence": [
-        "USD/BRL PTAX rose 1.57% over approximately one month and 0.16% over five valid observations to 5.1567.",
-        "The Brazil-US policy differential narrowed 0.25 pp over one month to 10.375 pp and would narrow another 0.50 pp in the base scenario.",
-        "The 2026 Focus Selic median is 13.75%, 0.25 pp below the current 14.00% target, and fell 0.25 pp over one month.",
-        "The US 2-year yield rose 0.10 pp over five valid observations to 4.34%, while the curve flattened 0.05 pp."
+        "USD/BRL PTAX fell 0.72% over approximately one month to 5.0915, close to the low of its refreshed 20-observation range.",
+        "The US 2-year yield rose 0.31 pp over one month to 4.56%, a dollar-positive signal that USD/BRL has not confirmed.",
+        "The current Brazil-US policy differential is 10.375 pp and would narrow by 0.50 pp in the saved base scenario.",
+        "Brent reached USD 109.51 per barrel in the latest official observation, supporting Brazilian export income while also increasing global inflation and risk concerns."
       ],
-      "catalyst": "The coincident 15-16 September Copom and FOMC decisions, especially confirmation of a Brazilian cut alongside a US hike or firm US guidance.",
-      "entry_logic": "No position at the 5.1567 snapshot. Consider the paper trade only after a daily PTAX midpoint closes above approximately 5.22, the rounded high of the latest 20 valid observations (5.2233), with the US 2-year yield still near or above 4.34% or the policy differential not widening.",
+      "catalyst": "The 16 September Copom and FOMC decisions and guidance, together with any change in the oil-supply shock or global risk appetite.",
+      "entry_logic": "No position at the 5.0915 snapshot. Consider the paper trade only after a daily PTAX midpoint closes above approximately 5.22, the rounded high of the refreshed 20-observation range (5.2233), with the US 2-year yield still near or above 4.56% or the policy differential actually narrowing.",
       "latest_ptax_reference": {
-        "value": 5.1567,
+        "value": 5.0915,
         "unit": "BRL per USD",
-        "observation_date": "2026-09-01",
-        "observation_timestamp": "2026-09-01T13:06:03.857125-03:00"
+        "observation_date": "2026-09-11",
+        "observation_timestamp": "2026-09-11T13:07:22.532196"
       },
-      "invalidation_condition": "Invalidate after entry if PTAX records two consecutive daily midpoints below approximately 5.16, the rounded midpoint of the saved 20-observation range (5.1569), or if the Brazil-US policy differential fails to narrow and remains near or above 10.375 pp because Copom does not ease and the FOMC does not hike.",
-      "profit_taking_logic": "Add the unrounded saved 20-observation high (5.2233) to the unrounded saved range width (0.1328) to obtain 5.3561, then bracket that measured move to the adjacent-cent 5.35-5.36 review zone; take profit earlier if post-meeting data reverse the differential or US 2-year confirmation.",
+      "invalidation_condition": "Before entry, abandon the dollar thesis if PTAX closes below approximately 5.08 while oil remains firm. After entry, invalidate on two consecutive daily midpoints below approximately 5.15, the rounded midpoint of the refreshed range (5.1543), or if the rate gap fails to narrow and export flows continue to support the real.",
+      "profit_taking_logic": "Add the refreshed 20-observation high (5.2233) to its width (0.1380) to obtain 5.3613; use 5.36-5.37 only as a review zone and reassess sooner if US yields fall or commodity support for the real strengthens.",
       "expected_holding_period": "Approximately two to four weeks, spanning the 15-16 September decisions and initial post-meeting repricing.",
       "principal_risks": [
-        "Copom holds or guides materially more hawkishly, preserving Brazilian carry and strengthening BRL.",
-        "The FOMC holds or guides dovishly, pulling the US 2-year yield and USD lower.",
-        "Improved global risk appetite, stronger commodity terms of trade or favorable Brazilian fiscal news supports BRL independently of the policy differential."
+        "Oil and other export prices keep bringing dollars into Brazil and support the real.",
+        "Copom stays restrictive or the FOMC turns less hawkish, preserving Brazilian carry or lowering US yields.",
+        "Brazilian fiscal or election news improves and attracts capital despite the narrower rate gap."
       ],
       "brief_principal_risks": [
-        "Copom holds or gives materially hawkish guidance.",
-        "The FOMC holds or guides dovishly, pulling US 2-year yields and USD lower.",
-        "Risk-on sentiment, stronger commodities or favorable Brazilian fiscal news supports BRL."
+        "Oil and export income continue to support the real.",
+        "Brazil keeps its rate advantage or US yields fall.",
+        "Brazilian fiscal or election news attracts capital."
       ],
-      "view_change_evidence": "Change the view if Focus Selic expectations revise back toward 14.00%, the policy differential fails to narrow, US 2-year yields fall materially from the saved 4.34% level, or PTAX fails the range breakout and moves below the saved 5.09 range low.",
+      "view_change_evidence": "Change the view if PTAX closes below 5.08 while oil stays firm, if the Brazil-US rate gap fails to narrow, or if US 2-year yields fall materially from 4.56%. Those outcomes would show that export flows or Brazilian carry matter more than the dollar-positive rate signal.",
       "supporting_scenario": "Base case",
       "invalidating_scenario": "Hawkish relative to expectations",
       "disclaimer": "Educational conditional paper trade only; not investment advice, an execution recommendation or a claim of past performance."

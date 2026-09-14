@@ -52,7 +52,7 @@ def test_portuguese_view_translates_deep_content() -> None:
         "margem de segurança",
         "Mais restritivo que o esperado",
         "Caminho dos juros",
-        "Tese original",
+        "Tese atual",
         "Regra de entrada",
         "Autor do projeto",
         "Ver o código",
@@ -73,7 +73,7 @@ def test_portuguese_view_translates_deep_content() -> None:
         "Hawkish relative to expectations",
         "Dovish relative to expectations",
         "**Policy path**",
-        "**Original thesis**",
+        "**Current thesis**",
         "**Entry rule**",
         "Project author",
         "Inspect the code",
@@ -87,8 +87,8 @@ def test_portuguese_view_translates_deep_content() -> None:
 
 def test_portuguese_snapshot_date_uses_portuguese_month() -> None:
     text = visible_text(render_portuguese())
-    assert "1 set 2026" in text
-    assert "1 Sep 2026" not in text
+    assert "13 set 2026" in text
+    assert "13 Sep 2026" not in text
 
 
 def test_french_view_translates_primary_and_deep_content() -> None:
@@ -106,7 +106,7 @@ def test_french_view_translates_primary_and_deep_content() -> None:
         "Marges et courbe de coûts",
         "Plus restrictif que prévu",
         "Trajectoire des taux",
-        "Thèse initiale",
+        "Thèse actuelle",
         "Règle d'entrée",
         "Auteur du projet",
         "Voir le code",
@@ -128,7 +128,7 @@ def test_french_view_translates_primary_and_deep_content() -> None:
         "Hawkish relative to expectations",
         "Dovish relative to expectations",
         "**Policy path**",
-        "**Original thesis**",
+        "**Current thesis**",
         "**Entry rule**",
         "Project author",
         "Inspect the code",
@@ -139,5 +139,5 @@ def test_french_view_translates_primary_and_deep_content() -> None:
 
 def test_french_snapshot_date_uses_french_month() -> None:
     text = visible_text(render_french())
-    assert "1 sept. 2026" in text
-    assert "1 Sep 2026" not in text
+    assert "13 sept. 2026" in text
+    assert "13 Sep 2026" not in text

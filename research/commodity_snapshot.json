@@ -1,5 +1,5 @@
 {
-  "retrieved_at": "2026-09-02T05:15:00Z",
+  "retrieved_at": "2026-09-13T19:58:14Z",
   "note": "Reviewable commodity snapshot for the portfolio dashboard. Frequencies differ by source; the UI never presents these observations as synchronous.",
   "commodities": {
     "brent": {
@@ -10,10 +10,10 @@
       "source_url": "https://fred.stlouisfed.org/series/DCOILBRENTEU",
       "frequency": "Daily",
       "unit": "USD per barrel",
-      "latest_date": "2026-08-18",
-      "latest": 95.29,
-      "previous_date": "2026-08-17",
-      "previous": 92.43,
+      "latest_date": "2026-09-09",
+      "latest": 109.51,
+      "previous_date": "2026-09-08",
+      "previous": 106.12,
       "signal": "higher",
       "channel": "Brazil is a major oil producer, so crude prices matter for export and producer revenues; fuel costs can also feed into the domestic inflation discussion."
     },

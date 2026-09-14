@@ -528,31 +528,31 @@ st.caption(ui("What I expect, why it matters, when I would act and when I would 
 if all(k in series for k in ("selic_target", "brazil_us_policy_differential", "ptax_usd_brl_midpoint")) and base_scenario and trade:
     base_brief = base_scenario.get("brief_summary", {})
     entry_value = thresholds.get("entry_trigger", {}).get("value", 5.22)
-    invalidation_value = thresholds.get("invalidation_reference", {}).get("value", 5.16)
+    invalidation_value = thresholds.get("invalidation_reference", {}).get("value", 5.15)
     decision_cards = (
         (
-            ui("1 / Starting point", "1 / Ponto de partida"),
-            ui("BRAZIL CUTS / U.S. RAISES", "BRASIL CORTA / EUA SOBEM"),
-            ui("The saved pricing suggested a small Brazilian rate cut and a small U.S. rate increase.", "Os preços salvos sugeriam um pequeno corte no Brasil e uma pequena alta nos EUA."),
+            ui("1 / Rates signal", "1 / Sinal dos juros"),
+            ui("THE DOLLAR HAS SUPPORT", "O DÓLAR TEM APOIO"),
+            ui("U.S. two-year yields rose to 4.56%, and the saved meeting path would narrow Brazil's rate advantage.", "O juro americano de dois anos subiu para 4,56%, e o cenário salvo reduziria a vantagem de juros do Brasil.", "Le taux américain à deux ans a atteint 4,56 %, et le scénario enregistré réduirait l'avantage de taux du Brésil."),
             "",
         ),
         (
-            ui("2 / Market mechanism", "2 / Mecanismo de mercado"),
-            ui("THE REAL LOSES SOME SUPPORT", "O REAL PERDE PARTE DO APOIO"),
-            ui(f"Brazil's rate lead over the U.S. would fall to about {base_brief.get('differential', '9.88 pp').split('to')[-1].strip()}.", "A vantagem de juros do Brasil sobre os EUA cairia para cerca de 9,88 pontos percentuais.", "L'avantage de taux du Brésil sur les États-Unis tomberait à environ 9,88 points."),
+            ui("2 / Oil signal", "2 / Sinal do petróleo"),
+            ui("BRAZIL GAINS EXPORT INCOME", "O BRASIL GANHA RECEITA EXTERNA"),
+            ui("Oil above $100 can bring more export dollars into Brazil, supporting the real even as it raises inflation risk.", "Petróleo acima de US$ 100 pode trazer mais dólares de exportação ao Brasil e apoiar o real, embora aumente o risco de inflação.", "Un pétrole au-dessus de 100 dollars peut accroître les recettes d'exportation du Brésil et soutenir le real, malgré le risque d'inflation."),
             "",
         ),
         (
-            ui("3 / Confirmation", "3 / Confirmação"),
-            ui(f"ONLY ABOVE {entry_value:.2f}", f"SÓ ACIMA DE {entry_value:.2f}", f"UNIQUEMENT AU-DESSUS DE {entry_value:.2f}"),
-            ui("I would buy dollars against reais only after USD/BRL breaks above its recent range.", "Eu só compraria dólares se o USD/BRL rompesse a máxima recente."),
+            ui("3 / Market verdict", "3 / Veredito do mercado"),
+            ui("NO CONFIRMATION YET", "AINDA SEM CONFIRMAÇÃO"),
+            ui("USD/BRL is near the bottom of its recent range, so the dollar-positive rate story is not winning yet.", "O USD/BRL está perto da mínima recente; portanto, a leitura dos juros favorável ao dólar ainda não venceu.", "L'USD/BRL est proche du bas de sa fourchette récente : le signal de taux favorable au dollar ne domine pas encore."),
+            "",
+        ),
+        (
+            ui("4 / Decision rule", "4 / Regra de decisão"),
+            ui(f"ACT ONLY ABOVE {entry_value:.2f}", f"AGIR SÓ ACIMA DE {entry_value:.2f}", f"AGIR SEULEMENT AU-DESSUS DE {entry_value:.2f}"),
+            ui("A breakout with firm U.S. yields would show that rates have finally overcome commodity support for the real.", "Um rompimento com juros americanos firmes mostraria que os juros finalmente superaram o apoio das commodities ao real.", "Une cassure avec des taux américains fermes montrerait que les taux ont enfin dépassé le soutien des commodities au real."),
             "signal",
-        ),
-        (
-            ui("4 / Risk control", "4 / Controle de risco"),
-            ui(f"BELOW {invalidation_value:.2f} TWICE", f"ABAIXO DE {invalidation_value:.2f} DUAS VEZES", f"SOUS {invalidation_value:.2f} DEUX FOIS"),
-            ui("I would abandon the idea if the price move fails or Brazil keeps its rate lead.", "Eu abandonaria a ideia se o movimento falhar ou se o Brasil mantiver sua vantagem de juros."),
-            "",
         ),
     )
     st.markdown(
@@ -671,16 +671,16 @@ st.subheader(ui("A paper trade - only if the market confirms it", "Uma operaçã
 if len(paper_trades) == 1 and series.get("ptax_usd_brl_midpoint"):
     trade = paper_trades[0]
     entry_value = float(thresholds.get("entry_trigger", {}).get("value", 5.22))
-    invalidation_value = float(thresholds.get("invalidation_reference", {}).get("value", 5.16))
-    review_low = float(thresholds.get("measured_move_review_zone", {}).get("lower", 5.35))
-    review_high = float(thresholds.get("measured_move_review_zone", {}).get("upper", 5.36))
+    invalidation_value = float(thresholds.get("invalidation_reference", {}).get("value", 5.15))
+    review_low = float(thresholds.get("measured_move_review_zone", {}).get("lower", 5.36))
+    review_high = float(thresholds.get("measured_move_review_zone", {}).get("upper", 5.37))
+    display_trade = TRADE_PT if portuguese else TRADE_FR if french else trade
     st.markdown(
         f'<div class="trade-card"><div class="trade-kicker">{ui("Conditional / no position at snapshot", "Condicional / sem posição no momento")}</div>'
         f'<div class="trade-title">{ui(f"Buy dollars only above {entry_value:.2f}", f"Comprar dólares só acima de {entry_value:.2f}", f"Acheter des dollars uniquement au-dessus de {entry_value:.2f}")}</div>'
-        f'<div class="trade-thesis">{ui("If Brazil cuts interest rates while the U.S. raises them, holding reais becomes slightly less attractive. Because much of that path is already expected, I would act only if price confirms it; fiscal news, export prices and global risk can still dominate.", "Se o Brasil cortar juros enquanto os EUA os elevam, manter reais fica um pouco menos atraente. Como boa parte desse caminho já é esperada, eu só agiria se o preço confirmasse; notícias fiscais, exportações e o risco global ainda podem dominar.")}</div></div>',
+        f'<div class="trade-thesis">{escape(str(display_trade.get("thesis", "")))}</div></div>',
         unsafe_allow_html=True,
     )
-    display_trade = TRADE_PT if portuguese else TRADE_FR if french else trade
     trade_details = (
         (c["entry"], c["entry_short"]),
         (c["invalidation"], c["invalidation_short"]),
@@ -704,9 +704,9 @@ if len(paper_trades) == 1 and series.get("ptax_usd_brl_midpoint"):
     with evidence_col:
         st.markdown(ui("#### Why the idea is plausible", "#### Por que a ideia é plausível"))
         evidence_items = (
-            ui("The dollar rose about 1.6% against the real over the latest month in the saved data.", "O dólar subiu cerca de 1,6% frente ao real no último mês dos dados salvos."),
-            ui("Brazil's interest-rate lead over the U.S. already narrowed by 0.25 percentage point.", "A vantagem de juros do Brasil sobre os EUA já caiu 0,25 ponto."),
-            ui("If the expected September decisions happen, that lead narrows by another 0.50 point.", "Se as decisões esperadas ocorrerem, essa vantagem cai mais 0,50 ponto."),
+            ui("U.S. two-year yields rose 0.31 percentage point over one month to 4.56%.", "O juro americano de dois anos subiu 0,31 ponto em um mês, para 4,56%.", "Le taux américain à deux ans a gagné 0,31 point en un mois, à 4,56 %."),
+            ui("The saved meeting path would reduce Brazil's rate advantage by 0.50 percentage point.", "O cenário salvo reduziria a vantagem de juros do Brasil em 0,50 ponto.", "Le scénario enregistré réduirait l'avantage de taux du Brésil de 0,50 point."),
+            ui("Yet USD/BRL fell 0.72% over one month to 5.0915 as oil rose above $100.", "Mesmo assim, o USD/BRL caiu 0,72% em um mês, para 5,0915, enquanto o petróleo superou US$ 100.", "Pourtant, l'USD/BRL a baissé de 0,72 % en un mois, à 5,0915, tandis que le pétrole dépassait 100 dollars."),
         )
         if evidence_items:
             st.markdown(
@@ -716,13 +716,13 @@ if len(paper_trades) == 1 and series.get("ptax_usd_brl_midpoint"):
                 unsafe_allow_html=True,
             )
         st.markdown(ui("#### Catalyst", "#### Catalisador"))
-        st.write(ui("The Brazilian and U.S. central-bank decisions on 15-16 September.", "As decisões dos bancos centrais do Brasil e dos EUA em 15-16 de setembro."))
+        st.write(ui("The 16 September central-bank decisions, their guidance and any change in the oil-supply shock.", "As decisões dos bancos centrais em 16 de setembro, suas orientações e qualquer mudança no choque de oferta de petróleo.", "Les décisions des banques centrales du 16 septembre, leurs orientations et toute évolution du choc d'offre pétrolier."))
     with risk_col:
         st.markdown(ui("#### What could go wrong", "#### O que pode dar errado"))
         risk_items = (
-            ui("Brazil keeps rates unchanged or signals that high rates will last longer.", "O Brasil mantém os juros ou indica que ficarão altos por mais tempo."),
-            ui("The U.S. does not raise rates or signals lower rates ahead.", "Os EUA não elevam os juros ou sinalizam cortes à frente."),
-            ui("Better fiscal news, stronger exports or a global rally strengthens the real instead.", "Notícias fiscais melhores, exportações fortes ou uma alta global fortalecem o real."),
+            ui("Oil and export income continue to support the real.", "Petróleo e exportações continuam apoiando o real.", "Le pétrole et les exportations continuent de soutenir le real."),
+            ui("Brazil keeps its rate advantage or U.S. yields fall.", "O Brasil mantém sua vantagem de juros ou os juros americanos caem.", "Le Brésil conserve son avantage de taux ou les taux américains baissent."),
+            ui("Brazilian fiscal or election news attracts capital.", "Notícias fiscais ou eleitorais no Brasil atraem capital.", "Les nouvelles budgétaires ou électorales brésiliennes attirent des capitaux."),
         )
         if risk_items:
             st.markdown(
@@ -733,14 +733,14 @@ if len(paper_trades) == 1 and series.get("ptax_usd_brl_midpoint"):
             )
     st.markdown(
         f'<div class="mind-change"><strong>{ui("What would make me change my mind", "O que me faria mudar de opinião")}</strong><br>'
-        + ui(f'USD/BRL fails to stay above {entry_value:.2f}; Brazil keeps its rate lead; or new fiscal, export or global-market evidence strengthens the real.', f'O dólar não se mantém acima de {entry_value:.2f}; o Brasil mantém sua vantagem de juros; ou novas informações fiscais, de exportação ou globais fortalecem o real.', f"L'USD/BRL ne reste pas au-dessus de {entry_value:.2f} ; le Brésil conserve son avantage de taux ; ou de nouvelles données budgétaires, commerciales ou mondiales renforcent le real.")
+        + ui(f'Before entry: USD/BRL closes below 5.08 while oil stays firm. After entry: price falls below {invalidation_value:.2f} twice, U.S. yields fall or Brazil keeps its rate advantage.', f'Antes da entrada: o USD/BRL fecha abaixo de 5,08 enquanto o petróleo continua firme. Depois: o preço cai abaixo de {invalidation_value:.2f} duas vezes, os juros americanos caem ou o Brasil mantém sua vantagem.', f"Avant l'entrée : l'USD/BRL clôture sous 5,08 tandis que le pétrole reste ferme. Après : le prix passe deux fois sous {invalidation_value:.2f}, les taux américains baissent ou le Brésil conserve son avantage.")
         + "</div>",
         unsafe_allow_html=True,
     )
     with st.expander(ui("See the calculations and full trade rules", "Ver cálculos e regras completas")):
         st.write(c["horizon"])
         display_trade = TRADE_PT if portuguese else TRADE_FR if french else trade
-        st.markdown(ui("**Original thesis**", "**Tese original**"))
+        st.markdown(ui("**Current thesis**", "**Tese atual**", "**Thèse actuelle**"))
         st.write(display_trade.get("thesis", ui("Unavailable", "Indisponível")))
         st.markdown(ui("**Entry rule**", "**Regra de entrada**"))
         st.write(display_trade.get("entry_logic", ui("Unavailable", "Indisponível")))
@@ -780,7 +780,7 @@ if all(k in series for k in ("selic_target", "brazil_us_policy_differential", "p
         ),
         (
             ui("Currency", "Câmbio"),
-            ui(f"USD/BRL PTAX is {fx['value']:.2f}; USD/BRL rose {abs(fx['one_month_change_percent']):.1f}% over the month in the saved official data.", c["fx_change"].format(change=f"{fx['one_month_change_percent']:+.2f}"), c["fx_change"].format(change=f"{fx['one_month_change_percent']:+.2f}")),
+            ui(f"USD/BRL PTAX is {fx['value']:.2f}; USD/BRL changed {fx['one_month_change_percent']:+.1f}% over the month.", c["fx_change"].format(change=f"{fx['one_month_change_percent']:+.2f}"), c["fx_change"].format(change=f"{fx['one_month_change_percent']:+.2f}")),
         ),
         (
             ui("Inflation", "Inflação"),
@@ -955,11 +955,21 @@ if commodities:
         + ui("Trade implication: ", "Implicação para a operação: ")
         + '</strong>'
         + ui(
-            "A broad commodity rally would weaken the long-USD/short-BRL case. Falling export prices alongside firm U.S. yields would strengthen it. Mixed signals reinforce the decision to wait for USD/BRL confirmation.",
-            "Uma alta ampla das commodities enfraqueceria a tese de compra de dólar. Queda dos preços de exportação com juros americanos firmes a fortaleceria. Sinais mistos reforçam a necessidade de esperar a confirmação do USD/BRL.",
+            "Oil above $100 helps explain why the real strengthened despite higher U.S. yields. That disagreement is the thesis: wait for USD/BRL to reveal which force is stronger.",
+            "Petróleo acima de US$ 100 ajuda a explicar por que o real se valorizou apesar dos juros americanos mais altos. Esse conflito é a tese: esperar o USD/BRL mostrar qual força é maior.",
+            "Un pétrole au-dessus de 100 dollars aide à expliquer pourquoi le real s'est renforcé malgré la hausse des taux américains. Ce conflit constitue la thèse : attendre que l'USD/BRL révèle la force dominante.",
         )
         + '</div></section>',
         unsafe_allow_html=True,
+    )
+    st.caption(
+        ui(
+            "Current context (9 September): reporting linked Brent above $100 to Middle East supply risk. For Brazil, the shock is two-sided: more oil-export income can support the real, while higher inflation and global risk can support the dollar.",
+            "Contexto atual (9 de setembro): o petróleo Brent acima de US$ 100 foi associado ao risco de oferta no Oriente Médio. Para o Brasil, o choque tem dois lados: mais receita de exportação pode apoiar o real, enquanto inflação e risco global podem apoiar o dólar.",
+            "Contexte au 9 septembre : la hausse du Brent au-dessus de 100 dollars a été liée au risque d'offre au Moyen-Orient. Pour le Brésil, le choc agit dans les deux sens : les exportations peuvent soutenir le real, tandis que l'inflation et le risque mondial peuvent soutenir le dollar.",
+        )
+        + " · [AP](https://apnews.com/article/0dd4014d2bb5a5e7627ad8acb7cd1256)"
+        + " · [Reuters](https://economia.uol.com.br/noticias/reuters/2026/09/09/dolar-fecha-em-alta-no-brasil-com-acirramento-das-tensoes-no-oriente-medio.htm)"
     )
 else:
     st.info(ui("The saved commodity snapshot is temporarily unavailable.", "Os dados salvos de commodities estão temporariamente indisponíveis."))

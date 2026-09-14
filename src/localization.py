@@ -25,6 +25,17 @@ UI_FR = {
     "I would buy dollars against reais only after USD/BRL breaks above its recent range.": "Je n'achèterais des dollars contre des reals qu'après une sortie de l'USD/BRL au-dessus de sa fourchette récente.",
     "4 / Risk control": "4 / Gestion du risque",
     "I would abandon the idea if the price move fails or Brazil keeps its rate lead.": "J'abandonnerais l'idée si le mouvement de prix échoue ou si le Brésil conserve son avantage de taux.",
+    "1 / Rates signal": "1 / Signal des taux",
+    "THE DOLLAR HAS SUPPORT": "LE DOLLAR EST SOUTENU",
+    "U.S. two-year yields rose to 4.56%, and the saved meeting path would narrow Brazil's rate advantage.": "Le taux américain à deux ans a atteint 4,56 %, et le scénario enregistré réduirait l'avantage de taux du Brésil.",
+    "2 / Oil signal": "2 / Signal du pétrole",
+    "BRAZIL GAINS EXPORT INCOME": "LE BRÉSIL GAGNE DES RECETTES D'EXPORTATION",
+    "Oil above $100 can bring more export dollars into Brazil, supporting the real even as it raises inflation risk.": "Un pétrole au-dessus de 100 dollars peut accroître les recettes d'exportation du Brésil et soutenir le real, malgré le risque d'inflation.",
+    "3 / Market verdict": "3 / Verdict du marché",
+    "NO CONFIRMATION YET": "PAS ENCORE DE CONFIRMATION",
+    "USD/BRL is near the bottom of its recent range, so the dollar-positive rate story is not winning yet.": "L'USD/BRL est proche du bas de sa fourchette récente : le signal de taux favorable au dollar ne domine pas encore.",
+    "4 / Decision rule": "4 / Règle de décision",
+    "A breakout with firm U.S. yields would show that rates have finally overcome commodity support for the real.": "Une cassure avec des taux américains fermes montrerait que les taux ont enfin dépassé le soutien des commodities au real.",
     "The saved decision frame is temporarily unavailable.": "Le cadre de décision enregistré est temporairement indisponible.",
     "Why these numbers matter": "Pourquoi ces chiffres comptent",
     "Rates": "Taux",
@@ -142,6 +153,7 @@ UI_FR = {
     "What would make me change my mind": "Ce qui me ferait changer d'avis",
     "See the calculations and full trade rules": "Voir les calculs et toutes les règles de l'opération",
     "**Original thesis**": "**Thèse initiale**",
+    "**Current thesis**": "**Thèse actuelle**",
     "**Entry rule**": "**Règle d'entrée**",
     "**Invalidation rule**": "**Règle d'invalidation**",
     "**Review-zone calculation**": "**Calcul de la zone de réévaluation**",
@@ -187,7 +199,7 @@ SCENARIO_FR = {
         "difference_from_current_expectations": "Le maintien au Brésil est plus restrictif que la baisse d'environ 0,22 point intégrée dans les prix de marché. Le maintien américain est plus accommodant que la hausse de 0,25 point privilégiée par l'observation CME. Ensemble, ils laissent l'écart de taux 0,50 point au-dessus du scénario central.",
         "confirmation_signals": [
             "La prévision médiane du taux Selic pour 2026 remonte de 13,75 % vers 14,00 %.",
-            "L'USD/BRL passe sous environ 5,09 tandis que le taux américain à deux ans recule depuis 4,34 %.",
+            "L'USD/BRL passe sous environ 5,08 tandis que le taux américain à deux ans recule depuis 4,56 %.",
         ],
         "principal_risk": "Une aversion mondiale au risque ou un choc sur les prix des commodities pourrait affaiblir le real malgré un écart de taux plus favorable.",
         "brief_summary": {
@@ -205,7 +217,7 @@ SCENARIO_FR = {
         "difference_from_current_expectations": "La baisse brésilienne de 0,25 point est proche de celle intégrée dans les prix de marché. La hausse américaine de 0,25 point est le résultat auquel l'observation CME accordait le poids le plus élevé. Aucune probabilité conjointe n'est déduite.",
         "confirmation_signals": [
             "Les taux directeurs passent à 13,75 % au Brésil et à un point médian de 3,875 % aux États-Unis, soit un écart proche de 9,88 points.",
-            "L'USD/BRL clôture au-dessus d'environ 5,22 tandis que le taux américain à deux ans reste proche ou au-dessus de 4,34 %.",
+            "L'USD/BRL clôture au-dessus d'environ 5,22 tandis que le taux américain à deux ans reste proche ou au-dessus de 4,56 %.",
         ],
         "principal_risk": "Les deux décisions peuvent déjà être intégrées dans les prix, laissant le budget brésilien, les commodities ou l'appétit mondial pour le risque dominer le change.",
         "brief_summary": {
@@ -223,7 +235,7 @@ SCENARIO_FR = {
         "difference_from_current_expectations": "La baisse brésilienne de 0,50 point dépasse d'environ 0,28 point celle intégrée dans les prix de marché et termine sous la prévision médiane du Selic pour 2026. Avec la hausse américaine attendue, le résultat est plus accommodant pour le Brésil.",
         "confirmation_signals": [
             "La prévision médiane du Selic pour 2026 passe sous 13,75 % sans hausse de la prévision d'inflation.",
-            "L'USD/BRL dépasse environ 5,22 et le taux américain à deux ans monte depuis 4,34 %.",
+            "L'USD/BRL dépasse environ 5,22 et le taux américain à deux ans reste au-dessus de 4,56 %.",
         ],
         "principal_risk": "Une baisse plus forte peut être interprétée comme une erreur de politique, accroître la prime de risque et faire monter les taux courts brésiliens.",
         "brief_summary": {
@@ -329,7 +341,7 @@ SCENARIO_PT = {
         ),
         "confirmation_signals": [
             "A mediana Focus para a Selic de 2026 volta de 13,75% em direção à meta inalterada de 14,00%.",
-            "A PTAX do USD/BRL rompe aproximadamente 5,09 para baixo, mínima da faixa salva de 20 observações, enquanto o juro americano de dois anos cai a partir de 4,34%.",
+            "A PTAX do USD/BRL rompe aproximadamente 5,08 para baixo, mínima da faixa atualizada, enquanto o juro americano de dois anos cai a partir de 4,56%.",
         ],
         "principal_risk": (
             "Uma aversão global a risco ou um choque nos preços das commodities pode enfraquecer o real mesmo "
@@ -360,7 +372,7 @@ SCENARIO_PT = {
         ),
         "confirmation_signals": [
             "As metas oficiais passam a 13,75% no Brasil e a um ponto médio de 3,875% nos EUA, produzindo um diferencial perto de 9,88 p.p.",
-            "A PTAX do USD/BRL fecha acima de aproximadamente 5,22, máxima da faixa salva de 20 observações, enquanto o juro americano de dois anos permanece perto ou acima de 4,34%.",
+            "A PTAX do USD/BRL fecha acima de aproximadamente 5,22, máxima da faixa atualizada, enquanto o juro americano de dois anos permanece perto ou acima de 4,56%.",
         ],
         "principal_risk": (
             "Os dois movimentos podem já estar refletidos nos juros e no câmbio, deixando o apetite "
@@ -391,7 +403,7 @@ SCENARIO_PT = {
         ),
         "confirmation_signals": [
             "A mediana Focus para a Selic de 2026 cai abaixo de 13,75% sem nova alta da mediana do IPCA de 2026, atualmente em 5,0062%.",
-            "A PTAX do USD/BRL supera aproximadamente 5,22 e o juro americano de dois anos sobe a partir de 4,34%.",
+            "A PTAX do USD/BRL supera aproximadamente 5,22 e o juro americano de dois anos permanece acima de 4,56%.",
         ],
         "principal_risk": (
             "Um corte maior do Copom pode ser interpretado como erro de credibilidade, elevando o prêmio "
@@ -409,24 +421,24 @@ SCENARIO_PT = {
 
 TRADE_PT = {
     "thesis": (
-        "Entrar apenas após um rompimento confirmado do USD/BRL, pois o cenário-base alinhado ao mercado "
-        "reduz o diferencial de juros entre Brasil e EUA, enquanto os movimentos recentes da PTAX, da "
-        "Focus Selic e do juro americano de dois anos já apontam na mesma direção."
+        "Os juros e o petróleo apontam em direções opostas. Juros americanos mais altos e um possível "
+        "estreitamento do diferencial favorecem o dólar; petróleo acima de US$ 100 pode apoiar as exportações "
+        "e o real. O USD/BRL perto da mínima recente mostra que a tese do dólar ainda não venceu."
     ),
     "entry_logic": (
-        "Sem posição no nível de 5,1567. Considerar a operação simulada apenas após a PTAX diária fechar "
+        "Sem posição no nível de 5,0915. Considerar a operação simulada apenas após a PTAX diária fechar "
         "acima de aproximadamente 5,22, máxima arredondada das últimas 20 observações válidas (5,2233), "
-        "com o juro americano de dois anos perto ou acima de 4,34% ou sem abertura do diferencial de juros."
+        "com o juro americano de dois anos perto ou acima de 4,56% ou com redução efetiva do diferencial."
     ),
     "invalidation_condition": (
-        "Após a entrada, invalidar se a PTAX registrar dois pontos médios diários consecutivos abaixo de "
-        "aproximadamente 5,16, ponto médio arredondado da faixa salva de 20 observações (5,1569), ou se o "
-        "diferencial de juros entre Brasil e EUA não diminuir e permanecer perto ou acima de 10,375 p.p."
+        "Antes da entrada, abandonar a tese do dólar abaixo de 5,08 se o petróleo continuar firme. Após a "
+        "entrada, invalidar após duas PTAX diárias abaixo de 5,15, ponto médio arredondado da faixa atualizada "
+        "(5,1543), ou se o diferencial de juros não diminuir."
     ),
     "profit_taking_logic": (
-        "Somar a máxima não arredondada da faixa salva de 20 observações (5,2233) à sua amplitude não "
-        "arredondada (0,1328) resulta em 5,3561; por isso, usar 5,35-5,36 como zona de reavaliação, não "
-        "como alvo garantido, e rever antes se os juros ou os dados posteriores às reuniões mudarem."
+        "Somar a máxima da faixa atualizada (5,2233) à sua amplitude (0,1380) resulta em 5,3613; por isso, "
+        "usar 5,36-5,37 apenas como zona de reavaliação e rever antes se os juros americanos caírem ou o "
+        "apoio das exportações ao real aumentar."
     ),
 }
 
@@ -513,9 +525,10 @@ SCENARIO_FR = _natural_french(SCENARIO_FR)
 TRADE_FR = _natural_french(TRADE_FR)
 
 TRADE_FR.update({
- 'entry_logic': "Aucune position à la référence enregistrée de 5,1567. Envisager l'opération fictive uniquement après un point médian PTAX quotidien au-dessus d'environ 5,22, sommet arrondi des 20 dernières observations valides (5,2233), avec le taux américain à deux ans proche ou au-dessus de 4,34 % ou un écart de taux qui ne s'élargit pas.",
- 'invalidation_condition': "Après l'entrée, invalider si la PTAX affiche deux points médians quotidiens consécutifs sous environ 5,16, milieu arrondi de la fourchette enregistrée (5,1569), ou si l'écart Brésil–États-Unis ne diminue pas et reste proche ou au-dessus de 10,375 points, le Copom ne baissant pas ses taux et la Fed ne les relevant pas.",
- 'profit_taking_logic': "Ajouter le sommet non arrondi (5,2233) à l'amplitude non arrondie (0,1328) donne 5,3561. Utiliser 5,35–5,36 comme zone de réexamen, pas comme objectif garanti ; réexaminer plus tôt si les données après les réunions inversent la confirmation de l'écart de taux ou du taux américain à deux ans.",
+ 'thesis': "Les taux et le pétrole pointent dans des directions opposées. Des taux américains plus élevés favorisent le dollar, tandis qu'un pétrole au-dessus de 100 dollars peut soutenir les exportations et le real. L'USD/BRL proche de son plus bas récent montre que le scénario dollar ne domine pas encore.",
+ 'entry_logic': "Aucune position à 5,0915. Envisager l'opération uniquement après un point médian PTAX quotidien au-dessus d'environ 5,22, avec le taux américain à deux ans proche ou au-dessus de 4,56 % ou une baisse effective de l'écart de taux.",
+ 'invalidation_condition': "Avant l'entrée, abandonner le scénario dollar sous 5,08 si le pétrole reste ferme. Après l'entrée, invalider après deux clôtures PTAX quotidiennes sous 5,15, milieu arrondi de la fourchette actualisée (5,1543), ou si l'écart de taux ne diminue pas.",
+ 'profit_taking_logic': "Ajouter le sommet de la fourchette (5,2233) à son amplitude (0,1380) donne 5,3613. Utiliser 5,36–5,37 comme zone de réexamen, et revoir plus tôt si les taux américains baissent ou si les exportations soutiennent davantage le real.",
 })
 UI_FR['SAVED REFERENCE'] = 'RÉFÉRENCE ENREGISTRÉE'
 

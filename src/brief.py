@@ -87,9 +87,6 @@ def build_brief_context(payload: dict[str, Any]) -> dict[str, Any]:
     audit = snapshot["scenario_label_audit"]
     trade = snapshot["paper_trades"][0]
 
-    usd_brl_five_day = ptax["five_business_day_change_percent"] / 100
-    brl_usd_five_day = ((1 / (1 + usd_brl_five_day)) - 1) * 100
-
     market_metrics = [
         {
             "label": "One U.S. dollar",
@@ -115,29 +112,30 @@ def build_brief_context(payload: dict[str, Any]) -> dict[str, Any]:
 
     what_changed = [
         (
-            f"Economists' 2026 Brazil-rate forecast fell {abs(focus_selic['selected_1_month_change_pp']):.2f} "
-            f"percentage point over one month, while their inflation forecast edged lower."
+            f"The U.S. two-year yield rose {us_2y['one_month_change_pp']:.2f} percentage point over one month "
+            f"to {us_2y['value']:.2f}%, a dollar-positive signal."
         ),
         (
-            f"The real weakened {abs(brl_usd_five_day):.2f}% against the dollar over the latest five observations."
+            f"Yet USD/BRL fell {abs(ptax['one_month_change_percent']):.2f}% over the month to {ptax['value']:.4f}, "
+            "close to the low of its recent range."
         ),
         (
-            f"Brazil's interest-rate advantage over the U.S. narrowed {abs(differential['one_month_change_pp']):.2f} "
-            "percentage point over one month."
+            f"The Focus 2026 Selic median stayed at {focus_selic['selected_value']:.2f}%, while its inflation median "
+            f"edged down {abs(focus_ipca['selected_1_month_change_pp']):.2f} percentage point."
         ),
     ]
 
     context_checks = [
-        "A small Brazilian cut and a small U.S. increase are already expected; the surprise and the guidance matter more than the headline decision.",
-        "Brazilian fiscal news, U.S. inflation and jobs data, export prices and global risk appetite can overpower the rate story.",
-        "The price trigger is therefore essential: do not take the risk unless USD/BRL first confirms the view.",
+        "Rates favor the dollar: U.S. two-year yields are higher and the saved meeting path narrows Brazil's rate advantage.",
+        "Oil favors Brazil through export income, but the same supply shock can lift global inflation, yields and risk aversion.",
+        "USD/BRL near its recent low says the dollar case is not winning yet; wait for price to resolve the conflict.",
     ]
 
     scenario_rows = []
     friendly = {
-        "Hawkish relative to expectations": ("Brazil stays tougher", "Real likely strengthens", "Hold at 14.00%", "Hold at 3.50%-3.75%", "Stays near 10.38 pp", "Rate forecasts rise; USD/BRL below 5.09"),
-        "Base case": ("Most expected path", "Real likely weakens slightly", "Cut 0.25% to 13.75%", "Raise 0.25% to 3.75%-4.00%", "Falls to about 9.88 pp", "Rate gap reaches 9.88 pp; USD/BRL above 5.22"),
-        "Dovish relative to expectations": ("Brazil cuts faster", "Real likely weakens more", "Cut 0.50% to 13.50%", "Raise 0.25% to 3.75%-4.00%", "Falls to about 9.63 pp", "Brazil rate forecasts fall; USD/BRL above 5.22"),
+        "Hawkish relative to expectations": ("Brazil stays tougher", "Real likely strengthens", "Hold at 14.00%", "Hold at 3.50%-3.75%", "Stays near 10.38 pp", "USD/BRL below 5.08; U.S. 2Y falls"),
+        "Base case": ("Saved base case", "Real may weaken", "Cut 0.25% to 13.75%", "Raise 0.25% to 3.75%-4.00%", "Falls to about 9.88 pp", "USD/BRL above 5.22; U.S. 2Y near 4.56%"),
+        "Dovish relative to expectations": ("Brazil cuts faster", "Real likely weakens more", "Cut 0.50% to 13.50%", "Raise 0.25% to 3.75%-4.00%", "Falls to about 9.63 pp", "USD/BRL above 5.22; U.S. 2Y above 4.56%"),
     }
     for scenario in snapshot["scenarios"]:
         scenario_name, fx_effect, brazil_move, us_move, rate_gap, confirmation = friendly[scenario["name"]]
@@ -157,8 +155,8 @@ def build_brief_context(payload: dict[str, Any]) -> dict[str, Any]:
         f"Until then, there is no trade."
     )
     invalidation_text = (
-        f"Abandon the idea after two closes below {thresholds.invalidation:.2f}, or if Brazil's "
-        "interest-rate advantage does not shrink."
+        "Before entry, abandon the dollar thesis below 5.08 if oil stays firm. After entry, leave after "
+        f"two closes below {thresholds.invalidation:.2f}, or if Brazil's rate advantage does not shrink."
     )
     review_text = (
         f"Reassess around {thresholds.review_low:.2f}-{thresholds.review_high:.2f}, one recent-range width above entry. "
@@ -171,13 +169,12 @@ def build_brief_context(payload: dict[str, Any]) -> dict[str, Any]:
 
     bottom_line = [
         (
-            f"Enter only after the official USD/BRL reference closes above {thresholds.entry:.2f} "
-            f"while the U.S. two-year yield stays near or above {us_2y['value']:.2f}%. "
-            "This tests whether price agrees with the rate story."
+            f"Rates favor the dollar; oil and export income favor the real. Enter only after USD/BRL closes "
+            f"above {thresholds.entry:.2f} while the U.S. two-year yield stays near or above {us_2y['value']:.2f}%."
         ),
         (
-            f"Leave after two closes below {thresholds.invalidation:.2f}, or if Brazil's rate advantage "
-            "does not narrow. Fiscal news, export prices and global risk can still overpower the setup."
+            f"Until then, there is no trade. A move below 5.08 with firm oil rejects the idea before entry; "
+            f"after entry, leave after two closes below {thresholds.invalidation:.2f} or if the rate gap does not narrow."
         ),
     ]
 
@@ -201,7 +198,7 @@ def build_brief_context(payload: dict[str, Any]) -> dict[str, Any]:
         "trade": {
             "direction": "Buy USD / sell BRL after confirmation",
             "status": "NO LIVE POSITION - WAITING FOR CONFIRMATION",
-            "thesis": "If Brazil cuts rates while the U.S. raises them, holding reais becomes slightly less attractive. Because much of that path is already expected, I would act only after price confirms it; fiscal news, export prices and global risk can still dominate.",
+            "thesis": trade["thesis"],
             "entry": entry_text,
             "latest_reference": latest_reference,
             "invalidation": invalidation_text,
@@ -214,7 +211,8 @@ def build_brief_context(payload: dict[str, Any]) -> dict[str, Any]:
         "sources": source_links,
         "limitations": (
             "PTAX is an official reference, not an executable price. Forecasts are survey data. "
-            "Global risk appetite, export prices and Brazilian fiscal news may matter more than rates."
+            "Oil can support Brazil through export income while also raising global inflation and risk aversion. "
+            "Fiscal and election news may still matter more than rates."
         ),
         "audit_summary": (
             f"CME FedWatch ({audit['fomc']['pricing_timestamp']}): "

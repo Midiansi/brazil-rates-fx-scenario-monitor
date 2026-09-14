@@ -65,14 +65,15 @@ def render_research_pdf(snapshot, commodities, output, language='en'):
     if language == 'en':
         changes = context['what_changed']
     elif language == 'pt':
-        changes = ['A mediana Focus da Selic de 2026 caiu 0,25 ponto percentual em um mês; a mediana do IPCA caiu 0,0899 ponto.', 'O diferencial de juros caiu 0,25 ponto em um mês. O juro americano de dois anos subiu 0,10 ponto nas últimas cinco observações.']
+        changes = ['O juro americano de dois anos subiu 0,31 ponto em um mês, para 4,56%, favorecendo o dólar.', 'Mesmo assim, o USD/BRL caiu 0,72% no mês, para 5,0915, perto da mínima recente: o petróleo e as exportações ainda apoiam o real.']
     else:
-        changes = ["La médiane Focus du Selic 2026 a baissé de 0,25 point sur un mois ; celle de l'IPCA a reculé de 0,0899 point.", "L'écart de taux a reculé de 0,25 point sur un mois. Le taux américain à deux ans a augmenté de 0,10 point sur les cinq dernières observations."]
+        changes = ["Le taux américain à deux ans a gagné 0,31 point en un mois, à 4,56 %, ce qui favorise le dollar.", "Pourtant, l'USD/BRL a baissé de 0,72 % sur le mois, à 5,0915, près de son plus bas récent : le pétrole et les exportations soutiennent encore le real."]
     for change in changes: story.append(p(change,'small'))
     heading('source_heading')
     links=[('BCB · Focus',series['focus_selic']['source_url']),('BCB · PTAX',series['ptax_usd_brl_midpoint']['source_url']),('BCB · Selic / SGS 432',series['selic_target']['source_url']),('Federal Reserve · FOMC',snapshot['event_context']['fomc_september_2026']['source_url']),('BCB · Copom',snapshot['event_context']['copom_september_2026']['source_url']),('FRED · DFEDTARL','https://fred.stlouisfed.org/series/DFEDTARL'),('FRED · DGS2','https://fred.stlouisfed.org/series/DGS2'),('CME FedWatch',snapshot['scenario_label_audit']['fomc']['source_url']),('B3 · DI1',snapshot['scenario_label_audit']['copom']['source_url'])]
     links += [('FRED · DFEDTARU','https://fred.stlouisfed.org/series/DFEDTARU'),('FRED · DGS10','https://fred.stlouisfed.org/series/DGS10')]
     links += [(('EIA' if key=='brent' else 'IMF')+' / FRED · '+item['series_id'],item['source_url']) for key,item in commodities.get('commodities',{}).items()]
+    links += [('AP · oil supply shock','https://apnews.com/article/0dd4014d2bb5a5e7627ad8acb7cd1256'),('Reuters · Brazil markets','https://economia.uol.com.br/noticias/reuters/2026/09/09/dolar-fecha-em-alta-no-brasil-com-acirramento-das-tensoes-no-oriente-medio.htm')]
     links=[(label,source_url_for(url,series["selic_target"]["latest_observation_date"])) for label,url in links]
     source_cells=[Paragraph('<a href="'+escape(url,quote=True)+'" color="#087969">'+clean(label)+'</a>',styles['small']) for label,url in links]
     if len(source_cells)%2: source_cells.append(p('','small'))

@@ -76,7 +76,7 @@ def test_localized_pdf_complete_and_searchable(tmp_path,language):
     reader=PdfReader(pdf); text='\n'.join(p.extract_text() for p in reader.pages)
     assert len(reader.pages)==3
     assert COPY[language]['pdf_title'] in text
-    assert '5.2233' in text.replace(',', '.') and '5.3561' in text.replace(',', '.') and '2026-09-01' in text
+    assert '5.2233' in text.replace(',', '.') and '5.3613' in text.replace(',', '.') and '2026-09-11' in text
     assert len(text)>4500
     assert len(reader.pages[-1].get('/Annots'))>=13
     if language!='en':
@@ -94,6 +94,6 @@ def test_selic_link_is_bounded_to_observed_day():
 
 def test_french_trade_preserves_alternative_confirmation():
     from src.localization import TRADE_FR
-    assert "ou un écart de taux qui ne s'élargit pas" in TRADE_FR['entry_logic']
-    assert 'deux points médians quotidiens consécutifs' in TRADE_FR['invalidation_condition']
-    assert '10,375' in TRADE_FR['invalidation_condition']
+    assert "ou une baisse effective de l'écart de taux" in TRADE_FR['entry_logic']
+    assert 'deux clôtures PTAX quotidiennes' in TRADE_FR['invalidation_condition']
+    assert "ne diminue pas" in TRADE_FR['invalidation_condition']
