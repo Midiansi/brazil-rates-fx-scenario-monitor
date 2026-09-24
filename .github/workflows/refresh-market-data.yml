@@ -2,7 +2,8 @@ name: refresh market data
 
 on:
   schedule:
-    # After the Brazilian close and the usual daily U.S. Treasury publication.
+    # After the Brazilian close (PTAX is published around 13:00 BRT) and the
+    # U.S. Treasury's daily yield-curve release.
     - cron: '17 22 * * 1-5'
   workflow_dispatch:
   push:
@@ -10,8 +11,10 @@ on:
     paths:
       - '.github/workflows/refresh-market-data.yml'
       - 'scripts/refresh_market_data.py'
+      - 'scripts/check_freshness.py'
       - 'src/live_refresh.py'
       - 'src/data.py'
+      - 'src/freshness.py'
 
 permissions:
   contents: write
@@ -23,23 +26,36 @@ concurrency:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: pip
-      - run: pip install -r requirements.txt
-      - run: python scripts/refresh_market_data.py
-      - name: Commit a newer snapshot
+          cache-dependency-path: requirements-refresh.txt
+      # pandas + requests only: the job does not need Streamlit.
+      - run: pip install -r requirements-refresh.txt
+
+      # Each source is validated separately; failures keep the last good value
+      # and are listed in the run summary. This step only fails on a crash.
+      - name: Fetch and validate official data
+        run: python scripts/refresh_market_data.py
+
+      - name: Commit the refreshed snapshot
         run: |
           if git diff --quiet -- research/live_snapshot.json; then
-            echo "No new observations."
+            echo "Snapshot unchanged."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add research/live_snapshot.json
           git commit -m "Refresh official market data"
+          git pull --rebase --autostash origin main
           git push
+
+      # Turns the run red (and notifies the repository owner) when key figures
+      # are more than a week old, instead of reporting a misleading success.
+      - name: Check data freshness
+        run: python scripts/check_freshness.py

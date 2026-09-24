@@ -1,77 +1,90 @@
 # Brazil Macro
 
-A source-grounded Streamlit research portfolio connecting Brazilian rates, U.S. rates, the real and commodity exports. English, Portuguese and French versions cover the entire page and downloadable brief. Official market observations refresh automatically without putting network calls in the visitor's render path.
+A student research log on how Brazilian and U.S. interest rates, the Brazilian real and Brazil's main commodity exports move together. Each view is dated, backed by official data, and paired with the rules that would make me act or change my mind — and each old view is reviewed after the fact.
 
-Public site: https://brasilmacro.streamlit.app/ — local changes are not deployed automatically by this repository's application code.
+Public site: https://brasilmacro.streamlit.app/ (English, `?lang=pt` Português, `?lang=fr` Français)
 
-## Reading the project
+Educational research, not investment advice. No real positions and no claimed performance.
 
-The first screen states the conditional view and its limitations. Navigation leads to three saved scenarios, a disciplined paper trade, commodity transmission channels and the underlying evidence. Detailed scenarios, trade calculations, research process and sources remain available in expanders.
+![First screen of the site: the dated view, why, and what would make me act or change my mind](assets/dashboard.png)
 
-The decision framework is a fixed 13 September 2026 research case, not a live trade recommendation. It studies a cross-asset disagreement: higher U.S. yields and a potentially smaller Brazil-U.S. rate gap favor the dollar, while oil above USD 100 supports Brazilian export income and the real. The prominent market observations are maintained separately in `research/live_snapshot.json` and refreshed from official feeds on weekdays. The page does not claim execution or performance, and the thesis is never silently rewritten by the updater.
+## Current thesis (24 September 2026)
 
-The updated paper trade remains inactive unless the daily PTAX midpoint closes above 5.22, with the U.S. two-year yield near/above 4.56% **or** the policy differential actually narrowing. Before entry, a close below 5.08 with firm oil rejects the dollar thesis. After entry, two consecutive PTAX midpoints below 5.15, or a rate gap that fails to narrow, invalidate it. 5.36–5.37 is a review zone. The exact refreshed range high is 5.2233; PTAX is not an executable spot quote, and costs/position sizing are not modelled.
+**The real is held up by its large interest-rate cushion; the 4 October election will decide the next move. No position until the market shows its hand.**
 
-## Sources and limitations
+- Both 16 September decisions matched the previous thesis: the Copom cut the Selic to 13.75%, the Fed raised its range to 3.75–4.00%. The rate gap narrowed from 10.38 to 9.88 points, yet USD/BRL rose only 1.7% and never reached the 5.22 trigger — no paper position was opened.
+- Brazil's two-year rate (13.76%, ANBIMA) sits about 1.5 points above the average implied by economists' own Selic forecasts (12.29%), which I read mostly as a fiscal and political risk premium.
+- Conditional paper trade: after the first round, buy the real (short USD/BRL) only on two PTAX closes below 5.10 with the U.S. two-year yield at or below 5.00%. Drop the idea on any close above 5.30; exit on two closes above 5.20; review at 4.97–5.00 or on 4 November.
 
-- BCB: Focus survey, PTAX, Selic and Copom publications.
-- Federal Reserve/FRED: policy targets, Treasury yields and FOMC publications.
-- EIA/IMF via FRED: Brent, iron ore, soybeans and sugar. Monthly/quarterly dates label observation periods, not publication days.
-- B3: saved DI futures decomposition. This is an analytical estimate that ignores term premia and assumes no other policy change in the contract window; it is not a B3-published Copom probability.
-- CME: saved 1 September FedWatch observation, retained after the original final refresh failed. The 68.2% figure is historical, not current pricing. No joint probability is assigned.
+The full reasoning — review of the 13 September call, evidence sorted into facts, market pricing, surveys and interpretation, four post-election paths, commodity channels and sources — is on the site and in the printable briefs in `outputs/`. The previous case is preserved unchanged in `research/data_snapshot.json` and `research/scenario_trade.md`.
 
-Official links identify the underlying sources; they do not guarantee that a current webpage reproduces a historical observation. Original B3/CME captures are not bundled, so those historical inputs should be checked against archived exchange evidence before external discussion. The saved research and official-source registry remain in `research/`.
+## How it works
 
-## Local use
+```
+GitHub Actions (weekdays, 22:17 UTC)                      Streamlit Community Cloud
+scripts/refresh_market_data.py                            app.py
+  ├─ BCB: PTAX, Selic (SGS 432), Focus survey               reads research/thesis.json      (dated thesis, numbers only)
+  ├─ New York Fed → Fed target range  (FRED fallback)       reads research/live_snapshot.json (refreshed data)
+  ├─ U.S. Treasury → 2y/10y yields   (FRED fallback)        renders cached HTML per language; no network, no pandas
+  └─ FRED: Brent (EIA), iron ore / soy / sugar (IMF)
+        │ each source validated independently
+        ▼
+research/live_snapshot.json  ──commit──▶  redeploy  ──▶  page shows every value with its own date and freshness
+scripts/check_freshness.py   ──▶ run fails (owner notified) if key figures are > 1 week old
+```
 
-Python 3.11 is the Community Cloud/CI target. The production entrypoint is `app.py`.
+- **Visitors never trigger a data request.** The page reads two small JSON files and pre-generated PDFs. HTML is built once per language and data version and cached in memory.
+- **One failed feed never blanks or freezes the others.** Each source keeps its last good value, original date and an error message in `refresh.sources`; the page flags delayed or stale values instead of hiding them.
+- **Honest refresh claims.** The page states when the job last ran and how many sources updated. Until 24 September 2026 the job reported success while every FRED request timed out on GitHub's runners, and the all-or-nothing build also discarded valid BCB data; the page kept showing 13 September figures. Sources are now independent, U.S. data has official fallbacks, and staleness turns the run red.
+- **The thesis is never rewritten by the updater.** Prose lives in `src/content.py` (EN/PT/FR); every number comes from `research/thesis.json`, and the data frozen at the thesis date is in `research/thesis_snapshot_2026-09-24.json`, so tests can recompute each figure. The only automatic element is a mechanical check of the pre-committed rules against new PTAX closes.
+
+## Run locally
+
+Python 3.11 is the Community Cloud and CI target (3.9+ works).
 
 ```bash
 python3.11 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements-dev.txt
-python -m streamlit run app.py --server.address 127.0.0.1 --server.port 8501
+python -m streamlit run app.py
 ```
 
-Open http://127.0.0.1:8501. For production installation, only `requirements.txt` is needed.
-
-## Performance, automatic updates and resilience
-
-Every visit and language change uses local JSON and pre-generated PDF files only. No market-feed request or PDF generation occurs in the production entrypoint. This keeps the page responsive even when BCB or FRED is slow.
-
-`.github/workflows/refresh-market-data.yml` runs after the Brazilian close on weekdays and can also be started manually. It calls `scripts/refresh_market_data.py`, validates each official response and commits `research/live_snapshot.json` only when the result changes. A failed feed retains the last good values rather than breaking the page. The original scenario case remains separate and reviewable.
-
-Missing or malformed snapshots yield localized unavailable states. Invalid individual macro series and commodity records are excluded without suppressing unrelated content. Missing PDFs omit the download button. Standard HTML provides the scenario cards, semantic forecast table and range visual, with no heavy charting dependencies or animation. The forecast table has a keyboard-focusable horizontal scroll area on narrow screens.
-
-Community Cloud hibernation can still delay server startup; application changes cannot remove hosting wake-up time.
-
-## Downloadable research brief
+Open http://localhost:8501 (add `?lang=pt` or `?lang=fr`).
 
 ```bash
-python scripts/generate_market_brief.py
+python -m pytest -q                                   # 107 tests
+python scripts/refresh_market_data.py                 # fetch official data (network)
+python scripts/check_freshness.py                     # exit 1 if key data is stale
+python scripts/generate_market_brief.py               # regenerate the three PDFs + Markdown brief
 ```
 
-This produces three searchable, print-friendly, three-page PDFs in `outputs/`, one in each language. Page 1 gives the view and scenarios; page 2 covers trade rules and commodities; page 3 preserves limitations, scenario risks and source links. The PDFs are saved outputs and never update themselves. ReportLab and pypdf are development dependencies only. The original English Markdown research companion remains available.
+Production installs only `requirements.txt` (Streamlit). The refresh job installs `requirements-refresh.txt` (pandas, requests); PDF generation and tests use `requirements-dev.txt`.
 
-## Validation
+## Updating the thesis
 
-```bash
-python -m pytest -q
-```
+1. Save the data as of the new date: copy `research/live_snapshot.json` to `research/thesis_snapshot_<date>.json`.
+2. Write the new numbers, rules, review verdicts and sources in `research/thesis.json` (point `inputs_file` and `previous_file` at the right files).
+3. Edit the prose in `src/content.py` in all three languages — placeholders only, no literal figures.
+4. `python scripts/generate_market_brief.py`, then `python -m pytest -q`. The tests fail if a number cannot be reproduced from the saved inputs, a language is missing a string, or the committed PDFs are out of date.
 
-Tests cover analytics, source parsing, snapshot research rules, startup without network requests, complete static French translation coverage, language switching, partial/malformed input failures, observation periods and all three PDFs. CI uses Python 3.11. Browser review additionally checks navigation, expanded content, keyboard access and responsive widths in each language.
+## Tests
+
+Refresh behaviour (independent sources, fallbacks, malformed data, total outage), freshness thresholds and the CI gate, thesis consistency (every figure recomputed from saved inputs; verdicts checked against the data), the rule monitor, EN/PT/FR structure and placeholder parity, French typography, "commodities" in Portuguese, page completeness and robustness to missing or malformed data, network isolation of the production render, PDF content/localization/searchability and that the committed PDFs match the current content, and static responsive-layout checks. Browser review covers 1440×900, 1280×720 and 375×812 in all three languages.
 
 ## Files
 
-- `app.py`: network-free production page, layout and interactions.
-- `scripts/refresh_market_data.py`, `src/live_refresh.py`: scheduled official-data refresh and validation.
-- `research/live_snapshot.json`: small last-known-good production data file created by the updater.
-- `src/editorial.py`: shared localized copy, period formatting and safe snapshot validation.
-- `src/localization.py`: detailed English-to-French and Portuguese research translations.
-- `src/print_brief.py`: localized print layout.
-- `src/brief.py`: preserved research calculations and brief-generation interface.
-- `src/data.py`, `src/analytics.py`, `src/research.py`: existing data parsers, calculations and research validation.
-- `research/`: original saved inputs and substantive research.
-- `tests/`: automated regression checks.
+- `app.py` — production entrypoint (Streamlit shell, caching, language switch).
+- `src/page.py`, `src/chart.py`, `src/style.css` — HTML sections, the one inline-SVG chart, the design system.
+- `src/content.py` — every visible sentence in English, Portuguese and French.
+- `src/thesis.py`, `src/formatting.py`, `src/freshness.py` — thesis loading, rule check, calculations, locale formatting, freshness rules.
+- `src/live_refresh.py`, `src/data.py`, `src/analytics.py` — scheduled refresh, source parsers, calculations (refresh job only).
+- `src/pdf_brief.py` — printable brief and Markdown companion (offline only).
+- `research/thesis.json`, `research/thesis_snapshot_2026-09-24.json`, `research/live_snapshot.json` — dated thesis, its frozen inputs, refreshed data.
+- `research/data_snapshot.json`, `research/commodity_snapshot.json`, `research/scenario_trade.md` — archived 13 September case.
+- `outputs/` — the three PDFs. `tests/` — automated checks.
 
-Educational research; not investment advice.
+## Limits
+
+PTAX is the central bank's daily reference rate, not an executable price; costs, spreads and sizing are not modelled. ANBIMA's curve and oil futures are dated manual observations. Focus is a survey. The market-vs-economists gap mixes expectations and risk premium. No probabilities are assigned and no rule has been back-tested. Community Cloud can still take a few seconds to wake a sleeping app.
+
+AI tools (OpenAI Codex/ChatGPT and Anthropic Claude) helped write the code, draft research text and translate. The question, the rules and the final judgement are mine; every figure links to its source.

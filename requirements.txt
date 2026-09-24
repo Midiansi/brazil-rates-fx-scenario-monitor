@@ -1,3 +1,4 @@
-# Streamlit brings its compatible UI/runtime dependencies. The production page
-# itself uses only Streamlit and the Python standard library.
+# Production page: Streamlit and the Python standard library only.
+# Market data is refreshed by a scheduled job (requirements-refresh.txt) and
+# the PDFs are generated offline (requirements-dev.txt).
 streamlit==1.50.0

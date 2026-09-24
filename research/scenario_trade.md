@@ -1,3 +1,5 @@
+> **Archived.** This is the 13 September 2026 case, kept unchanged for the record. It was superseded on 24 September 2026 by the thesis in `research/thesis.json`; the website reviews what happened to it. No position was ever opened.
+
 # Rates versus oil: September 2026 decision case
 
 **Thesis updated:** 13 September 2026, 16:58 Brasília time

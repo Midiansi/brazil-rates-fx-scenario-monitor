@@ -110,3 +110,60 @@ def test_bcb_request_uses_percent_encoded_spaces(monkeypatch) -> None:
     assert result == {"value": []}
     assert "%20" in captured["url"]
     assert "+" not in captured["url"]
+
+
+def test_treasury_parser_reads_two_and_ten_year_yields() -> None:
+    from src.data import parse_treasury_csv
+
+    text = 'Date,"1 Mo","2 Yr","10 Yr"\n09/24/2026,4.01,4.87,5.18\n09/23/2026,3.99,4.85,5.11\n'
+    frame = parse_treasury_csv(text)
+    assert list(frame["2y"]) == [4.85, 4.87]
+    assert frame.iloc[-1]["10y"] == 5.18
+
+
+def test_treasury_parser_rejects_a_changed_format() -> None:
+    from src.data import parse_treasury_csv
+
+    with pytest.raises(DataSourceError):
+        parse_treasury_csv("Date,1 Mo\n09/24/2026,4.01\n")
+
+
+def test_nyfed_parser_reads_the_target_range() -> None:
+    from src.data import parse_nyfed_effr
+
+    payload = {"refRates": [
+        {"effectiveDate": "2026-09-16", "type": "EFFR", "percentRate": 3.63, "targetRateFrom": 3.5, "targetRateTo": 3.75},
+        {"effectiveDate": "2026-09-17", "type": "EFFR", "percentRate": 3.88, "targetRateFrom": 3.75, "targetRateTo": 4.0},
+    ]}
+    frame = parse_nyfed_effr(payload)
+    assert (frame.iloc[-1]["Lower"], frame.iloc[-1]["Upper"]) == (3.75, 4.0)
+    with pytest.raises(DataSourceError):
+        parse_nyfed_effr({"refRates": []})
+
+
+def test_first_success_falls_back_and_reports_errors() -> None:
+    from src.data import first_success
+
+    def broken():
+        raise TimeoutError("FRED timed out")
+
+    name, frame, errors = first_success([("FRED", broken), ("Treasury", lambda: pd.DataFrame({"Date": [1], "Value": [2]}))])
+    assert name == "Treasury" and len(frame) == 1 and "FRED timed out" in errors[0]
+    with pytest.raises(DataSourceError):
+        first_success([("FRED", broken)])
+
+
+def test_requests_retry_then_raise_readable_error(monkeypatch) -> None:
+    import requests
+
+    attempts = []
+    monkeypatch.setattr(data_module.time, "sleep", lambda seconds: None)
+
+    def timeout(url, **kwargs):
+        attempts.append(url)
+        raise requests.Timeout("read timed out")
+
+    monkeypatch.setattr(data_module.requests, "get", timeout)
+    with pytest.raises(DataSourceError, match="after 3 attempts"):
+        data_module.fetch_fred_series("DGS2", __import__("datetime").date(2026, 9, 1))
+    assert len(attempts) == 3
