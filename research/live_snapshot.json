@@ -743,71 +743,71 @@
  },
  "note": "Written by scripts/refresh_market_data.py from official feeds. A failed source keeps its last good value; see refresh.sources.",
  "refresh": {
-  "attempted_at": "2026-09-24T21:40:17Z",
+  "attempted_at": "2026-09-24T22:47:09Z",
   "sources": {
    "brent": {
     "error": "",
-    "last_success": "2026-09-24T21:40:17Z",
+    "last_success": "2026-09-24T22:47:09Z",
     "source": "FRED DCOILBRENTEU",
     "status": "ok"
    },
    "fed_range": {
     "error": "",
-    "last_success": "2026-09-24T21:40:17Z",
+    "last_success": "2026-09-24T22:47:09Z",
     "source": "New York Fed (EFFR feed)",
     "status": "ok"
    },
    "focus_fx": {
     "error": "",
-    "last_success": "2026-09-24T21:40:17Z",
+    "last_success": "2026-09-24T22:47:09Z",
     "source": "BCB Focus",
     "status": "ok"
    },
    "focus_ipca": {
     "error": "",
-    "last_success": "2026-09-24T21:40:17Z",
+    "last_success": "2026-09-24T22:47:09Z",
     "source": "BCB Focus",
     "status": "ok"
    },
    "focus_selic": {
     "error": "",
-    "last_success": "2026-09-24T21:40:17Z",
+    "last_success": "2026-09-24T22:47:09Z",
     "source": "BCB Focus",
     "status": "ok"
    },
    "iron_ore": {
     "error": "",
-    "last_success": "2026-09-24T21:40:17Z",
+    "last_success": "2026-09-24T22:47:09Z",
     "source": "FRED PIORECRUSDM",
     "status": "ok"
    },
    "ptax": {
     "error": "",
-    "last_success": "2026-09-24T21:40:17Z",
+    "last_success": "2026-09-24T22:47:09Z",
     "source": "BCB PTAX",
     "status": "ok"
    },
    "selic_target": {
     "error": "",
-    "last_success": "2026-09-24T21:40:17Z",
+    "last_success": "2026-09-24T22:47:09Z",
     "source": "BCB SGS 432",
     "status": "ok"
    },
    "soybeans": {
     "error": "",
-    "last_success": "2026-09-24T21:40:17Z",
+    "last_success": "2026-09-24T22:47:09Z",
     "source": "FRED PSOYBUSDM",
     "status": "ok"
    },
    "sugar": {
     "error": "",
-    "last_success": "2026-09-24T21:40:17Z",
+    "last_success": "2026-09-24T22:47:09Z",
     "source": "FRED PSUGAISAUSDM",
     "status": "ok"
    },
    "us_yields": {
     "error": "",
-    "last_success": "2026-09-24T21:40:17Z",
+    "last_success": "2026-09-24T22:47:09Z",
     "source": "U.S. Treasury par yield curve",
     "status": "ok"
    }
