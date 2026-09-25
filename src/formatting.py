@@ -99,10 +99,10 @@ def period(value: str | date, frequency: str, lang: str = "en") -> str:
 
 
 def timestamp(value: str, lang: str = "en") -> str:
-    """ISO UTC timestamp -> '24 Sep 2026, 18:40 BRT'."""
+    """ISO UTC timestamp -> '24 Sep 2026, 18:40 BRT' ('' when unreadable)."""
 
     try:
         parsed = datetime.fromisoformat(value.replace("Z", "+00:00")).astimezone(ZoneInfo("America/Sao_Paulo"))
     except (AttributeError, TypeError, ValueError):
-        return "—"
+        return ""
     return f"{day(parsed.date(), lang)}, {parsed:%H:%M} BRT"

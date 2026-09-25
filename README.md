@@ -75,6 +75,7 @@ Refresh behaviour (independent sources, fallbacks, malformed data, total outage)
 
 - `app.py` — production entrypoint (Streamlit shell, caching, language switch).
 - `src/page.py`, `src/chart.py`, `src/style.css` — HTML sections, the one inline-SVG chart, the design system.
+- `static/fonts/` — self-hosted Geist and Geist Mono (SIL Open Font License), registered in `.streamlit/config.toml`.
 - `src/content.py` — every visible sentence in English, Portuguese and French.
 - `src/thesis.py`, `src/formatting.py`, `src/freshness.py` — thesis loading, rule check, calculations, locale formatting, freshness rules.
 - `src/live_refresh.py`, `src/data.py`, `src/analytics.py` — scheduled refresh, source parsers, calculations (refresh job only).

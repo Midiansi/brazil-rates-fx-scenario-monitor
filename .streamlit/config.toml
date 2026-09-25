@@ -4,6 +4,8 @@ toolbarMode = "minimal"
 
 [server]
 headless = true
+# Serves static/ at app/static/ (self-hosted Geist fonts, no third-party request).
+enableStaticServing = true
 
 [browser]
 gatherUsageStats = false
@@ -14,4 +16,19 @@ primaryColor = "#3CC6B0"
 backgroundColor = "#08131C"
 secondaryBackgroundColor = "#0C1B26"
 textColor = "#EEF4F2"
-font = "sans serif"
+font = "Geist, sans-serif"
+codeFont = "Geist Mono, monospace"
+
+# Geist and Geist Mono (SIL Open Font License, static/fonts/OFL.txt), one
+# variable file each.
+[[theme.fontFaces]]
+family = "Geist"
+url = "app/static/fonts/Geist-Variable.woff2"
+weight = "100 900"
+style = "normal"
+
+[[theme.fontFaces]]
+family = "Geist Mono"
+url = "app/static/fonts/GeistMono-Variable.woff2"
+weight = "100 900"
+style = "normal"

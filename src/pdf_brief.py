@@ -201,7 +201,7 @@ def render_pdf(thesis: dict[str, Any], snapshot: dict[str, Any], output: Path | 
             change = f.pct((item["latest"] / item["previous"] - 1) * 100, 1, lang, signed=True)
             change += f"<br/><font size='7' color='#607782'>{_pdf_text(t['vs'])} {_pdf_text(f.period(item['previous_date'], frequency, lang))}</font>"
         else:
-            latest, change = _pdf_text(t["unavailable"]), "—"
+            latest, change = _pdf_text(t["unavailable"]), t["na"]
         rows.append([p(f"<b>{_pdf_text(t['commodity_names'][key])}</b>", "cell"), p(latest, "cell"),
                      p(change, "cell"), p(f"<b>{_pdf_text(verdict)}.</b> {s(reason)}", "cell")])
     story.append(grid(rows, [WIDTH * 0.2, WIDTH * 0.19, WIDTH * 0.13, WIDTH * 0.48], header=True))

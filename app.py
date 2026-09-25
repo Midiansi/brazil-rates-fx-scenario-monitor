@@ -115,9 +115,11 @@ pdf_bytes = _pdf(str(pdf_path), _mtime(pdf_path))
 if pdf_bytes:
     st.download_button(
         content.TEXT[lang]["download"], data=pdf_bytes, file_name=pdf_path.name, mime="application/pdf",
-        help=content.TEXT[lang]["download_help"], on_click="ignore",
+        help=content.TEXT[lang]["download_help"], on_click="ignore", icon=":material/download:",
     )
 
+if "toc" in blocks:  # its own element so CSS can pin it while the sections scroll
+    st.html(blocks["toc"])
 if "body_1" in blocks:
     st.html(blocks["body_1"])
     if blocks.get("chart"):

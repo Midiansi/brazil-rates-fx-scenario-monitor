@@ -26,7 +26,7 @@ EVIDENCE_SOURCES = {
     "survey": (("bcb_focus",), ("fomc_sep",), ("eia_steo", "aljazeera_pipeline")),
     "interpretation": ((), (), ()),
 }
-VERDICT_ICONS = {"confirmed": "✓", "partly": "~", "unresolved": "?", "not_triggered": "–", "underweighted": "!"}
+VERDICT_ICONS = {"confirmed": "✓", "partly": "~", "unresolved": "?", "not_triggered": "○", "underweighted": "!"}
 
 
 def e(text: Any) -> str:
@@ -59,11 +59,14 @@ class Page:
         short = self.t["source_short"].get(key, source["label"].split(" · ")[0])
         return f'<a href="{e(source["url"])}" target="_blank" rel="noopener">{e(short)}</a>'
 
-    def section_head(self, index: int, key: str, title: str, intro: str = "") -> str:
+    def section_head(self, key: str, title: str, intro: str = "") -> str:
         intro_html = f'<p class="intro">{intro}</p>' if intro else ""
-        return (
-            f'<div class="sec-head"><span class="n">{index:02d}</span><h2 id="{key}-title">{title}</h2>{intro_html}</div>'
-        )
+        return f'<div class="sec-head"><h2 id="{key}-title">{title}</h2>{intro_html}</div>'
+
+    def stamp(self, value: str | None) -> str:
+        """Refresh timestamp, or the localized 'n/a' when missing or unreadable."""
+
+        return (f.timestamp(value, self.lang) if value else "") or self.t["na"]
 
     # -- series formatting -------------------------------------------------
     def series_value(self, key: str, item: dict[str, Any]) -> str:
@@ -97,7 +100,8 @@ class Page:
     def top_bar(self) -> str:
         t = self.t
         return (
-            '<div class="bm"><div class="bm-top"><strong>Romeo Mugnier de Almeida</strong>'
+            f'<div class="bm"><a class="skip" href="#view">{e(t["skip"])}</a>'
+            '<div class="bm-top"><strong translate="no">Romeo Mugnier de Almeida</strong>'
             f'<span class="byline">{e(t["byline"])}</span><span class="links">'
             f'<a href="{GITHUB}" target="_blank" rel="noopener">GitHub</a>'
             f'<a href="{LINKEDIN}" target="_blank" rel="noopener">LinkedIn</a></span></div></div>'
@@ -140,22 +144,24 @@ class Page:
                     source = "Fed" if "New York" in source or "FRED" in source else source
             state, chip = self.freshness_chip(observed, frequency)
             states.append(state)
-            when = f.day(observed, self.lang, year=False) if observed else "—"
+            when = f.day(observed, self.lang, year=False) if observed else t["na"]
+            # Every cell shows its date; the chip only speaks up when a value is late.
+            flag = f'<span class="m">{chip}</span>' if state != "fresh" else ""
             cells.append(
                 f'<div><dt>{e(t["tape"][key])}</dt><dd><span class="v num">{e(value)}</span>'
-                f'<span class="m">{e(when)} · {e(source)}</span><span class="m">{chip}</span></dd></div>'
+                f'<span class="m">{e(when)} · {e(source)}</span>{flag}</dd></div>'
             )
         banner = ""
-        run_age = run_age_days((self.snapshot.get("refresh") or {}).get("attempted_at"), self.today)
-        attempted = (self.snapshot.get("refresh") or {}).get("attempted_at") or self.snapshot.get("updated_at")
+        refresh = self.snapshot.get("refresh") or {}
+        run_age = run_age_days(refresh.get("attempted_at"), self.today)
+        attempted = refresh.get("attempted_at") or self.snapshot.get("updated_at")
         if run_age is None or run_age > 4:
-            when = f.day(attempted[:10], self.lang) if isinstance(attempted, str) and len(attempted) >= 10 else "—"
+            when = f.day(attempted[:10], self.lang) if isinstance(attempted, str) and len(attempted) >= 10 else t["na"]
             banner = f'<p class="banner" role="status">{self.s(t["refresh_banner"], date=when)}</p>'
         elif any(state in ("stale", "unknown") for state in states):
             banner = f'<p class="banner" role="status">{e(t["stale_banner"])}</p>'
-        caption = self.s(t["refresh_status"], attempted=f.timestamp(attempted, self.lang) if attempted else "—",
-                         ok=str((self.snapshot.get("refresh") or {}).get("sources_ok", "—")),
-                         total=str((self.snapshot.get("refresh") or {}).get("sources_total", "—")))
+        caption = self.s(t["refresh_status"], attempted=self.stamp(attempted),
+                         ok=str(refresh.get("sources_ok", t["na"])), total=str(refresh.get("sources_total", t["na"])))
         return (
             f'<h2 class="sr-only">{e(t["tape_label"])}</h2><dl class="tape" aria-label="{e(t["tape_label"])}">{"".join(cells)}</dl>'
             f'<div class="tape-caption"><span>{e(t["tape_label"])}</span><span>{caption}</span></div>{banner}'
@@ -163,18 +169,13 @@ class Page:
 
     def hero(self) -> str:
         t = self.t
-        why = "".join(
-            f'<div><h3><span class="n">{i}</span>{self.s(title)}</h3><p>{self.s(body)}</p></div>'
-            for i, (title, body) in enumerate(t["why"], 1)
-        )
-        nav = "".join(
-            f'<a href="#{key}"><span class="n">{i:02d}</span>{e(t["nav"][key])}</a>' for i, key in enumerate(SECTIONS, 1)
-        )
+        why = "".join(f"<div><h3>{self.s(title)}</h3><p>{self.s(body)}</p></div>" for title, body in t["why"])
+        nav = "".join(f'<a href="#{key}">{e(t["nav"][key])}</a>' for key in SECTIONS)
         return (
             f'<div class="bm" lang="{t["html_lang"]}"><section class="hero" id="view" aria-labelledby="view-title">'
-            f'<p class="kicker">{e(t["kicker"])}</p><div class="hero-head"><h1>{e(t["title"])}</h1><p class="lede">{e(t["intro"])}</p></div>'
+            f'<div class="hero-head"><h1>{e(t["title"])}</h1><p class="lede">{e(t["intro"])}</p></div>'
             f'<article class="view" aria-labelledby="view-title"><div class="view-meta">'
-            f'<h2 class="label" id="view-title">{e(t["view_label"])}</h2>'
+            f'<h2 class="eyebrow" id="view-title">{e(t["view_label"])}</h2>'
             f'<span class="status">{e(t["status_no_position"])}</span>'
             f'<time datetime="{e(self.thesis["as_of"])}">{e(self.values["as_of"])}</time></div>'
             f'<p class="view-headline">{self.s(t["view_headline"])}</p>'
@@ -197,7 +198,7 @@ class Page:
             )
         return (
             f'<div class="bm" lang="{t["html_lang"]}"><section class="sec" id="review" aria-labelledby="review-title">'
-            + self.section_head(2, "review", e(t["review_title"]), self.s(t["review_intro"]))
+            + self.section_head("review", e(t["review_title"]), self.s(t["review_intro"]))
             + f'<div class="sec-body"><div class="table-wrap" tabindex="0" role="region" aria-labelledby="review-title">'
             f'<table class="review"><thead><tr>{head}</tr></thead><tbody>{"".join(rows)}</tbody></table></div>'
             f'<div class="lesson"><span class="label">{e(t["review_lesson_label"])}</span><p>{e(t["review_lesson"])}</p></div>'
@@ -214,7 +215,7 @@ class Page:
             for year in years:
                 value = ev[key].get(year)
                 if value is None:
-                    cells.append("<td>—</td>")
+                    cells.append(f'<td class="muted">{e(t["na"])}</td>')
                 else:
                     text = f.pct(value, digits, self.lang) if kind == "pct" else f.num(value, digits, self.lang)
                     cells.append(f"<td>{e(text)}</td>")
@@ -239,7 +240,7 @@ class Page:
             )
         return (
             f'<div class="bm" lang="{t["html_lang"]}"><section class="sec" id="evidence" aria-labelledby="evidence-title">'
-            + self.section_head(3, "evidence", e(t["evidence_title"]), self.s(t["evidence_intro"]))
+            + self.section_head("evidence", e(t["evidence_title"]), self.s(t["evidence_intro"]))
             + f'<div class="sec-body"><div class="kinds">{"".join(blocks)}</div>{self.focus_table()}</div></section></div>'
         )
 
@@ -261,7 +262,7 @@ class Page:
         )
         return (
             f'<div class="bm" lang="{t["html_lang"]}"><section class="sec" id="paths" aria-labelledby="paths-title">'
-            + self.section_head(4, "paths", self.s(t["paths_title"]), e(t["paths_intro"]))
+            + self.section_head("paths", self.s(t["paths_title"]), e(t["paths_intro"]))
             + f'<div class="sec-body"><div class="paths">{"".join(cards)}</div>'
             f'<div class="calendar-wrap"><span class="label">{e(t["calendar_label"])}</span><ul class="calendar">{dates}</ul></div>'
             "</div></section></div>"
@@ -275,7 +276,7 @@ class Page:
             rows.append(f'<div class="{key.strip()}"><dt>{e(term)}</dt><dd>{self.s(body)}</dd></div>')
         return (
             f'<div class="bm" lang="{t["html_lang"]}"><section class="sec" id="trade" aria-labelledby="trade-title">'
-            + self.section_head(5, "trade", e(t["trade_title"]))
+            + self.section_head("trade", e(t["trade_title"]))
             + f'<div class="sec-body"><p class="trade-status"><span class="status">{self.s(t["trade_status"])}</span></p>'
             f'<dl class="rules">{"".join(rows)}</dl></div></section></div>'
         )
@@ -349,19 +350,20 @@ class Page:
                 change = (float(item["latest"]) / float(item["previous"]) - 1) * 100
                 change_text = f.pct(change, 1, self.lang, signed=True)
             except (KeyError, TypeError, ValueError, ZeroDivisionError):
-                change_text = "—"
+                change_text = t["na"]
             state, chip = self.freshness_chip(item.get("latest_date"), frequency)
+            flag = f'<span class="sub">{chip}</span>' if state != "fresh" else ""
             period = f.period(item["latest_date"], frequency, self.lang)
             previous = f.period(item["previous_date"], frequency, self.lang)
             rows.append(
                 f'<tr><th scope="row">{e(t["commodity_names"][key])}<span class="sub">{self.source_link({"brent": "fred_brent", "iron_ore": "fred_iron", "soybeans": "fred_soy", "sugar": "fred_sugar"}[key])}</span></th>'
-                f'<td>{e(self.commodity_value(key, item))}<span class="sub">{e(period)} · {e(t["freq"].get(frequency.lower(), frequency))}</span><span class="sub">{chip}</span></td>'
+                f'<td>{e(self.commodity_value(key, item))}<span class="sub">{e(period)} · {e(t["freq"].get(frequency.lower(), frequency))}</span>{flag}</td>'
                 f'<td>{e(change_text)}<span class="sub">{e(t["vs"])} {e(previous)}</span></td>'
                 f"<td><strong>{e(verdict)}</strong>{self.s(reason)}</td></tr>"
             )
         return (
             f'<div class="bm" lang="{t["html_lang"]}"><section class="sec" id="commodities" aria-labelledby="commodities-title">'
-            + self.section_head(6, "commodities", e(t["commodities_title"]), e(t["commodities_intro"]))
+            + self.section_head("commodities", e(t["commodities_title"]), e(t["commodities_intro"]))
             + f'<div class="sec-body"><div class="table-wrap" tabindex="0" role="region" aria-labelledby="commodities-title">'
             f'<table class="commodities"><thead><tr>{head}</tr></thead><tbody>{"".join(rows)}</tbody></table></div>'
             + self.equity()
@@ -372,7 +374,7 @@ class Page:
         t = self.t
         steps = "".join(f"<div><h3>{e(title)}</h3><p>{e(body)}</p></div>" for title, body in t["equity_steps"])
         return (
-            f'<h3 style="margin:3rem 0 0.5rem;font-size:1.15rem">{e(t["equity_title"])}</h3><p class="muted" style="max-width:68ch">{e(t["equity_intro"])}</p>'
+            f'<h3 class="sub-head">{e(t["equity_title"])}</h3><p class="sub-intro">{e(t["equity_intro"])}</p>'
             f'<div class="steps">{steps}</div><p class="examples"><span class="label">{e(t["equity_examples_label"])}</span>{e(t["equity_examples"])}</p>'
         )
 
@@ -391,9 +393,9 @@ class Page:
             frequency = item.get("frequency", "daily")
             _, chip = self.freshness_chip(observed, frequency)
             url = item.get("source_url", "")
-            label = t["source_short"]["derived_gap"] if key == "brazil_us_policy_differential" else item.get("source", "—")
+            label = t["source_short"]["derived_gap"] if key == "brazil_us_policy_differential" else item.get("source", t["na"])
             source = f'<a href="{e(url)}" target="_blank" rel="noopener">{e(label)}</a>' if url.startswith("https://") else e(label)
-            rows.append(f"<tr><th scope=\"row\">{e(name)}</th><td>{e(self.series_value(key, item))}</td><td>{e(f.day(observed, self.lang) if observed else '—')}</td>"
+            rows.append(f"<tr><th scope=\"row\">{e(name)}</th><td>{e(self.series_value(key, item))}</td><td>{e(f.day(observed, self.lang) if observed else t['na'])}</td>"
                         f"<td>{e(t['freq'].get(frequency, frequency))}</td><td>{source}</td><td>{chip}</td></tr>")
         for key in ("brent", "iron_ore", "soybeans", "sugar"):
             item = self.commodities.get(key)
@@ -415,8 +417,8 @@ class Page:
         failed = [key for key, item in (refresh.get("sources") or {}).items() if item.get("status") != "ok"]
         failed_html = f"<p>{self.s(t['refresh_failed'], names=', '.join(failed))}</p>" if failed else ""
         attempted = refresh.get("attempted_at") or self.snapshot.get("updated_at")
-        status_line = self.s(t["refresh_status"], attempted=f.timestamp(attempted, self.lang) if attempted else "—",
-                             ok=str(refresh.get("sources_ok", "—")), total=str(refresh.get("sources_total", "—")))
+        status_line = self.s(t["refresh_status"], attempted=self.stamp(attempted),
+                             ok=str(refresh.get("sources_ok", t["na"])), total=str(refresh.get("sources_total", t["na"])))
         calc = "".join(f"<div><dt>{e(term)}</dt><dd>{self.s(body)}</dd></div>" for term, body in t["method_calc"])
         limits = "".join(f"<li>{e(item)}</li>" for item in t["limits"])
         labels = self.t["source_labels"]
@@ -426,7 +428,7 @@ class Page:
         )
         return (
             f'<div class="bm" lang="{t["html_lang"]}"><section class="sec" id="method" aria-labelledby="method-title">'
-            + self.section_head(7, "method", e(t["method_title"]))
+            + self.section_head("method", e(t["method_title"]))
             + '<div class="sec-body">'
             f'<details><summary>{e(t["method_calc_label"])}</summary><div class="inner"><dl class="defs">{calc}</dl></div></details>'
             f'<details><summary>{e(t["data_label"])}</summary><div class="inner">{self.data_table()}</div></details>'
@@ -441,7 +443,7 @@ class Page:
         t = self.t
         return (
             f'<div class="bm" lang="{t["html_lang"]}"><section class="sec" id="about" aria-labelledby="about-title">'
-            f'<div class="sec-head"><span class="n">—</span><h2 id="about-title">{e(t["about_title"])}</h2></div>'
+            f'<div class="sec-head"><h2 id="about-title">{e(t["about_title"])}</h2></div>'
             f'<div class="sec-body about"><div><p>{e(t["about"])}</p><p>{e(t["about_build"])}</p></div>'
             f'<div class="links"><a href="{GITHUB}" target="_blank" rel="noopener">{e(t["links"]["code"])}</a>'
             f'<a href="{LINKEDIN}" target="_blank" rel="noopener">{e(t["links"]["linkedin"])}</a></div></div>'
@@ -460,7 +462,8 @@ def render(lang: str, thesis: dict[str, Any], snapshot: dict[str, Any], today: d
     return {
         "top": page.top_bar(),
         "hero": hero,
-        "body_1": toc + page.review() + page.evidence() + page.paths() + page.trade_top(),
+        "toc": toc,
+        "body_1": page.review() + page.evidence() + page.paths() + page.trade_top(),
         "chart": page.chart(),
         "body_2": page.trade_bottom() + page.commodities_section() + page.method() + page.about(),
     }

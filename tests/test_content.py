@@ -80,6 +80,6 @@ def test_no_inflated_or_forbidden_wording() -> None:
 
 
 def test_ai_assistance_is_disclosed_in_every_language() -> None:
-    markers = {"en": "AI tools", "pt": "Ferramentas de IA", "fr": "Des outils d'IA"}
+    markers = {"en": "AI tools", "pt": "Ferramentas de IA", "fr": "Des outils d’IA"}
     for lang, marker in markers.items():
         assert any(marker in text for text in TEXT[lang]["limits"])
