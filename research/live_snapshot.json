@@ -4,10 +4,10 @@
    "benchmark": "Brent crude, spot (EIA)",
    "frequency": "Daily",
    "label": "Oil",
-   "latest": 114.89,
-   "latest_date": "2026-09-22",
-   "previous": 116.15,
-   "previous_date": "2026-09-21",
+   "latest": 113.96,
+   "latest_date": "2026-09-29",
+   "previous": 119.97,
+   "previous_date": "2026-09-28",
    "series_id": "DCOILBRENTEU",
    "source": "U.S. Energy Information Administration via FRED",
    "source_url": "https://fred.stlouisfed.org/series/DCOILBRENTEU",
@@ -55,26 +55,6 @@
  },
  "history": {
   "brent": [
-   [
-    "2026-07-28",
-    85.51
-   ],
-   [
-    "2026-07-29",
-    91.95
-   ],
-   [
-    "2026-07-30",
-    91.91
-   ],
-   [
-    "2026-07-31",
-    96.95
-   ],
-   [
-    "2026-08-03",
-    88.9
-   ],
    [
     "2026-08-04",
     86.47
@@ -214,13 +194,29 @@
    [
     "2026-09-22",
     114.89
+   ],
+   [
+    "2026-09-23",
+    117.45
+   ],
+   [
+    "2026-09-24",
+    120.92
+   ],
+   [
+    "2026-09-25",
+    116.01
+   ],
+   [
+    "2026-09-28",
+    119.97
+   ],
+   [
+    "2026-09-29",
+    113.96
    ]
   ],
   "ptax": [
-   [
-    "2026-05-25",
-    5.0069
-   ],
    [
     "2026-05-26",
     5.0208
@@ -576,13 +572,13 @@
    [
     "2026-09-29",
     5.2201
+   ],
+   [
+    "2026-09-30",
+    5.1806
    ]
   ],
   "us_2y": [
-   [
-    "2026-08-04",
-    4.2
-   ],
    [
     "2026-08-05",
     4.18
@@ -738,76 +734,80 @@
    [
     "2026-09-29",
     4.89
+   ],
+   [
+    "2026-09-30",
+    4.88
    ]
   ]
  },
  "note": "Written by scripts/refresh_market_data.py from official feeds. A failed source keeps its last good value; see refresh.sources.",
  "refresh": {
-  "attempted_at": "2026-09-30T01:19:23Z",
+  "attempted_at": "2026-10-01T01:19:07Z",
   "sources": {
    "brent": {
     "error": "",
-    "last_success": "2026-09-30T01:19:23Z",
+    "last_success": "2026-10-01T01:19:07Z",
     "source": "FRED DCOILBRENTEU",
     "status": "ok"
    },
    "fed_range": {
     "error": "",
-    "last_success": "2026-09-30T01:19:23Z",
+    "last_success": "2026-10-01T01:19:07Z",
     "source": "New York Fed (EFFR feed)",
     "status": "ok"
    },
    "focus_fx": {
     "error": "",
-    "last_success": "2026-09-30T01:19:23Z",
+    "last_success": "2026-10-01T01:19:07Z",
     "source": "BCB Focus",
     "status": "ok"
    },
    "focus_ipca": {
     "error": "",
-    "last_success": "2026-09-30T01:19:23Z",
+    "last_success": "2026-10-01T01:19:07Z",
     "source": "BCB Focus",
     "status": "ok"
    },
    "focus_selic": {
     "error": "",
-    "last_success": "2026-09-30T01:19:23Z",
+    "last_success": "2026-10-01T01:19:07Z",
     "source": "BCB Focus",
     "status": "ok"
    },
    "iron_ore": {
     "error": "",
-    "last_success": "2026-09-30T01:19:23Z",
+    "last_success": "2026-10-01T01:19:07Z",
     "source": "FRED PIORECRUSDM",
     "status": "ok"
    },
    "ptax": {
     "error": "",
-    "last_success": "2026-09-30T01:19:23Z",
+    "last_success": "2026-10-01T01:19:07Z",
     "source": "BCB PTAX",
     "status": "ok"
    },
    "selic_target": {
     "error": "",
-    "last_success": "2026-09-30T01:19:23Z",
+    "last_success": "2026-10-01T01:19:07Z",
     "source": "BCB SGS 432",
     "status": "ok"
    },
    "soybeans": {
     "error": "",
-    "last_success": "2026-09-30T01:19:23Z",
+    "last_success": "2026-10-01T01:19:07Z",
     "source": "FRED PSOYBUSDM",
     "status": "ok"
    },
    "sugar": {
     "error": "",
-    "last_success": "2026-09-30T01:19:23Z",
+    "last_success": "2026-10-01T01:19:07Z",
     "source": "FRED PSUGAISAUSDM",
     "status": "ok"
    },
    "us_yields": {
     "error": "",
-    "last_success": "2026-09-30T01:19:23Z",
+    "last_success": "2026-10-01T01:19:07Z",
     "source": "U.S. Treasury par yield curve",
     "status": "ok"
    }
@@ -821,9 +821,9 @@
    "additional_source_url": "https://www.newyorkfed.org/markets/reference-rates/effr",
    "frequency": "daily",
    "label": "Selic target minus federal-funds target-range midpoint",
-   "latest_observation_date": "2026-09-28",
+   "latest_observation_date": "2026-09-29",
    "source": "Derived: BCB SGS 432 and New York Fed (EFFR feed)",
-   "source_url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=17/09/2026&dataFinal=30/09/2026",
+   "source_url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=17/09/2026&dataFinal=01/10/2026",
    "unit": "percentage points",
    "value": 9.875
   },
@@ -831,7 +831,7 @@
    "effective_since": "2026-09-17",
    "frequency": "daily",
    "label": "Federal-funds target range",
-   "latest_observation_date": "2026-09-28",
+   "latest_observation_date": "2026-09-29",
    "lower": 3.75,
    "midpoint": 3.875,
    "source": "New York Fed (EFFR feed)",
@@ -891,68 +891,68 @@
    }
   },
   "ptax_usd_brl_midpoint": {
-   "buying_rate": 5.2198,
-   "five_business_day_change_percent": 2.0387818132061586,
+   "buying_rate": 5.1803,
+   "five_business_day_change_percent": 0.7683180642275023,
    "frequency": "daily",
    "label": "USD/BRL PTAX midpoint",
-   "latest_observation_date": "2026-09-29",
-   "latest_observation_timestamp": "2026-09-29T13:06:06.446305",
-   "one_month_change_percent": 0.38267758932348794,
-   "selling_rate": 5.2204,
+   "latest_observation_date": "2026-09-30",
+   "latest_observation_timestamp": "2026-09-30T13:11:44.783262",
+   "one_month_change_percent": -0.37690858043922804,
+   "selling_rate": 5.1809,
    "source": "BCB PTAX",
    "source_url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/",
    "twenty_observation_range": {
-    "end_date": "2026-09-29",
+    "end_date": "2026-09-30",
     "high": 5.2201,
     "low": 5.0853,
     "midpoint": 5.1527,
-    "start_date": "2026-09-01",
+    "start_date": "2026-09-02",
     "width": 0.13480000000000025
    },
    "unit": "BRL per USD",
-   "value": 5.2201
+   "value": 5.1806
   },
   "selic_target": {
    "effective_since": "2026-09-17",
    "frequency": "daily",
    "label": "BCB Selic target",
-   "latest_observation_date": "2026-09-30",
+   "latest_observation_date": "2026-10-01",
    "source": "BCB SGS 432",
-   "source_url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=17/09/2026&dataFinal=30/09/2026",
+   "source_url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=17/09/2026&dataFinal=01/10/2026",
    "unit": "% p.a.",
    "value": 13.75
   },
   "us_10_year_treasury": {
-   "five_business_day_change_pp": 0.2999999999999998,
-   "frequency": "daily",
-   "label": "U.S. 10-year Treasury yield",
-   "latest_observation_date": "2026-09-29",
-   "one_month_change_pp": 0.5299999999999994,
-   "source": "U.S. Treasury par yield curve",
-   "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve",
-   "unit": "% p.a.",
-   "value": 5.26
-  },
-  "us_2_year_treasury": {
    "five_business_day_change_pp": 0.17999999999999972,
    "frequency": "daily",
-   "label": "U.S. 2-year Treasury yield",
-   "latest_observation_date": "2026-09-29",
-   "one_month_change_pp": 0.5499999999999998,
+   "label": "U.S. 10-year Treasury yield",
+   "latest_observation_date": "2026-09-30",
+   "one_month_change_pp": 0.5599999999999996,
    "source": "U.S. Treasury par yield curve",
    "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve",
    "unit": "% p.a.",
-   "value": 4.89
+   "value": 5.29
+  },
+  "us_2_year_treasury": {
+   "five_business_day_change_pp": 0.03000000000000025,
+   "frequency": "daily",
+   "label": "U.S. 2-year Treasury yield",
+   "latest_observation_date": "2026-09-30",
+   "one_month_change_pp": 0.54,
+   "source": "U.S. Treasury par yield curve",
+   "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve",
+   "unit": "% p.a.",
+   "value": 4.88
   },
   "us_2s10s": {
    "frequency": "daily",
    "label": "U.S. 2s10s slope (10-year minus 2-year)",
-   "latest_observation_date": "2026-09-29",
+   "latest_observation_date": "2026-09-30",
    "source": "U.S. Treasury par yield curve",
    "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve",
    "unit": "percentage points",
-   "value": 0.3700000000000001
+   "value": 0.41000000000000014
   }
  },
- "updated_at": "2026-09-30T01:19:23Z"
+ "updated_at": "2026-10-01T01:19:07Z"
 }
