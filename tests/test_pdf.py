@@ -43,7 +43,7 @@ def test_pdf_is_searchable_localized_and_short(generated, lang) -> None:
     for key in ("pdf_title", "view_label", "act_label", "change_label", "trade_title", "review_title"):
         assert normalize(t[key]).split(":")[0][:30].lower() in text.lower(), key
     assert ("5,10" if lang != "en" else "5.10") in text
-    assert ("5,1792" if lang != "en" else "5.1792") in text
+    assert ("5,2235" if lang != "en" else "5.2235") in text
     assert reader.metadata.author == "Romeo Mugnier de Almeida"
     annotations = sum(len(page.get("/Annots") or []) for page in reader.pages)
     assert annotations >= 20  # clickable sources

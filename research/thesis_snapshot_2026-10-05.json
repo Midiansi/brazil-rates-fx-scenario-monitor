@@ -1,0 +1,1083 @@
+{
+ "anbima_ettj": {
+  "date": "2026-10-02",
+  "fixed_rate": {
+   "252": 13.3811,
+   "504": 13.7085
+  },
+  "implied_inflation": {
+   "504": 5.906
+  },
+  "note": "Vertices in business days: 252 = one year, 504 = two years."
+ },
+ "commodities": {
+  "brent": {
+   "benchmark": "Brent crude, spot (EIA)",
+   "frequency": "Daily",
+   "label": "Oil",
+   "latest": 113.96,
+   "latest_date": "2026-09-29",
+   "previous": 119.97,
+   "previous_date": "2026-09-28",
+   "series_id": "DCOILBRENTEU",
+   "source": "U.S. Energy Information Administration via FRED",
+   "source_url": "https://fred.stlouisfed.org/series/DCOILBRENTEU",
+   "unit": "USD per barrel"
+  },
+  "iron_ore": {
+   "benchmark": "IMF global iron-ore price",
+   "frequency": "Monthly",
+   "label": "Iron ore",
+   "latest": 101.595652173913,
+   "latest_date": "2026-07-01",
+   "previous": 103.7909090909091,
+   "previous_date": "2026-06-01",
+   "series_id": "PIORECRUSDM",
+   "source": "International Monetary Fund via FRED",
+   "source_url": "https://fred.stlouisfed.org/series/PIORECRUSDM",
+   "unit": "USD per metric ton"
+  },
+  "soybeans": {
+   "benchmark": "IMF global soybean price",
+   "frequency": "Monthly",
+   "label": "Soybeans",
+   "latest": 442.4505721529122,
+   "latest_date": "2026-07-01",
+   "previous": 414.542332960393,
+   "previous_date": "2026-06-01",
+   "series_id": "PSOYBUSDM",
+   "source": "International Monetary Fund via FRED",
+   "source_url": "https://fred.stlouisfed.org/series/PSOYBUSDM",
+   "unit": "USD per metric ton"
+  },
+  "sugar": {
+   "benchmark": "IMF Sugar No. 11 world price",
+   "frequency": "Monthly",
+   "label": "Sugar",
+   "latest": 14.81227272727273,
+   "latest_date": "2026-07-01",
+   "previous": 13.90772727272727,
+   "previous_date": "2026-06-01",
+   "series_id": "PSUGAISAUSDM",
+   "source": "International Monetary Fund via FRED",
+   "source_url": "https://fred.stlouisfed.org/series/PSUGAISAUSDM",
+   "unit": "US cents per pound"
+  }
+ },
+ "election": {
+  "collected": "2026-10-05",
+  "date": "2026-10-04",
+  "note": "Valid votes by candidate as counted when 99.46% of sections had reported; read from the public results tables that mirror the TSE count. The count was not final.",
+  "reporting_pct": 99.46,
+  "round": 1,
+  "runoff_date": "2026-10-25",
+  "valid_votes": {
+   "caiado": 2598851,
+   "cury": 3436463,
+   "flavio": 55936126,
+   "lula": 53438052,
+   "minor_candidates": 260001,
+   "santos": 2669413,
+   "zema": 325683
+  }
+ },
+ "event_study": {
+  "source": "BCB PTAX (OData), midpoint of the buying and selling rate",
+  "windows": [
+   {
+    "closes": {
+     "friday_before": [
+      "2014-10-03",
+      2.4929
+     ],
+     "friday_before_runoff": [
+      "2014-10-24",
+      2.4802
+     ],
+     "monday_after": [
+      "2014-10-06",
+      2.4095
+     ]
+    },
+    "first_round": "2014-10-05",
+    "runoff": "2014-10-26",
+    "year": 2014
+   },
+   {
+    "closes": {
+     "friday_before": [
+      "2018-10-05",
+      3.8696
+     ],
+     "friday_before_runoff": [
+      "2018-10-26",
+      3.6749
+     ],
+     "monday_after": [
+      "2018-10-08",
+      3.7585
+     ]
+    },
+    "first_round": "2018-10-07",
+    "runoff": "2018-10-28",
+    "year": 2018
+   },
+   {
+    "closes": {
+     "friday_before": [
+      "2022-09-30",
+      5.4063
+     ],
+     "friday_before_runoff": [
+      "2022-10-28",
+      5.3452
+     ],
+     "monday_after": [
+      "2022-10-03",
+      5.1999
+     ]
+    },
+    "first_round": "2022-10-02",
+    "runoff": "2022-10-30",
+    "year": 2022
+   }
+  ]
+ },
+ "history": {
+  "brent": [
+   [
+    "2026-08-04",
+    86.47
+   ],
+   [
+    "2026-08-05",
+    86.65
+   ],
+   [
+    "2026-08-06",
+    89.65
+   ],
+   [
+    "2026-08-07",
+    87.62
+   ],
+   [
+    "2026-08-10",
+    92.74
+   ],
+   [
+    "2026-08-11",
+    93.26
+   ],
+   [
+    "2026-08-12",
+    92.52
+   ],
+   [
+    "2026-08-13",
+    92.03
+   ],
+   [
+    "2026-08-14",
+    92.02
+   ],
+   [
+    "2026-08-17",
+    92.43
+   ],
+   [
+    "2026-08-18",
+    95.29
+   ],
+   [
+    "2026-08-19",
+    92.37
+   ],
+   [
+    "2026-08-20",
+    94.0
+   ],
+   [
+    "2026-08-21",
+    96.92
+   ],
+   [
+    "2026-08-24",
+    92.71
+   ],
+   [
+    "2026-08-25",
+    88.24
+   ],
+   [
+    "2026-08-26",
+    87.77
+   ],
+   [
+    "2026-08-27",
+    90.18
+   ],
+   [
+    "2026-08-28",
+    89.75
+   ],
+   [
+    "2026-09-01",
+    96.02
+   ],
+   [
+    "2026-09-02",
+    97.59
+   ],
+   [
+    "2026-09-03",
+    100.52
+   ],
+   [
+    "2026-09-04",
+    102.24
+   ],
+   [
+    "2026-09-07",
+    104.47
+   ],
+   [
+    "2026-09-08",
+    106.12
+   ],
+   [
+    "2026-09-09",
+    109.51
+   ],
+   [
+    "2026-09-10",
+    120.98
+   ],
+   [
+    "2026-09-11",
+    118.06
+   ],
+   [
+    "2026-09-14",
+    121.25
+   ],
+   [
+    "2026-09-15",
+    130.8
+   ],
+   [
+    "2026-09-16",
+    127.84
+   ],
+   [
+    "2026-09-17",
+    121.18
+   ],
+   [
+    "2026-09-18",
+    119.66
+   ],
+   [
+    "2026-09-21",
+    116.15
+   ],
+   [
+    "2026-09-22",
+    114.89
+   ],
+   [
+    "2026-09-23",
+    117.45
+   ],
+   [
+    "2026-09-24",
+    120.92
+   ],
+   [
+    "2026-09-25",
+    116.01
+   ],
+   [
+    "2026-09-28",
+    119.97
+   ],
+   [
+    "2026-09-29",
+    113.96
+   ]
+  ],
+  "ptax": [
+   [
+    "2026-05-28",
+    5.0514
+   ],
+   [
+    "2026-05-29",
+    5.0566
+   ],
+   [
+    "2026-06-01",
+    5.03
+   ],
+   [
+    "2026-06-02",
+    5.0157
+   ],
+   [
+    "2026-06-03",
+    5.0412
+   ],
+   [
+    "2026-06-05",
+    5.1241
+   ],
+   [
+    "2026-06-08",
+    5.1692
+   ],
+   [
+    "2026-06-09",
+    5.169
+   ],
+   [
+    "2026-06-10",
+    5.176
+   ],
+   [
+    "2026-06-11",
+    5.1475
+   ],
+   [
+    "2026-06-12",
+    5.0824
+   ],
+   [
+    "2026-06-15",
+    5.0427
+   ],
+   [
+    "2026-06-16",
+    5.0777
+   ],
+   [
+    "2026-06-17",
+    5.0638
+   ],
+   [
+    "2026-06-18",
+    5.161
+   ],
+   [
+    "2026-06-19",
+    5.1439
+   ],
+   [
+    "2026-06-22",
+    5.1392
+   ],
+   [
+    "2026-06-23",
+    5.174
+   ],
+   [
+    "2026-06-24",
+    5.2095
+   ],
+   [
+    "2026-06-25",
+    5.1889
+   ],
+   [
+    "2026-06-26",
+    5.1692
+   ],
+   [
+    "2026-06-29",
+    5.1714
+   ],
+   [
+    "2026-06-30",
+    5.1763
+   ],
+   [
+    "2026-07-01",
+    5.1947
+   ],
+   [
+    "2026-07-02",
+    5.1942
+   ],
+   [
+    "2026-07-03",
+    5.1714
+   ],
+   [
+    "2026-07-06",
+    5.1667
+   ],
+   [
+    "2026-07-07",
+    5.1455
+   ],
+   [
+    "2026-07-08",
+    5.1549
+   ],
+   [
+    "2026-07-09",
+    5.1326
+   ],
+   [
+    "2026-07-10",
+    5.1085
+   ],
+   [
+    "2026-07-13",
+    5.118
+   ],
+   [
+    "2026-07-14",
+    5.0739
+   ],
+   [
+    "2026-07-15",
+    5.0724
+   ],
+   [
+    "2026-07-16",
+    5.0972
+   ],
+   [
+    "2026-07-17",
+    5.1173
+   ],
+   [
+    "2026-07-20",
+    5.0891
+   ],
+   [
+    "2026-07-21",
+    5.0777
+   ],
+   [
+    "2026-07-22",
+    5.0635
+   ],
+   [
+    "2026-07-23",
+    5.0804
+   ],
+   [
+    "2026-07-24",
+    5.0663
+   ],
+   [
+    "2026-07-27",
+    5.10015
+   ],
+   [
+    "2026-07-28",
+    5.1174
+   ],
+   [
+    "2026-07-29",
+    5.1214
+   ],
+   [
+    "2026-07-30",
+    5.0736
+   ],
+   [
+    "2026-07-31",
+    5.077
+   ],
+   [
+    "2026-08-03",
+    5.072
+   ],
+   [
+    "2026-08-04",
+    5.105
+   ],
+   [
+    "2026-08-05",
+    5.1151
+   ],
+   [
+    "2026-08-06",
+    5.1014
+   ],
+   [
+    "2026-08-07",
+    5.0905
+   ],
+   [
+    "2026-08-10",
+    5.096
+   ],
+   [
+    "2026-08-11",
+    5.1282
+   ],
+   [
+    "2026-08-12",
+    5.16355
+   ],
+   [
+    "2026-08-13",
+    5.1856
+   ],
+   [
+    "2026-08-14",
+    5.2233
+   ],
+   [
+    "2026-08-17",
+    5.2011
+   ],
+   [
+    "2026-08-18",
+    5.204
+   ],
+   [
+    "2026-08-19",
+    5.1711
+   ],
+   [
+    "2026-08-20",
+    5.1859
+   ],
+   [
+    "2026-08-21",
+    5.1622
+   ],
+   [
+    "2026-08-24",
+    5.1509
+   ],
+   [
+    "2026-08-25",
+    5.1487
+   ],
+   [
+    "2026-08-26",
+    5.1601
+   ],
+   [
+    "2026-08-27",
+    5.16395
+   ],
+   [
+    "2026-08-28",
+    5.2002
+   ],
+   [
+    "2026-08-31",
+    5.1813
+   ],
+   [
+    "2026-09-01",
+    5.1567
+   ],
+   [
+    "2026-09-02",
+    5.127
+   ],
+   [
+    "2026-09-03",
+    5.0959
+   ],
+   [
+    "2026-09-04",
+    5.125
+   ],
+   [
+    "2026-09-08",
+    5.0853
+   ],
+   [
+    "2026-09-09",
+    5.0976
+   ],
+   [
+    "2026-09-10",
+    5.1146
+   ],
+   [
+    "2026-09-11",
+    5.0915
+   ],
+   [
+    "2026-09-14",
+    5.1693
+   ],
+   [
+    "2026-09-15",
+    5.1487
+   ],
+   [
+    "2026-09-16",
+    5.15235
+   ],
+   [
+    "2026-09-17",
+    5.1518
+   ],
+   [
+    "2026-09-18",
+    5.1572
+   ],
+   [
+    "2026-09-21",
+    5.1114
+   ],
+   [
+    "2026-09-22",
+    5.1158
+   ],
+   [
+    "2026-09-23",
+    5.1411
+   ],
+   [
+    "2026-09-24",
+    5.1792
+   ],
+   [
+    "2026-09-25",
+    5.1988
+   ],
+   [
+    "2026-09-28",
+    5.2129
+   ],
+   [
+    "2026-09-29",
+    5.2201
+   ],
+   [
+    "2026-09-30",
+    5.1806
+   ],
+   [
+    "2026-10-01",
+    5.2076
+   ],
+   [
+    "2026-10-02",
+    5.2235
+   ]
+  ],
+  "us_2y": [
+   [
+    "2026-08-07",
+    4.19
+   ],
+   [
+    "2026-08-10",
+    4.25
+   ],
+   [
+    "2026-08-11",
+    4.22
+   ],
+   [
+    "2026-08-12",
+    4.2
+   ],
+   [
+    "2026-08-13",
+    4.15
+   ],
+   [
+    "2026-08-14",
+    4.17
+   ],
+   [
+    "2026-08-17",
+    4.19
+   ],
+   [
+    "2026-08-18",
+    4.19
+   ],
+   [
+    "2026-08-19",
+    4.19
+   ],
+   [
+    "2026-08-20",
+    4.19
+   ],
+   [
+    "2026-08-21",
+    4.24
+   ],
+   [
+    "2026-08-24",
+    4.24
+   ],
+   [
+    "2026-08-25",
+    4.17
+   ],
+   [
+    "2026-08-26",
+    4.19
+   ],
+   [
+    "2026-08-27",
+    4.2
+   ],
+   [
+    "2026-08-28",
+    4.34
+   ],
+   [
+    "2026-08-31",
+    4.34
+   ],
+   [
+    "2026-09-01",
+    4.39
+   ],
+   [
+    "2026-09-02",
+    4.39
+   ],
+   [
+    "2026-09-03",
+    4.34
+   ],
+   [
+    "2026-09-04",
+    4.37
+   ],
+   [
+    "2026-09-08",
+    4.39
+   ],
+   [
+    "2026-09-09",
+    4.43
+   ],
+   [
+    "2026-09-10",
+    4.56
+   ],
+   [
+    "2026-09-11",
+    4.63
+   ],
+   [
+    "2026-09-14",
+    4.65
+   ],
+   [
+    "2026-09-15",
+    4.67
+   ],
+   [
+    "2026-09-16",
+    4.74
+   ],
+   [
+    "2026-09-17",
+    4.67
+   ],
+   [
+    "2026-09-18",
+    4.76
+   ],
+   [
+    "2026-09-21",
+    4.76
+   ],
+   [
+    "2026-09-22",
+    4.71
+   ],
+   [
+    "2026-09-23",
+    4.85
+   ],
+   [
+    "2026-09-24",
+    4.87
+   ],
+   [
+    "2026-09-25",
+    4.81
+   ],
+   [
+    "2026-09-28",
+    4.92
+   ],
+   [
+    "2026-09-29",
+    4.89
+   ],
+   [
+    "2026-09-30",
+    4.88
+   ],
+   [
+    "2026-10-01",
+    4.78
+   ],
+   [
+    "2026-10-02",
+    4.83
+   ]
+  ]
+ },
+ "note": "Written by scripts/refresh_market_data.py from official feeds. A failed source keeps its last good value; see refresh.sources.",
+ "polls": {
+  "datafolha": {
+   "fieldwork": "2026-10-03",
+   "registration": "BR-01708-2026",
+   "runoff_total_votes": {
+    "flavio": 46,
+    "lula": 47
+   },
+   "sample": 4006,
+   "valid_votes": {
+    "caiado": 4,
+    "cury": 3,
+    "flavio": 42,
+    "lula": 45,
+    "santos": 3,
+    "zema": 1
+   }
+  },
+  "quaest": {
+   "fieldwork": "2026-10-02/03",
+   "registration": "BR-02197/2026",
+   "runoff_total_votes": {
+    "flavio": 44,
+    "lula": 42
+   },
+   "sample": 3702,
+   "valid_votes": {
+    "caiado": 3,
+    "cury": 3,
+    "flavio": 45,
+    "lula": 46,
+    "santos": 3
+   }
+  }
+ },
+ "refresh": {
+  "attempted_at": "2026-10-05T01:09:10Z",
+  "sources": {
+   "brent": {
+    "error": "",
+    "last_success": "2026-10-05T01:09:10Z",
+    "source": "FRED DCOILBRENTEU",
+    "status": "ok"
+   },
+   "fed_range": {
+    "error": "",
+    "last_success": "2026-10-05T01:09:10Z",
+    "source": "New York Fed (EFFR feed)",
+    "status": "ok"
+   },
+   "focus_fx": {
+    "error": "",
+    "last_success": "2026-10-05T01:09:10Z",
+    "source": "BCB Focus",
+    "status": "ok"
+   },
+   "focus_ipca": {
+    "error": "",
+    "last_success": "2026-10-05T01:09:10Z",
+    "source": "BCB Focus",
+    "status": "ok"
+   },
+   "focus_selic": {
+    "error": "",
+    "last_success": "2026-10-05T01:09:10Z",
+    "source": "BCB Focus",
+    "status": "ok"
+   },
+   "iron_ore": {
+    "error": "",
+    "last_success": "2026-10-05T01:09:10Z",
+    "source": "FRED PIORECRUSDM",
+    "status": "ok"
+   },
+   "ptax": {
+    "error": "",
+    "last_success": "2026-10-05T01:09:10Z",
+    "source": "BCB PTAX",
+    "status": "ok"
+   },
+   "selic_target": {
+    "error": "",
+    "last_success": "2026-10-05T01:09:10Z",
+    "source": "BCB SGS 432",
+    "status": "ok"
+   },
+   "soybeans": {
+    "error": "",
+    "last_success": "2026-10-05T01:09:10Z",
+    "source": "FRED PSOYBUSDM",
+    "status": "ok"
+   },
+   "sugar": {
+    "error": "",
+    "last_success": "2026-10-05T01:09:10Z",
+    "source": "FRED PSUGAISAUSDM",
+    "status": "ok"
+   },
+   "us_yields": {
+    "error": "",
+    "last_success": "2026-10-05T01:09:10Z",
+    "source": "U.S. Treasury par yield curve",
+    "status": "ok"
+   }
+  },
+  "sources_ok": 11,
+  "sources_total": 11
+ },
+ "schema_version": 2,
+ "series": {
+  "brazil_us_policy_differential": {
+   "additional_source_url": "https://www.newyorkfed.org/markets/reference-rates/effr",
+   "frequency": "daily",
+   "label": "Selic target minus federal-funds target-range midpoint",
+   "latest_observation_date": "2026-10-01",
+   "source": "Derived: BCB SGS 432 and New York Fed (EFFR feed)",
+   "source_url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=17/09/2026&dataFinal=05/10/2026",
+   "unit": "percentage points",
+   "value": 9.875
+  },
+  "fed_target_range": {
+   "effective_since": "2026-09-17",
+   "frequency": "daily",
+   "label": "Federal-funds target range",
+   "latest_observation_date": "2026-10-01",
+   "lower": 3.75,
+   "midpoint": 3.875,
+   "source": "New York Fed (EFFR feed)",
+   "source_url": "https://www.newyorkfed.org/markets/reference-rates/effr",
+   "unit": "% p.a.",
+   "upper": 4.0
+  },
+  "focus_fx": {
+   "frequency": "weekly",
+   "label": "Focus year-end USD/BRL median",
+   "latest_observation_date": "2026-09-25",
+   "selected_1_month_change_pp": 0.0,
+   "selected_reference_year": 2026,
+   "selected_value": 5.2,
+   "source": "BCB Focus survey",
+   "source_url": "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/",
+   "unit": "BRL per USD",
+   "values_by_reference_year": {
+    "2026": 5.2,
+    "2027": 5.2769,
+    "2028": 5.3,
+    "2029": 5.3508
+   }
+  },
+  "focus_ipca": {
+   "frequency": "weekly",
+   "label": "Focus annual IPCA median",
+   "latest_observation_date": "2026-09-25",
+   "selected_1_month_change_pp": -0.03529999999999944,
+   "selected_reference_year": 2026,
+   "selected_value": 4.9915,
+   "source": "BCB Focus survey",
+   "source_url": "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/",
+   "unit": "% annual change",
+   "values_by_reference_year": {
+    "2026": 4.9915,
+    "2027": 4.3118,
+    "2028": 3.8,
+    "2029": 3.5003
+   }
+  },
+  "focus_selic": {
+   "frequency": "weekly",
+   "label": "Focus year-end Selic median",
+   "latest_observation_date": "2026-09-25",
+   "selected_1_month_change_pp": -0.25,
+   "selected_reference_year": 2026,
+   "selected_value": 13.5,
+   "source": "BCB Focus survey",
+   "source_url": "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/",
+   "unit": "% p.a.",
+   "values_by_reference_year": {
+    "2026": 13.5,
+    "2027": 12.0,
+    "2028": 10.5,
+    "2029": 10.0
+   }
+  },
+  "ptax_usd_brl_midpoint": {
+   "buying_rate": 5.2232,
+   "five_business_day_change_percent": 0.4751096406862887,
+   "frequency": "daily",
+   "label": "USD/BRL PTAX midpoint",
+   "latest_observation_date": "2026-10-02",
+   "latest_observation_timestamp": "2026-10-02T13:03:16.256632",
+   "one_month_change_percent": 1.8821923151940645,
+   "selling_rate": 5.2238,
+   "source": "BCB PTAX",
+   "source_url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/",
+   "twenty_observation_range": {
+    "end_date": "2026-10-02",
+    "high": 5.2235,
+    "low": 5.0853,
+    "midpoint": 5.1544,
+    "start_date": "2026-09-04",
+    "width": 0.13819999999999943
+   },
+   "unit": "BRL per USD",
+   "value": 5.2235
+  },
+  "selic_target": {
+   "effective_since": "2026-09-17",
+   "frequency": "daily",
+   "label": "BCB Selic target",
+   "latest_observation_date": "2026-10-05",
+   "source": "BCB SGS 432",
+   "source_url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=17/09/2026&dataFinal=05/10/2026",
+   "unit": "% p.a.",
+   "value": 13.75
+  },
+  "us_10_year_treasury": {
+   "five_business_day_change_pp": 0.11000000000000032,
+   "frequency": "daily",
+   "label": "U.S. 10-year Treasury yield",
+   "latest_observation_date": "2026-10-02",
+   "one_month_change_pp": 0.4900000000000002,
+   "source": "U.S. Treasury par yield curve",
+   "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve",
+   "unit": "% p.a.",
+   "value": 5.28
+  },
+  "us_2_year_treasury": {
+   "five_business_day_change_pp": 0.020000000000000462,
+   "frequency": "daily",
+   "label": "U.S. 2-year Treasury yield",
+   "latest_observation_date": "2026-10-02",
+   "one_month_change_pp": 0.4400000000000004,
+   "source": "U.S. Treasury par yield curve",
+   "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve",
+   "unit": "% p.a.",
+   "value": 4.83
+  },
+  "us_2s10s": {
+   "frequency": "daily",
+   "label": "U.S. 2s10s slope (10-year minus 2-year)",
+   "latest_observation_date": "2026-10-02",
+   "source": "U.S. Treasury par yield curve",
+   "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve",
+   "unit": "percentage points",
+   "value": 0.4500000000000002
+  }
+ },
+ "updated_at": "2026-10-05T01:09:10Z"
+}

@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-THESIS_DATE = date(2026, 9, 24)
+THESIS_DATE = date(2026, 10, 5)
 
 
 def load(name: str) -> dict:

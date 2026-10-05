@@ -51,7 +51,7 @@ def test_stale_data_is_flagged_not_hidden(thesis, snapshot) -> None:
     # The refresh has not run for weeks: say so, keep the values with their dates.
     assert "has not run since" in page
     assert 'class="fresh stale"' in page
-    assert "5.1792" in page
+    assert "5.2235" in page
 
 
 def test_one_failed_feed_does_not_blank_the_page(thesis, snapshot) -> None:
@@ -59,7 +59,7 @@ def test_one_failed_feed_does_not_blank_the_page(thesis, snapshot) -> None:
     broken["series"]["us_2_year_treasury"] = {"value": "oops"}
     del broken["commodities"]["brent"]
     page = html(thesis, broken)
-    assert "13.75%" in page and "5.1792" in page
+    assert "13.75%" in page and "5.2235" in page
     assert "Unavailable" in page
 
 
@@ -93,35 +93,47 @@ def with_history(snapshot, closes, us2y=4.8):
     return data
 
 
-def test_monitor_waits_before_the_first_round(thesis, snapshot) -> None:
+def test_monitor_waits_for_the_runoff(thesis, snapshot) -> None:
     assert rule_status(thesis, snapshot, THESIS_DATE)["state"] == "waiting"
 
 
 def test_monitor_abandons_above_5_30(thesis, snapshot) -> None:
-    data = with_history(snapshot, [["2026-09-29", 5.31]])
-    result = rule_status(thesis, data, date(2026, 9, 30))
-    assert result["state"] == "abandoned" and result["date"] == "2026-09-29"
+    data = with_history(snapshot, [["2026-10-06", 5.31]])
+    result = rule_status(thesis, data, date(2026, 10, 7))
+    assert result["state"] == "abandoned" and result["date"] == "2026-10-06"
 
 
-def test_monitor_needs_two_closes_after_the_vote(thesis, snapshot) -> None:
-    # A close below 5.10 before 5 October does not count.
-    data = with_history(snapshot, [["2026-10-02", 5.05], ["2026-10-05", 5.08]])
-    assert rule_status(thesis, data, date(2026, 10, 5))["state"] == "watching"
-    data = with_history(snapshot, [["2026-10-05", 5.08], ["2026-10-06", 5.07]])
-    result = rule_status(thesis, data, date(2026, 10, 6))
-    assert result["state"] == "entered" and result["date"] == "2026-10-06"
+def test_monitor_counts_the_first_session_after_the_data_date(thesis, snapshot) -> None:
+    # The thesis is dated 5 Oct but its data ends on 2 Oct: Monday's close must still be checked.
+    data = with_history(snapshot, [["2026-10-05", 5.31]])
+    assert rule_status(thesis, data, date(2026, 10, 5))["state"] == "abandoned"
+
+
+def test_monitor_ignores_closes_before_the_runoff_is_over(thesis, snapshot) -> None:
+    # A rally on the first Monday does not count, however far it goes.
+    rally = [["2026-10-05", 5.02], ["2026-10-06", 5.01], ["2026-10-23", 5.05]]
+    data = with_history(snapshot, rally)
+    assert rule_status(thesis, data, date(2026, 10, 23))["state"] == "waiting"
+    one_close = with_history(snapshot, rally + [["2026-10-26", 5.08]])
+    assert rule_status(thesis, one_close, date(2026, 10, 26))["state"] == "watching"
+
+
+def test_monitor_needs_two_closes_after_the_runoff(thesis, snapshot) -> None:
+    data = with_history(snapshot, [["2026-10-26", 5.08], ["2026-10-27", 5.07]])
+    result = rule_status(thesis, data, date(2026, 10, 27))
+    assert result["state"] == "entered" and result["date"] == "2026-10-27"
 
 
 def test_monitor_blocks_entry_when_us_rates_surge(thesis, snapshot) -> None:
-    data = with_history(snapshot, [["2026-10-05", 5.08], ["2026-10-06", 5.07]], us2y=5.05)
-    assert rule_status(thesis, data, date(2026, 10, 6))["state"] == "watching"
+    data = with_history(snapshot, [["2026-10-26", 5.08], ["2026-10-27", 5.07]], us2y=5.05)
+    assert rule_status(thesis, data, date(2026, 10, 27))["state"] == "watching"
 
 
 def test_monitor_exit_and_review(thesis, snapshot) -> None:
-    exited = with_history(snapshot, [["2026-10-05", 5.08], ["2026-10-06", 5.07], ["2026-10-07", 5.21], ["2026-10-08", 5.22]])
-    assert rule_status(thesis, exited, date(2026, 10, 8))["state"] == "exited"
-    reviewed = with_history(snapshot, [["2026-10-05", 5.08], ["2026-10-06", 5.07], ["2026-10-07", 4.99]])
-    assert rule_status(thesis, reviewed, date(2026, 10, 7))["state"] == "review"
+    exited = with_history(snapshot, [["2026-10-26", 5.08], ["2026-10-27", 5.07], ["2026-10-28", 5.23], ["2026-10-29", 5.24]])
+    assert rule_status(thesis, exited, date(2026, 10, 29))["state"] == "exited"
+    reviewed = with_history(snapshot, [["2026-10-26", 5.08], ["2026-10-27", 5.07], ["2026-10-28", 4.99]])
+    assert rule_status(thesis, reviewed, date(2026, 10, 28))["state"] == "review"
 
 
 def test_monitor_expires_after_the_review_date(thesis, snapshot) -> None:

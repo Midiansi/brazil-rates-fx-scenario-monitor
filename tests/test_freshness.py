@@ -18,11 +18,11 @@ from conftest import ROOT, THESIS_DATE
 @pytest.mark.parametrize(
     ("observed", "frequency", "expected"),
     [
-        ("2026-09-24", "daily", "fresh"),
-        ("2026-09-19", "daily", "delayed"),   # a long weekend
-        ("2026-09-10", "daily", "stale"),
-        ("2026-09-18", "weekly", "fresh"),
-        ("2026-09-10", "weekly", "delayed"),
+        ("2026-10-05", "daily", "fresh"),
+        ("2026-09-30", "daily", "delayed"),   # a long weekend
+        ("2026-09-20", "daily", "stale"),
+        ("2026-09-28", "weekly", "fresh"),
+        ("2026-09-20", "weekly", "delayed"),
         ("2026-07-01", "monthly", "fresh"),    # IMF prices lag by design
         ("2026-05-01", "monthly", "stale"),
         (None, "daily", "unknown"),
@@ -47,7 +47,7 @@ def test_gate_fails_when_critical_data_is_stale(frozen) -> None:
 
 
 def test_gate_fails_when_the_job_stops_running(frozen) -> None:
-    _, problems = evaluate(frozen, date(2026, 10, 2))
+    _, problems = evaluate(frozen, date(2026, 10, 15))
     assert any("refresh attempt" in problem for problem in problems)
 
 
@@ -61,8 +61,8 @@ def test_gate_fails_when_a_critical_series_is_missing(frozen) -> None:
 def test_gate_script_exit_codes(tmp_path, frozen) -> None:
     path = tmp_path / "snapshot.json"
     path.write_text(json.dumps(frozen), encoding="utf-8")
-    ok = subprocess.run([sys.executable, "scripts/check_freshness.py", "--snapshot", str(path), "--today", "2026-09-24"], cwd=ROOT, capture_output=True, text=True)
+    ok = subprocess.run([sys.executable, "scripts/check_freshness.py", "--snapshot", str(path), "--today", "2026-10-05"], cwd=ROOT, capture_output=True, text=True)
     assert ok.returncode == 0, ok.stdout + ok.stderr
-    late = subprocess.run([sys.executable, "scripts/check_freshness.py", "--snapshot", str(path), "--today", "2026-10-15"], cwd=ROOT, capture_output=True, text=True)
+    late = subprocess.run([sys.executable, "scripts/check_freshness.py", "--snapshot", str(path), "--today", "2026-10-20"], cwd=ROOT, capture_output=True, text=True)
     assert late.returncode == 1
     assert "::error" in late.stdout

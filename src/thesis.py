@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 import math
+import statistics
 from datetime import date, timedelta
 from pathlib import Path
 from typing import Any
@@ -30,7 +31,7 @@ def read_json(path: Path) -> dict[str, Any]:
 
 def load_thesis(path: Path | None = None) -> dict[str, Any]:
     thesis = read_json(path or ROOT / "research" / "thesis.json")
-    required = ("as_of", "evidence", "rules", "review", "calendar", "sources")
+    required = ("as_of", "evidence", "rules", "review", "calendar", "sources", "election", "previous_rules", "previous_evidence")
     if not all(isinstance(thesis.get(key), (dict, list, str)) for key in required):
         return {}
     return thesis
@@ -65,18 +66,67 @@ def monthly_carry(domestic: float, foreign: float) -> float:
     return (((1 + domestic / 100) / (1 + foreign / 100)) ** (1 / 12) - 1) * 100
 
 
+def vote_shares(votes: dict[str, int], leader: str = "flavio", trailer: str = "lula") -> dict[str, float]:
+    """First-round shares of valid votes and the runoff arithmetic.
+
+    ``*_needs`` is the share of the other candidates' voters a finalist must win
+    to reach 50% of valid votes, with turnout and blank votes held constant.
+    """
+
+    total = sum(votes.values())
+    others = total - votes[leader] - votes[trailer]
+    return {
+        "leader": votes[leader] / total * 100,
+        "trailer": votes[trailer] / total * 100,
+        "others": others / total * 100,
+        "margin_pts": (votes[leader] - votes[trailer]) / total * 100,
+        "margin_votes": float(votes[leader] - votes[trailer]),
+        "leader_needs": (total / 2 - votes[leader]) / others * 100,
+        "trailer_needs": (total / 2 - votes[trailer]) / others * 100,
+    }
+
+
+def poll_margin_miss(poll_valid_votes: dict[str, float], result_margin: float, leader: str = "flavio", trailer: str = "lula") -> float:
+    """Points by which a poll's leader-minus-trailer margin fell short of the result."""
+
+    return result_margin - (poll_valid_votes[leader] - poll_valid_votes[trailer])
+
+
+def first_round_reaction(window: dict[str, Any]) -> dict[str, float]:
+    """PTAX move on the first business day after a first round, and how much of it was undone.
+
+    ``giveback`` is 100 when the real was back at its pre-vote level by the Friday
+    before the runoff, and negative when the move was extended.
+    """
+
+    friday, monday, runoff = (window["closes"][key][1] for key in ("friday_before", "monday_after", "friday_before_runoff"))
+    return {"monday_move": (monday / friday - 1) * 100, "giveback": (runoff - monday) / (friday - monday) * 100}
+
+
+def volatility(closes: list[float], sessions: int = 20, horizon: int = 15) -> dict[str, float]:
+    """Realised volatility of daily log returns, in percent, scaled to a horizon of sessions."""
+
+    window = closes[-(sessions + 1):]
+    daily = statistics.stdev(math.log(b / a) for a, b in zip(window, window[1:])) * 100
+    return {"daily_sd": daily, "horizon_sd": daily * math.sqrt(horizon), "annualised": daily * math.sqrt(252)}
+
+
 # ---------------------------------------------------------------------------
 # Placeholders: every number the prose uses, formatted for one language.
 
 
 def placeholders(thesis: dict[str, Any], lang: str) -> dict[str, str]:
-    e, r, p = thesis["evidence"], thesis["rules"], thesis["previous_rules"]
+    e, r, p, q = thesis["evidence"], thesis["rules"], thesis["previous_rules"], thesis["previous_evidence"]
     cal = {item["event"]: item["date"] for item in thesis["calendar"]}
     fed_mid = (e["fed_range"]["lower"] + e["fed_range"]["upper"]) / 2
     ptax_change = (e["ptax"]["value"] / e["ptax"]["previous"] - 1) * 100
-    sp = e["survey_path_average"]
+    sp, vote, polls, jp, vol = e["survey_path_average"], e["election_first_round"], e["final_polls"], e["jpmorgan"], e["volatility"]
+    moves = {w["year"]: w for w in e["first_round_reactions"]["windows"]}
+    sizes = [abs(w["monday_move"]) for w in moves.values()]
+    million = {"en": " million", "pt": " milhões", "fr": " millions"}[lang]
     values = {
         "as_of": f.day(thesis["as_of"], lang, long=True),
+        "first_monday": f.day(thesis["as_of"], lang, year=False, long=True),
         "selic": f.pct(e["selic"]["value"], 2, lang),
         "selic_prev": f.pct(e["selic"]["previous"], 2, lang),
         "fed_range": f.rate_range(e["fed_range"]["lower"], e["fed_range"]["upper"], lang),
@@ -103,6 +153,8 @@ def placeholders(thesis: dict[str, Any], lang: str) -> dict[str, str]:
         "low4m": f.num(e["ptax"]["four_month_low"], 4, lang),
         "us2y": f.pct(e["us_2y"]["value"], 2, lang),
         "us2y_prev": f.pct(e["us_2y"]["previous"], 2, lang),
+        "us2y_high": f.pct(e["us_2y"]["high_since_previous"], 2, lang),
+        "us2y_high_date": f.day(e["us_2y"]["high_date"], lang, year=False, long=True),
         "us10y": f.pct(e["us_10y"]["value"], 2, lang),
         "br_1y": f.pct(e["br_1y"]["value"], 2, lang),
         "br_2y": f.pct(e["br_2y"]["value"], 2, lang),
@@ -121,19 +173,65 @@ def placeholders(thesis: dict[str, Any], lang: str) -> dict[str, str]:
         "fed_proj_june": f.pct(e["fed_projection"]["june_2026"], 1, lang),
         "brent": f.usd(e["brent_spot"]["value"], 2, lang),
         "brent_date": f.day(e["brent_spot"]["date"], lang, year=False, long=True),
+        "brent_prev": f.usd(e["brent_spot"]["previous"], 2, lang),
         "brent_peak": f.usd(e["brent_spot"]["peak"], 2, lang),
         "brent_peak_date": f.day(e["brent_spot"]["peak_date"], lang, year=False, long=True),
-        "brent_july": f.usd(e["brent_spot"]["late_july"], 2, lang),
-        "brent_fut": f.usd(e["brent_futures_reported"]["value"], 2, lang),
-        "brent_fut_date": f.day(e["brent_futures_reported"]["date"], lang, year=False, long=True),
-        "eia_2h": f.usd(e["eia_brent_forecast_2h26"]["value"], 0, lang),
-        "lula": str(e["poll_first_round"]["lula"]),
-        "flavio": str(e["poll_first_round"]["flavio"]),
-        "moe": {"en": "{} pts", "pt": "{} p.p.", "fr": "{}\u202fpts"}[lang].format(e["poll_first_round"]["margin"]),
-        "runoff_lula": str(e["poll_runoff"]["lula"]),
-        "runoff_flavio": str(e["poll_runoff"]["flavio"]),
         "fiscal_gov": f.brl_bn(e["fiscal_2027"]["government"], lang),
         "fiscal_ifi": f.brl_bn(e["fiscal_2027"]["ifi"], lang),
+        # First round and final polls.
+        "counted": f.pct(vote["reporting_pct"], 1, lang),
+        "fl_share": f.pct(vote["flavio"], 1, lang),
+        "lu_share": f.pct(vote["lula"], 1, lang),
+        "oth_share": f.pct(vote["others"], 1, lang),
+        "margin_pts": f.pp(vote["margin_pts"], 1, lang),
+        "margin_votes": f.num(vote["margin_votes"] / 1e6, 1, lang) + million,
+        "need_fl": f.pct(e["runoff_arithmetic"]["flavio_needs"], 0, lang),
+        "need_lu": f.pct(e["runoff_arithmetic"]["lula_needs"], 0, lang),
+        "dat_lula": str(polls["datafolha"]["lula"]),
+        "dat_flavio": str(polls["datafolha"]["flavio"]),
+        "dat_lead": str(polls["datafolha"]["lula"] - polls["datafolha"]["flavio"]),
+        "dat_miss": f.pp(polls["datafolha"]["margin_miss"], 1, lang),
+        "dat_r_lula": str(polls["datafolha"]["runoff_lula"]),
+        "dat_r_flavio": str(polls["datafolha"]["runoff_flavio"]),
+        "que_lula": str(polls["quaest"]["lula"]),
+        "que_flavio": str(polls["quaest"]["flavio"]),
+        "que_lead": str(polls["quaest"]["lula"] - polls["quaest"]["flavio"]),
+        "que_miss": f.pp(polls["quaest"]["margin_miss"], 1, lang),
+        "que_r_lula": str(polls["quaest"]["runoff_lula"]),
+        "que_r_flavio": str(polls["quaest"]["runoff_flavio"]),
+        "miss_avg": f.pp(polls["average_miss"], 1, lang),
+        # Past first rounds, volatility and bank scenarios.
+        "ev_min": f.pct(min(sizes), 1, lang),
+        "ev_max": f.pct(max(sizes), 1, lang),
+        "ev_avg": f.pct(abs(e["first_round_reactions"]["average_move"]), 1, lang),
+        "gb_2014": f.pct(moves[2014]["giveback"], 0, lang),
+        "gb_2018": f.pct(abs(moves[2018]["giveback"]), 0, lang),
+        "gb_2022": f.pct(moves[2022]["giveback"], 0, lang),
+        "vol_daily": f.pct(vol["daily_sd"], 2, lang),
+        "vol_ann": f.pct(vol["annualised"], 0, lang),
+        "vol15": f.pct(vol["horizon_sd"], 1, lang),
+        "vol15_brl": f.num(vol["horizon_brl"], 2, lang),
+        "entry_dist": f.pct(abs(vol["entry_distance"]), 1, lang),
+        "abandon_dist": f.pct(vol["abandon_distance"], 1, lang),
+        "entry_sigma": f.num(vol["entry_sigma"], 1, lang),
+        "abandon_sigma": f.num(vol["abandon_sigma"], 1, lang),
+        "event_sigma": f.num(vol["event_sigma"], 1, lang),
+        "jpm_low": f.num(jp["low"], 2, lang),
+        "jpm_high": f.num(jp["high"], 2, lang),
+        "jpm_event": f.pct(jp["event_move"], 1, lang),
+        "jpm_real": f.pct(jp["real_rate"], 1, lang),
+        "jpm_real22": f.pct(jp["real_rate_2022"], 1, lang),
+        "jpm_debt": f.pct(jp["gross_debt"], 0, lang),
+        "jpm_debt22": f.pct(jp["gross_debt_2022"], 0, lang),
+        # The 24 September thesis, for the review table.
+        "prev_entry": f.num(p["entry_below"], 2, lang),
+        "prev_abandon": f.num(p["abandon_above"], 2, lang),
+        "prev_lula": str(q["poll_lula"]),
+        "prev_flavio": str(q["poll_flavio"]),
+        "prev_moe": {"en": "{} pts", "pt": "{} p.p.", "fr": "{}\u202fpts"}[lang].format(q["poll_margin"]),
+        "prev_gap_2y": f.pp(q["br_2y_gap"], 1, lang),
+        "prev_br_2y": f.pct(q["br_2y"], 2, lang),
+        # Rules.
         "entry": f.num(r["entry_below"], 2, lang),
         "us2y_max": f.pct(r["entry_us2y_max"], 2, lang),
         "abandon": f.num(r["abandon_above"], 2, lang),
@@ -146,10 +244,8 @@ def placeholders(thesis: dict[str, Any], lang: str) -> dict[str, str]:
         "earliest": f.day(r["earliest_entry"], lang, year=False, long=True),
         "range_low": f.num(r["range"]["low"], 4, lang),
         "range_high": f.num(r["range"]["high"], 4, lang),
-        "prev_trigger": f.num(p["trigger"], 2, lang),
-        "prev_abandon": f.num(p["abandon_before_entry"], 2, lang),
-        "first_round": f.day(cal["election_first"], lang, year=False, long=True),
-        "runoff": f.day(cal["election_runoff"], lang, year=False, long=True),
+        "first_round": f.day(thesis["election"]["first_round"], lang, year=False, long=True),
+        "runoff": f.day(thesis["election"]["runoff"], lang, year=False, long=True),
         "fomc_next": f.day(cal["fomc"], lang, year=False, long=True),
         "copom_next": f.day(cal["copom"], lang, year=False, long=True),
     }
@@ -187,7 +283,7 @@ def rule_status(thesis: dict[str, Any], snapshot: dict[str, Any], today: date) -
         return {"state": "unavailable"}
     latest_date, latest = clean[-1]
     base = {"latest": latest, "latest_date": latest_date}
-    after = [(d, v) for d, v in clean if d > thesis["as_of"]]
+    after = [(d, v) for d, v in clean if d > thesis.get("data_as_of", thesis["as_of"])]
 
     entered: tuple[str, float] | None = None
     below = above = 0

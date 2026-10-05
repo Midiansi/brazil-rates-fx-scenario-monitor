@@ -64,10 +64,10 @@ def _styles() -> dict[str, ParagraphStyle]:
 
 
 def _pdf_text(text: str) -> str:
-    """Escape for ReportLab markup and cover the two glyphs Vera lacks."""
+    """Escape for ReportLab markup and cover the glyphs Vera lacks (arrow, sigma)."""
 
     safe = escape(text, quote=False).replace(" ", " ")
-    return safe.replace("→", '<font name="Symbol">→</font>')
+    return safe.replace("→", '<font name="Symbol">→</font>').replace("σ", '<font name="Symbol">σ</font>')
 
 
 def render_pdf(thesis: dict[str, Any], snapshot: dict[str, Any], output: Path | str, lang: str = "en") -> Path:
@@ -152,7 +152,7 @@ def render_pdf(thesis: dict[str, Any], snapshot: dict[str, Any], output: Path | 
                      p(f"<font name='Sans-Bold' color='{color}'>{_pdf_text(t['verdicts'][item['verdict']])}</font>", "cell")])
     story.append(grid(rows, [WIDTH * 0.3, WIDTH * 0.52, WIDTH * 0.18], header=True))
     story.append(Spacer(1, 6))
-    story.append(p(f"<b>{_pdf_text(t['review_lesson_label'])}.</b> {_pdf_text(t['review_lesson'])}", "body"))
+    story.append(p(f"<b>{_pdf_text(t['review_lesson_label'])}.</b> {s(t['review_lesson'])}", "body"))
 
     # 4. Paper trade rules.
     story.append(p(_pdf_text(t["trade_title"]), "h2"))
@@ -210,7 +210,7 @@ def render_pdf(thesis: dict[str, Any], snapshot: dict[str, Any], output: Path | 
     story.append(p(_pdf_text(t["method_title"]), "h2"))
     for term, body in t["method_calc"][2:4]:
         story.append(p(f"<b>{_pdf_text(term)}.</b> {s(body)}", "body"))
-    story.append(p(f"<b>{_pdf_text(t['limits_label'])}.</b> " + " ".join(_pdf_text(item) for item in t["limits"]), "body"))
+    story.append(p(f"<b>{_pdf_text(t['limits_label'])}.</b> " + " ".join(s(item) for item in t["limits"]), "body"))
     story.append(p(_pdf_text(t["sources_label"]), "h2"))
     labels = t["source_labels"]
     links = [
@@ -269,7 +269,7 @@ def markdown_brief(thesis: dict[str, Any]) -> str:
     for item in thesis["review"]:
         expected, happened = t["review_rows"][item["id"]]
         lines.append(f"| {s(expected)} | {s(happened)} | {t['verdicts'][item['verdict']]} |")
-    lines += ["", f"**{t['review_lesson_label']}.** {t['review_lesson']}", "", f"## {t['trade_title']}", "", s(t["trade_status"]), ""]
+    lines += ["", f"**{t['review_lesson_label']}.** {s(t['review_lesson'])}", "", f"## {t['trade_title']}", "", s(t["trade_status"]), ""]
     lines += [f"- **{term}.** {s(body)}" for term, body in t["trade_rows"]]
     lines += ["", f"## {s(t['paths_title'])}", ""]
     for letter, (title, signals, meaning, action) in zip("ABCD", t["paths"]):

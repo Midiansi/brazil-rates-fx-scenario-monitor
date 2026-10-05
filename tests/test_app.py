@@ -9,9 +9,9 @@ import pytest
 from streamlit.testing.v1 import AppTest
 
 EXPECTED = {
-    "EN": ("Brazil macro, from policy to price.", "What would make me act", "What happened to my 13 September thesis"),
-    "PT": ("Brasil macro: da política monetária aos preços.", "O que me faria agir", "O que aconteceu com a minha tese de 13 de setembro"),
-    "FR": ("Le Brésil, de la politique monétaire aux marchés.", "Ce qui me ferait agir", "Ce qu’est devenue ma thèse du 13 septembre"),
+    "EN": ("Brazil macro, from policy to price.", "What would make me act", "What happened to my 24 September thesis"),
+    "PT": ("Brasil macro: da política monetária aos preços.", "O que me faria agir", "O que aconteceu com a minha tese de 24 de setembro"),
+    "FR": ("Le Brésil, de la politique monétaire aux marchés.", "Ce qui me ferait agir", "Ce qu’est devenue ma thèse du 24 septembre"),
 }
 
 

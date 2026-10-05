@@ -21,10 +21,10 @@ LINKEDIN = "https://www.linkedin.com/in/romeomugnier"
 SECTIONS = ("view", "review", "evidence", "paths", "trade", "commodities", "method")
 TAPE = ("selic_target", "fed_target_range", "brazil_us_policy_differential", "ptax_usd_brl_midpoint", "us_2_year_treasury", "brent")
 EVIDENCE_SOURCES = {
-    "fact": (("copom_281",), ("fomc_statement",), ("derived_gap",), ("datafolha_0917", "tse"), ("ifi_ploa2027",)),
-    "pricing": (("bcb_ptax",), ("treasury",), ("anbima_ettj",), ("fred_brent", "advfn_estadao_0923")),
-    "survey": (("bcb_focus",), ("fomc_sep",), ("eia_steo", "aljazeera_pipeline")),
-    "interpretation": ((), (), ()),
+    "fact": (("tse_results",), ("datafolha_1003", "quaest_1003"), ("copom_281", "fomc_statement", "derived_gap"), ("ifi_ploa2027",)),
+    "pricing": (("bcb_ptax",), ("treasury",), ("anbima_ettj",), ("fred_brent",)),
+    "survey": (("bcb_focus",), ("fomc_sep",), ("jpmorgan_infomoney",)),
+    "interpretation": (("tse_results",), ("bcb_ptax",), ()),
 }
 VERDICT_ICONS = {"confirmed": "✓", "partly": "~", "unresolved": "?", "not_triggered": "○", "underweighted": "!"}
 
@@ -201,7 +201,7 @@ class Page:
             + self.section_head("review", e(t["review_title"]), self.s(t["review_intro"]))
             + f'<div class="sec-body"><div class="table-wrap" tabindex="0" role="region" aria-labelledby="review-title">'
             f'<table class="review"><thead><tr>{head}</tr></thead><tbody>{"".join(rows)}</tbody></table></div>'
-            f'<div class="lesson"><span class="label">{e(t["review_lesson_label"])}</span><p>{e(t["review_lesson"])}</p></div>'
+            f'<div class="lesson"><span class="label">{e(t["review_lesson_label"])}</span><p>{self.s(t["review_lesson"])}</p></div>'
             "</div></section></div>"
         )
 
@@ -288,12 +288,12 @@ class Page:
         history = (self.snapshot.get("history") or {}).get("ptax") or []
         if len(history) < 2:
             return ""
-        r, p = self.thesis["rules"], self.thesis["previous_rules"]
+        r, focus = self.thesis["rules"], self.thesis["evidence"]["focus_fx"]["2026"]
         labels = {k: fill(v, self.values, self.lang) for k, v in t["chart_labels"].items()}
         levels = [
             {"value": r["abandon_above"], "kind": "abandon", "label": labels["abandon"]},
-            {"value": p["trigger"], "kind": "prev", "label": labels["prev"], "nudge": -6},
-            {"value": r["exit_above"], "kind": "exit", "label": labels["exit"], "nudge": 7},
+            {"value": r["exit_above"], "kind": "exit", "label": labels["exit"], "nudge": -6},
+            {"value": focus, "kind": "prev", "label": labels["prev"], "nudge": 7},
             {"value": r["entry_below"], "kind": "entry", "label": labels["entry"]},
         ]
         events = [{"date": "2026-09-16", "label": labels["event"]}]
@@ -420,7 +420,7 @@ class Page:
         status_line = self.s(t["refresh_status"], attempted=self.stamp(attempted),
                              ok=str(refresh.get("sources_ok", t["na"])), total=str(refresh.get("sources_total", t["na"])))
         calc = "".join(f"<div><dt>{e(term)}</dt><dd>{self.s(body)}</dd></div>" for term, body in t["method_calc"])
-        limits = "".join(f"<li>{e(item)}</li>" for item in t["limits"])
+        limits = "".join(f"<li>{self.s(item)}</li>" for item in t["limits"])
         labels = self.t["source_labels"]
         sources = "".join(
             f'<li><a href="{e(src["url"])}" target="_blank" rel="noopener">{e(labels.get(key, src["label"]))}</a> <span class="d">{e(f.day(src["date"], self.lang))}</span></li>'
@@ -435,7 +435,7 @@ class Page:
             f'<details><summary>{e(t["refresh_label"])}</summary><div class="inner"><p>{e(t["refresh_text"])}</p><p>{status_line}</p>{failed_html}<p class="muted">{e(t["refresh_history"])}</p></div></details>'
             f'<details><summary>{e(t["limits_label"])}</summary><div class="inner"><ul>{limits}</ul></div></details>'
             f'<details><summary>{e(t["sources_label"])}</summary><div class="inner"><p class="muted">{e(t["sources_note"])}</p><ul class="sources">{sources}</ul>'
-            f'<h4>{e(t["archive_label"])}</h4><p>{e(t["archive"])} <a href="{GITHUB}/blob/main/research/data_snapshot.json" target="_blank" rel="noopener">GitHub</a></p></div></details>'
+            f'<h4>{e(t["archive_label"])}</h4><p>{e(t["archive"])} <a href="{GITHUB}/blob/main/research/thesis_2026-09-24.json" target="_blank" rel="noopener">GitHub</a></p></div></details>'
             "</div></section></div>"
         )
 
