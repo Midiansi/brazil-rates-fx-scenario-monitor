@@ -1,0 +1,78 @@
+name: Keep Streamlit Awake
+
+on:
+  schedule:
+    # Every 8 hours, away from the busy start of the hour (UTC).
+    - cron: '23 0,8,16 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/keep-streamlit-awake.yml']
+
+permissions: {}
+
+concurrency:
+  group: keep-streamlit-awake
+  cancel-in-progress: false
+
+jobs:
+  visit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      STREAMLIT_URL: https://brasilmacro.streamlit.app/
+    steps:
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.11'
+      - name: Install the browser
+        run: |
+          python -m pip install playwright==1.63.0
+          python -m playwright install --with-deps chromium
+      - name: Visit the deployed dashboard
+        run: |
+          python - <<'PY'
+          import os
+          from time import monotonic
+
+          from playwright.sync_api import sync_playwright
+
+          url = os.environ["STREAMLIT_URL"]
+          with sync_playwright() as p:
+              for attempt in range(1, 3):
+                  browser = p.chromium.launch(headless=True)
+                  try:
+                      page = browser.new_page()
+                      page.goto(url, wait_until="domcontentloaded", timeout=60000)
+                      deadline = monotonic() + 180
+                      while monotonic() < deadline:
+                          ready = False
+                          # Community Cloud embeds the app in an iframe; check
+                          # both the outer page and frames for sleep/ready states.
+                          for frame in page.frames:
+                              wake = frame.get_by_role(
+                                  "button", name="Yes, get this app back up!", exact=True
+                              )
+                              if wake.is_visible():
+                                  wake.click(timeout=10000)
+                                  print("Requested Streamlit wake-up", flush=True)
+                              if frame.locator("#view h1").is_visible():
+                                  ready = True
+                                  break
+                          if ready:
+                              break
+                          page.wait_for_timeout(1000)
+                      else:
+                          raise RuntimeError("Brazil Macro did not render within 180 seconds")
+
+                      # Keep the real browser/WebSocket session open briefly.
+                      page.wait_for_timeout(15000)
+                      print(f"Visited {url}: {page.title()}", flush=True)
+                      break
+                  except Exception as error:
+                      print(f"Visit attempt {attempt} failed: {error}", flush=True)
+                      if attempt == 2:
+                          raise
+                  finally:
+                      browser.close()
+          PY
