@@ -21,6 +21,7 @@ from src import chart, content, formatting, freshness, page, thesis
 ROOT = Path(__file__).resolve().parent
 THESIS_PATH = ROOT / "research" / "thesis.json"
 SNAPSHOT_PATH = ROOT / "research" / "live_snapshot.json"
+STUDY_PATH = ROOT / "research" / "study_2026-10-06.json"
 CSS_PATH = ROOT / "src" / "style.css"
 LANGUAGES = {"EN": "en", "PT": "pt", "FR": "fr"}
 PDF_NAMES = {"en": "Brazil_Rates_FX_Trade_Brief.pdf", "pt": "Brazil_Rates_FX_Trade_Brief_PT.pdf", "fr": "Brazil_Rates_FX_Trade_Brief_FR.pdf"}
@@ -64,11 +65,11 @@ def _css(version: float) -> str:
     return "<style>" + raw + "</style>"
 
 
-@lru_cache(maxsize=16)
-def _blocks(lang: str, today: str, versions: tuple[float, float, float]) -> dict[str, str]:
+@lru_cache(maxsize=24)
+def _blocks(lang: str, lens: str, today: str, versions: tuple[float, ...]) -> dict[str, str]:
     saved_thesis = thesis.load_thesis(THESIS_PATH)
     snapshot = thesis.read_json(SNAPSHOT_PATH)
-    return page.render(lang, saved_thesis, snapshot, datetime.fromisoformat(today).date())
+    return page.render(lang, saved_thesis, snapshot, datetime.fromisoformat(today).date(), lens)
 
 
 @lru_cache(maxsize=8)
@@ -77,6 +78,13 @@ def _pdf(path: str, version: float) -> bytes:
         return Path(path).read_bytes()
     except OSError:
         return b""
+
+
+def _lens() -> str:
+    """``?lens=quant`` or ``?lens=commodities`` puts that reading first; anything else means quant."""
+
+    requested = str(st.query_params.get("lens", "quant")).lower()
+    return requested if requested in page.LENSES else "quant"
 
 
 def _language() -> str:
@@ -105,7 +113,7 @@ if st.query_params.get("lang", "en") != lang:
     st.query_params["lang"] = lang
 
 today = datetime.now(timezone.utc).date().isoformat()
-blocks = _blocks(lang, today, (code_version, _mtime(THESIS_PATH), _mtime(SNAPSHOT_PATH)))
+blocks = _blocks(lang, _lens(), today, (code_version, _mtime(THESIS_PATH), _mtime(SNAPSHOT_PATH), _mtime(STUDY_PATH)))
 with top_left:
     st.html(blocks["top"])
 st.html(blocks["hero"])
@@ -120,8 +128,8 @@ if pdf_bytes:
 
 if "toc" in blocks:  # its own element so CSS can pin it while the sections scroll
     st.html(blocks["toc"])
-if "body_1" in blocks:
-    st.html(blocks["body_1"])
-    if blocks.get("chart"):
-        st.markdown(blocks["chart"], unsafe_allow_html=True)
-    st.html(blocks["body_2"])
+for name, markup in blocks.items():
+    if name.startswith("body_"):
+        st.html(markup)
+    elif name.startswith("chart_"):  # inline SVG survives only through Markdown
+        st.markdown(markup, unsafe_allow_html=True)

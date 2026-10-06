@@ -53,12 +53,13 @@ def _styles() -> dict[str, ParagraphStyle]:
         "eyebrow": style("eyebrow", 7, 10, color=TEAL, spaceAfter=6),
         "title": style("title", 19, 23, "Sans-Bold", spaceAfter=4),
         "subtitle": style("subtitle", 9, 13, color=MUTED, spaceAfter=14),
-        "h2": style("h2", 11.5, 15, "Sans-Bold", spaceBefore=16, spaceAfter=7),
+        "h2": style("h2", 11.5, 15, "Sans-Bold", spaceBefore=12, spaceAfter=5),
         "label": style("label", 6.8, 9, "Sans-Bold", color=MUTED, spaceAfter=3),
         "lead": style("lead", 11.2, 15.5, "Sans-Bold", spaceAfter=8),
-        "body": style("body", 8.6, 12.4, color=INK_2, spaceAfter=5),
-        "small": style("small", 7.6, 10.6, color=MUTED, spaceAfter=3),
-        "cell": style("cell", 8, 11, color=INK_2),
+        "body": style("body", 8.5, 11.9, color=INK_2, spaceAfter=4),
+        "small": style("small", 7.4, 10.0, color=MUTED, spaceAfter=3),
+        "tiny": style("tiny", 6.7, 8.4, color=MUTED),
+        "cell": style("cell", 7.9, 10.6, color=INK_2),
         "metric": style("metric", 8, 15, color=INK_2),
     }
 
@@ -67,7 +68,8 @@ def _pdf_text(text: str) -> str:
     """Escape for ReportLab markup and cover the glyphs Vera lacks (arrow, sigma)."""
 
     safe = escape(text, quote=False).replace(" ", " ")
-    return safe.replace("→", '<font name="Symbol">→</font>').replace("σ", '<font name="Symbol">σ</font>')
+    return (safe.replace("→", '<font name="Symbol">→</font>').replace("σ", '<font name="Symbol">σ</font>')
+            .replace("Σ", '<font name="Symbol">Σ</font>').replace("₂", "2").replace("₁", "1"))
 
 
 def render_pdf(thesis: dict[str, Any], snapshot: dict[str, Any], output: Path | str, lang: str = "en") -> Path:
@@ -85,7 +87,7 @@ def render_pdf(thesis: dict[str, Any], snapshot: dict[str, Any], output: Path | 
         table.setStyle(TableStyle([
             ("VALIGN", (0, 0), (-1, -1), "TOP"),
             ("LEFTPADDING", (0, 0), (-1, -1), 0), ("RIGHTPADDING", (0, 0), (-1, -1), 10),
-            ("TOPPADDING", (0, 0), (-1, -1), 5), ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
+            ("TOPPADDING", (0, 0), (-1, -1), 4), ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
             ("LINEBELOW", (0, 0), (-1, -1), 0.4, LINE),
             *(style or []),
         ]))
@@ -141,7 +143,7 @@ def render_pdf(thesis: dict[str, Any], snapshot: dict[str, Any], output: Path | 
     ]
     story.append(grid([cells[:3], cells[3:]], [WIDTH / 3] * 3, [("TOPPADDING", (0, 0), (-1, -1), 7), ("BOTTOMPADDING", (0, 0), (-1, -1), 8)]))
 
-    # 3. Review of the previous thesis.
+    # 3. Review of the 5 October thesis.
     story.append(p(_pdf_text(t["review_title"]), "h2"))
     story.append(p(s(t["review_intro"]), "body"))
     rows = [[p(_pdf_text(h.upper()), "label") for h in t["review_head"]]]
@@ -154,7 +156,80 @@ def render_pdf(thesis: dict[str, Any], snapshot: dict[str, Any], output: Path | 
     story.append(Spacer(1, 6))
     story.append(p(f"<b>{_pdf_text(t['review_lesson_label'])}.</b> {s(t['review_lesson'])}", "body"))
 
-    # 4. Paper trade rules.
+    study = thesis.get("study") or {}
+    right = [("TOPPADDING", (0, 0), (-1, -1), 3), ("BOTTOMPADDING", (0, 0), (-1, -1), 4), ("ALIGN", (1, 0), (-1, -1), "RIGHT")]
+    if study:
+        curve, gap, bp = study["curve"], study["survey_gap"], t["bp"]
+
+        def num(value: float, digits: int = 2, signed: bool = False) -> str:
+            return f.num(value, digits, lang, signed)
+
+        # 4. Rates, FX and quant.
+        story.append(p(_pdf_text(t["quant_title"]), "h2"))
+        story.append(p(f"<b>{_pdf_text(t['quant_curve_title'])}.</b> {s(t['quant_curve_text'])}", "body"))
+        rows = [[p(_pdf_text(h.upper()), "label") for h in t["curve_cols"]]]
+        for row in curve["rows"]:
+            if row["vertex"] in ("126", "252", "504", "756", "1260", "2520"):
+                rows.append([p(_pdf_text(t["curve_tenors"][row["vertex"]]), "cell"), p(f.pct(row["before"], 2, lang), "cell"),
+                             p(f.pct(row["after"], 2, lang), "cell"), p(f"{num(row['change_bp'], 0, True)} {bp}", "cell")])
+        memo = t["curve_memo"]
+        for label, before, after, fmt in (
+            (memo["fwd"], curve["forward_1y1y"]["before"], curve["forward_1y1y"]["after"], lambda v: f.pct(v, 2, lang)),
+            (memo["be"], curve["breakeven_2y"]["before"], curve["breakeven_2y"]["after"], lambda v: f.pct(v, 2, lang)),
+            (memo["real"], curve["real_2y"]["before"], curve["real_2y"]["after"], lambda v: f.pct(v, 2, lang)),
+        ):
+            rows.append([p(_pdf_text(label), "cell"), p(fmt(before), "cell"), p(fmt(after), "cell"), p(f"{num((after - before) * 100, 0, True)} {bp}", "cell")])
+        story.append(grid(rows, [WIDTH * 0.46, WIDTH * 0.18, WIDTH * 0.18, WIDTH * 0.18], right, header=True))
+
+        story.append(p(f"<b>{_pdf_text(t['quant_events_title'])}.</b> {s(t['quant_events_text'])}", "body"))
+        rows = [[p(_pdf_text(h.upper()), "label") for h in t["events_cols"]]]
+        for w in study["elections"]:
+            pending = w["year"] == 2026
+            dash = _pdf_text(t["events_undefined"])
+            cells = [str(w["year"]), f.pct(w["monday_move"], 2, lang, signed=True), num(w["z"], 1, True)]
+            if pending:
+                cells += [_pdf_text(t["events_pending"])] * 3
+            else:
+                first, second = w.get("giveback_runoff_friday"), w.get("giveback_first_close")
+                cells += [f.pct(first, 0, lang) if first is not None else dash, f.pct(second, 0, lang) if second is not None else dash,
+                          f.pct(w["runoff_session_move"], 2, lang, signed=True)]
+            weight = "Sans-Bold" if pending or w["surprise"] else "Sans"
+            rows.append([p(f"<font name='{weight}'>{c}</font>", "cell") for c in cells])
+        story.append(grid(rows, [WIDTH * 0.1, WIDTH * 0.15, WIDTH * 0.12, WIDTH * 0.23, WIDTH * 0.23, WIDTH * 0.17], right, header=True))
+        story.append(p(_pdf_text(t["events_note"]), "small"))
+
+        story.append(p(f"<b>{_pdf_text(t['quant_rule_title'])}.</b> {s(t['quant_rule_text'])}", "body"))
+        geometry, rules = study["rule_geometry"], thesis["rules"]
+        walk, walk_lr = geometry["random_walk"]["diffusion"], geometry["random_walk"]["long_run"]
+        rows = [[p(_pdf_text(h.upper()), "label") for h in (s(c) for c in t["rule_cols"])]]
+        for key, level, field in (("entry", rules["entry_below"], "below_entry"), ("exit", rules["exit_above"], "above_exit"), ("abandon", rules["abandon_above"], "above_abandon")):
+            name, rule, verb = t["rule_rows"][key]
+            rows.append([p(f"<b>{num(level)}</b>", "cell"), p(f"<b>{_pdf_text(name)}</b> · {s(rule)}", "cell"), p(f.pct(geometry["giveback"][key], 0, lang), "cell"),
+                         p(f.pct(geometry["distance_pct"][key], 1, lang, signed=True), "cell"),
+                         p(f"{f.pct(walk[field], 0, lang)} · {_pdf_text(verb)}", "cell"), p(f"{f.pct(walk_lr[field], 0, lang)} · {_pdf_text(verb)}", "cell")])
+        story.append(grid(rows, [WIDTH * 0.1, WIDTH * 0.28, WIDTH * 0.13, WIDTH * 0.13, WIDTH * 0.18, WIDTH * 0.18], header=True))
+        story.append(Spacer(1, 4))
+        for term, body in t["rule_bullets"]:
+            story.append(p(f"<b>{_pdf_text(term)}.</b> {s(body)}", "body"))
+
+        # 5. Commodities.
+        story.append(p(_pdf_text(t["commodities_title"]), "h2"))
+        story.append(p(s(t["commodities_intro"]), "body"))
+        story.append(p(f"<b>{_pdf_text(t['c_link_title'])}</b> {s(t['c_link_text'])}", "body"))
+        hedge = {item["key"]: item for item in study["hedge"]}
+        yoy = {item["key"]: item for item in study["year_on_year"]["rows"]}
+        share = study["weights"]["share_of_exports"]
+        rows = [[p(_pdf_text(h.upper()), "label") for h in (*t["producer_cols"], t["bars_labels"]["usd"], t["bars_labels"]["brl"])]]
+        for key in ("brent", "soybeans", "iron_ore", "coffee", "sugar", "maize"):
+            rows.append([p(f"<b>{_pdf_text(t['commodity_names'][key])}</b>", "cell"), p(f.pct(share[key], 1, lang), "cell"), p(f.pct(hedge[key]["vol_usd"], 0, lang), "cell"),
+                         p(f.pct(hedge[key]["vol_brl"], 0, lang), "cell"), p(num(hedge[key]["corr_fx"]), "cell"),
+                         p(f.pct(yoy[key]["usd"], 1, lang, signed=True), "cell"), p(f.pct(yoy[key]["brl"], 1, lang, signed=True), "cell")])
+        story.append(grid(rows, [WIDTH * 0.2, WIDTH * 0.13, WIDTH * 0.13, WIDTH * 0.13, WIDTH * 0.15, WIDTH * 0.13, WIDTH * 0.13], right, header=True))
+        story.append(p(f"{_pdf_text(t['producer_note'])} {s(t['bars_title'])}.", "small"))
+        for title, body in t["c_oil_points"][:2]:
+            story.append(p(f"<b>{_pdf_text(title)}</b> {s(body)}", "body"))
+
+    # 6. Paper trade rules.
     story.append(p(_pdf_text(t["trade_title"]), "h2"))
     story.append(p(s(t["trade_status"]), "small"))
     rows = []
@@ -164,10 +239,9 @@ def render_pdf(thesis: dict[str, Any], snapshot: dict[str, Any], output: Path | 
     story.append(grid(rows, [WIDTH * 0.24, WIDTH * 0.76]))
     story.append(Spacer(1, 6))
     story.append(p(f"<b>{_pdf_text(t['trade_risks_label'])}.</b> " + " ".join(f"({i}) {s(r)}" for i, r in enumerate(t["trade_risks"], 1)), "body"))
-    story.append(p(f"<b>{_pdf_text(t['trade_change_label'])}.</b> {s(t['trade_change'])}", "body"))
 
-    # 5. Paths after the first round.
-    paths_block = [p(s(t["paths_title"]), "h2"), p(_pdf_text(t["paths_intro"]), "body")]
+    # 7. Paths.
+    paths_block = [p(s(t["paths_title"]), "h2")]
     colon = "\u00a0:" if lang == "fr" else ":"
     path_cells = []
     for letter, (title, signals, meaning, action) in zip("ABCD", t["paths"]):
@@ -181,45 +255,18 @@ def render_pdf(thesis: dict[str, Any], snapshot: dict[str, Any], output: Path | 
     story.append(Spacer(1, 4))
     story.append(p(f"<b>{_pdf_text(t['calendar_label'])}.</b> {dates}", "small"))
 
-    # 6. My interpretation (the full evidence list stays on the website).
-    story.append(p(_pdf_text(t["kinds"]["interpretation"]), "h2"))
-    for text in t["evidence"]["interpretation"]:
-        story.append(p("– " + s(text), "body"))
-
-    # 7. Commodities.
-    story.append(p(_pdf_text(t["commodities_title"]), "h2"))
-    story.append(p(_pdf_text(t["commodities_intro"]), "body"))
-    rows = [[p(_pdf_text(h.upper()), "label") for h in t["commodity_cols"]]]
-    commodities = snapshot.get("commodities") or {}
-    for key in ("brent", "iron_ore", "soybeans", "sugar"):
-        item = commodities.get(key)
-        verdict, reason = t["commodity_verdicts"][key]
-        if item:
-            frequency = item.get("frequency", "Daily")
-            unit = t["units"].get(item["unit"], item["unit"])
-            latest = f"{_pdf_text(f.num(item['latest'], 2, lang) + ' ' + unit)}<br/><font size='7' color='#607782'>{_pdf_text(f.period(item['latest_date'], frequency, lang))}</font>"
-            change = f.pct((item["latest"] / item["previous"] - 1) * 100, 1, lang, signed=True)
-            change += f"<br/><font size='7' color='#607782'>{_pdf_text(t['vs'])} {_pdf_text(f.period(item['previous_date'], frequency, lang))}</font>"
-        else:
-            latest, change = _pdf_text(t["unavailable"]), t["na"]
-        rows.append([p(f"<b>{_pdf_text(t['commodity_names'][key])}</b>", "cell"), p(latest, "cell"),
-                     p(change, "cell"), p(f"<b>{_pdf_text(verdict)}.</b> {s(reason)}", "cell")])
-    story.append(grid(rows, [WIDTH * 0.2, WIDTH * 0.19, WIDTH * 0.13, WIDTH * 0.48], header=True))
-
     # 8. Method, limits and sources.
-    story.append(p(_pdf_text(t["method_title"]), "h2"))
-    for term, body in t["method_calc"][2:4]:
-        story.append(p(f"<b>{_pdf_text(term)}.</b> {s(body)}", "body"))
-    story.append(p(f"<b>{_pdf_text(t['limits_label'])}.</b> " + " ".join(s(item) for item in t["limits"]), "body"))
+    story.append(p(_pdf_text(t["limits_label"]), "h2"))
+    story.append(p(" ".join(s(item) for i, item in enumerate(t["limits"]) if i not in (4, 5)), "tiny"))  # the rest is on the website
     story.append(p(_pdf_text(t["sources_label"]), "h2"))
     labels = t["source_labels"]
     links = [
         p(f"<a href='{escape(src['url'], quote=True)}' color='#0B7F70'>{_pdf_text(labels.get(key, src['label']))}</a> "
-          f"<font color='#607782'>· {_pdf_text(f.day(src['date'], lang))}</font>", "small")
+          f"<font color='#607782'>· {_pdf_text(f.day(src['date'], lang))}</font>", "tiny")
         for key, src in sorted(thesis["sources"].items(), key=lambda item: labels.get(item[0], item[1]["label"]))
     ]
     if len(links) % 2:
-        links.append(p("", "small"))
+        links.append(p("", "tiny"))
     story.append(grid([links[i:i + 2] for i in range(0, len(links), 2)], [WIDTH / 2] * 2,
                       [("LINEBELOW", (0, 0), (-1, -1), 0, colors.white), ("TOPPADDING", (0, 0), (-1, -1), 1), ("BOTTOMPADDING", (0, 0), (-1, -1), 2)]))
     story.append(Spacer(1, 8))
@@ -263,13 +310,21 @@ def markdown_brief(thesis: dict[str, Any]) -> str:
 
     lines = [f"# {t['pdf_title']}", "", f"*{s(t['pdf_subtitle'])}. Educational research, not investment advice.*", "",
              f"## {t['view_label']} — {t['status_no_position']}", "", s(t["view_headline"]), ""]
-    lines += [f"{i}. **{s(title)}** {s(body)}" for i, (title, body) in enumerate(t["why"], 1)]
+    lines += [f"- **{s(label)}:** {s(value)} ({s(detail)})" for label, value, detail in t["reaction"]]
+    lines += [""] + [f"{i}. **{s(title)}** {s(body)}" for i, (title, body) in enumerate(t["why"], 1)]
     lines += ["", f"**{t['act_label']}.** {s(t['act'])}", "", f"**{t['change_label']}.** {s(t['change'])}", "",
               f"## {t['review_title']}", "", s(t["review_intro"]), "", "| " + " | ".join(t["review_head"]) + " |", "|---|---|---|"]
     for item in thesis["review"]:
         expected, happened = t["review_rows"][item["id"]]
         lines.append(f"| {s(expected)} | {s(happened)} | {t['verdicts'][item['verdict']]} |")
-    lines += ["", f"**{t['review_lesson_label']}.** {s(t['review_lesson'])}", "", f"## {t['trade_title']}", "", s(t["trade_status"]), ""]
+    lines += ["", f"**{t['review_lesson_label']}.** {s(t['review_lesson'])}", "", f"## {t['quant_title']}", "", s(t["quant_intro"]), "",
+              f"**{t['quant_curve_title']}.** {s(t['quant_curve_text'])}", "", f"**{t['quant_events_title']}.** {s(t['quant_events_text'])}", "",
+              f"**{t['quant_rule_title']}.** {s(t['quant_rule_text'])}", ""]
+    lines += [f"- **{term}.** {s(body)}" for term, body in t["rule_bullets"]]
+    lines += ["", f"## {t['commodities_title']}", "", s(t["commodities_intro"]), "", f"**{t['c_link_title']}** {s(t['c_link_text'])}", "",
+              f"**{t['c_producer_title']}.** {s(t['c_producer_text'])}", ""]
+    lines += [f"- **{title}** {s(body)}" for title, body in t["c_oil_points"]]
+    lines += ["", f"**{t['c_sugar_title']}.** {s(t['c_sugar_text'])}", "", f"## {t['trade_title']}", "", s(t["trade_status"]), ""]
     lines += [f"- **{term}.** {s(body)}" for term, body in t["trade_rows"]]
     lines += ["", f"## {s(t['paths_title'])}", ""]
     for letter, (title, signals, meaning, action) in zip("ABCD", t["paths"]):

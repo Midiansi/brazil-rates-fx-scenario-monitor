@@ -27,7 +27,9 @@ def normalize(text: str) -> str:
 def generated(tmp_path_factory):
     import json
 
-    thesis = json.loads((ROOT / "research" / "thesis.json").read_text(encoding="utf-8"))
+    from src.thesis import load_thesis
+
+    thesis = load_thesis(ROOT / "research" / "thesis.json")
     frozen = json.loads((ROOT / thesis["inputs_file"]).read_text(encoding="utf-8"))
     folder = tmp_path_factory.mktemp("pdf")
     return {lang: render_pdf(thesis, frozen, folder / name, lang) for lang, name in FILES.items()}, thesis
@@ -37,7 +39,7 @@ def generated(tmp_path_factory):
 def test_pdf_is_searchable_localized_and_short(generated, lang) -> None:
     paths, _ = generated
     reader = PdfReader(paths[lang])
-    assert 2 <= len(reader.pages) <= 4
+    assert 2 <= len(reader.pages) <= 5
     text = normalize(text_of(paths[lang]))
     t = TEXT[lang]
     for key in ("pdf_title", "view_label", "act_label", "change_label", "trade_title", "review_title"):

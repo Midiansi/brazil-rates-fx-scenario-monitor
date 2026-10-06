@@ -954,5 +954,140 @@
    "value": 0.46999999999999975
   }
  },
- "updated_at": "2026-10-05T23:50:08Z"
+ "updated_at": "2026-10-05T23:50:08Z",
+ "election": {
+  "collected": "2026-10-05",
+  "date": "2026-10-04",
+  "note": "Valid votes by candidate as counted when 99.46% of sections had reported; read from the public results tables that mirror the TSE count. The count was not final.",
+  "reporting_pct": 99.46,
+  "round": 1,
+  "runoff_date": "2026-10-25",
+  "valid_votes": {
+   "caiado": 2598851,
+   "cury": 3436463,
+   "flavio": 55936126,
+   "lula": 53438052,
+   "minor_candidates": 260001,
+   "santos": 2669413,
+   "zema": 325683
+  }
+ },
+ "polls": {
+  "datafolha": {
+   "fieldwork": "2026-10-03",
+   "registration": "BR-01708-2026",
+   "runoff_total_votes": {
+    "flavio": 46,
+    "lula": 47
+   },
+   "sample": 4006,
+   "valid_votes": {
+    "caiado": 4,
+    "cury": 3,
+    "flavio": 42,
+    "lula": 45,
+    "santos": 3,
+    "zema": 1
+   }
+  },
+  "quaest": {
+   "fieldwork": "2026-10-02/03",
+   "registration": "BR-02197/2026",
+   "runoff_total_votes": {
+    "flavio": 44,
+    "lula": 42
+   },
+   "sample": 3702,
+   "valid_votes": {
+    "caiado": 3,
+    "cury": 3,
+    "flavio": 45,
+    "lula": 46,
+    "santos": 3
+   }
+  }
+ },
+ "event_study": {
+  "source": "BCB PTAX (OData), midpoint of the buying and selling rate",
+  "windows": [
+   {
+    "closes": {
+     "friday_before": [
+      "2014-10-03",
+      2.4929
+     ],
+     "friday_before_runoff": [
+      "2014-10-24",
+      2.4802
+     ],
+     "monday_after": [
+      "2014-10-06",
+      2.4095
+     ]
+    },
+    "first_round": "2014-10-05",
+    "runoff": "2014-10-26",
+    "year": 2014
+   },
+   {
+    "closes": {
+     "friday_before": [
+      "2018-10-05",
+      3.8696
+     ],
+     "friday_before_runoff": [
+      "2018-10-26",
+      3.6749
+     ],
+     "monday_after": [
+      "2018-10-08",
+      3.7585
+     ]
+    },
+    "first_round": "2018-10-07",
+    "runoff": "2018-10-28",
+    "year": 2018
+   },
+   {
+    "closes": {
+     "friday_before": [
+      "2022-09-30",
+      5.4063
+     ],
+     "friday_before_runoff": [
+      "2022-10-28",
+      5.3452
+     ],
+     "monday_after": [
+      "2022-10-03",
+      5.1999
+     ]
+    },
+    "first_round": "2022-10-02",
+    "runoff": "2022-10-30",
+    "year": 2022
+   }
+  ]
+ },
+ "anbima_ettj": {
+  "date": "2026-10-05",
+  "fixed_rate": {
+   "252": 12.6798,
+   "504": 12.6001
+  },
+  "implied_inflation": {
+   "504": 5.268
+  },
+  "previous": {
+   "date": "2026-10-02",
+   "fixed_rate": {
+    "252": 13.3811,
+    "504": 13.7085
+   },
+   "implied_inflation": {
+    "504": 5.906
+   }
+  },
+  "note": "Vertices in business days: 252 = one year, 504 = two years. ANBIMA's CSV download, collected 5 Oct 2026 after the close; the full curves are in research/study_inputs_2026-10-06.json."
+ }
 }

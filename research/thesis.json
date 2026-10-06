@@ -1,120 +1,528 @@
 {
   "schema_version": 1,
-  "id": "2026-10-05",
-  "as_of": "2026-10-05",
-  "data_as_of": "2026-10-02",
+  "id": "2026-10-06",
+  "as_of": "2026-10-06",
+  "data_as_of": "2026-10-05",
   "status": "no_position",
-  "previous_id": "2026-09-24",
-  "previous_file": "research/thesis_2026-09-24.json",
-  "inputs_file": "research/thesis_snapshot_2026-10-05.json",
-  "note": "Numbers only. Prose lives in src/content.py and reads these values, so every language shows the same figures. Values are frozen at the thesis date; the automatically refreshed figures are in research/live_snapshot.json. Market prices are from the last session before the first-round result (2 Oct); markets reopen on the thesis date.",
-  "election": {"first_round": "2026-10-04", "runoff": "2026-10-25"},
+  "previous_id": "2026-10-05",
+  "previous_file": "research/thesis_2026-10-05.json",
+  "inputs_file": "research/thesis_snapshot_2026-10-06.json",
+  "note": "Numbers only. Prose lives in src/content.py and reads these values, so every language shows the same figures. Values are frozen at the thesis date; the automatically refreshed figures are in research/live_snapshot.json and the quantitative study in research/study_2026-10-06.json. Market prices are from the close of 5 October, the first session after the first-round result.",
+  "election": {
+    "first_round": "2026-10-04",
+    "runoff": "2026-10-25"
+  },
   "evidence": {
-    "election_first_round": {"kind": "fact", "date": "2026-10-04", "reporting_pct": 99.46, "flavio": 47.14, "lula": 45.03, "others": 7.83, "margin_pts": 2.11, "margin_votes": 2498074, "source": "tse_results"},
+    "election_first_round": {
+      "kind": "fact",
+      "date": "2026-10-04",
+      "reporting_pct": 99.46,
+      "flavio": 47.14,
+      "lula": 45.03,
+      "others": 7.83,
+      "margin_pts": 2.11,
+      "margin_votes": 2498074,
+      "source": "tse_results"
+    },
     "final_polls": {
-      "kind": "fact", "date": "2026-10-03", "source": "datafolha_1003",
-      "datafolha": {"lula": 45, "flavio": 42, "runoff_lula": 47, "runoff_flavio": 46, "margin_miss": 5.11, "fieldwork_end": "2026-10-03"},
-      "quaest": {"lula": 46, "flavio": 45, "runoff_lula": 42, "runoff_flavio": 44, "margin_miss": 3.11, "fieldwork_end": "2026-10-03"},
+      "kind": "fact",
+      "date": "2026-10-03",
+      "source": "datafolha_1003",
+      "datafolha": {
+        "lula": 45,
+        "flavio": 42,
+        "runoff_lula": 47,
+        "runoff_flavio": 46,
+        "margin_miss": 5.11,
+        "fieldwork_end": "2026-10-03"
+      },
+      "quaest": {
+        "lula": 46,
+        "flavio": 45,
+        "runoff_lula": 42,
+        "runoff_flavio": 44,
+        "margin_miss": 3.11,
+        "fieldwork_end": "2026-10-03"
+      },
       "average_miss": 4.11
     },
-    "selic": {"kind": "fact", "value": 13.75, "previous": 14.0, "date": "2026-09-16", "effective": "2026-09-17", "source": "copom_281"},
-    "fed_range": {"kind": "fact", "lower": 3.75, "upper": 4.0, "previous_lower": 3.5, "previous_upper": 3.75, "date": "2026-09-16", "vote": "12-0", "source": "fomc_statement"},
-    "policy_gap": {"kind": "fact", "value": 9.875, "previous": 10.375, "date": "2026-10-01", "source": "derived_gap"},
-    "copom_projection_2028q1": {"kind": "fact", "value": 3.2, "target": 3.0, "date": "2026-09-16", "source": "copom_281"},
-    "copom_cuts_since_march": {"kind": "fact", "value": 1.25, "count": 5, "source": "copom_281"},
-    "fiscal_2027": {"kind": "fact", "government": 18.6, "ifi": -86.1, "date": "2026-09-17", "source": "ifi_ploa2027"},
-    "ptax": {"kind": "pricing", "value": 5.2235, "date": "2026-10-02", "previous": 5.1792, "previous_date": "2026-09-24", "high_since_previous": 5.2235, "high_date": "2026-10-02", "low_since_previous": 5.1806, "low_date": "2026-09-30", "four_month_high": 5.2235, "four_month_high_date": "2026-10-02", "four_month_low": 5.0157, "four_month_low_date": "2026-06-02", "source": "bcb_ptax"},
-    "us_2y": {"kind": "pricing", "value": 4.83, "date": "2026-10-02", "previous": 4.87, "previous_date": "2026-09-24", "high_since_previous": 4.92, "high_date": "2026-09-28", "source": "treasury"},
-    "us_10y": {"kind": "pricing", "value": 5.28, "date": "2026-10-02", "source": "treasury"},
-    "br_1y": {"kind": "pricing", "value": 13.3811, "date": "2026-10-02", "source": "anbima_ettj"},
-    "br_2y": {"kind": "pricing", "value": 13.7085, "date": "2026-10-02", "source": "anbima_ettj"},
-    "br_2y_breakeven": {"kind": "pricing", "value": 5.906, "date": "2026-10-02", "source": "anbima_ettj"},
-    "focus_selic": {"kind": "survey", "2026": 13.5, "2027": 12.0, "2028": 10.5, "date": "2026-09-25", "source": "bcb_focus"},
-    "focus_ipca": {"kind": "survey", "2026": 4.99, "2027": 4.31, "2028": 3.8, "date": "2026-09-25", "source": "bcb_focus"},
-    "focus_fx": {"kind": "survey", "2026": 5.2, "2027": 5.277, "2028": 5.3, "date": "2026-09-25", "source": "bcb_focus"},
-    "fed_projection": {"kind": "survey", "2026": 4.1, "2027": 4.1, "june_2026": 3.8, "pce_2026": 3.7, "date": "2026-09-16", "source": "fomc_sep"},
-    "jpmorgan": {"kind": "survey", "date": "2026-09-28", "low": 4.9, "high": 5.5, "event_move": 6.5, "real_rate": 9.5, "real_rate_2022": 6.6, "gross_debt": 83, "gross_debt_2022": 74, "fx_vol": 12.6, "fx_vol_2022": 20.4, "source": "jpmorgan_infomoney"},
-    "runoff_arithmetic": {"kind": "interpretation", "flavio_needs": 36.6, "lula_needs": 63.4, "method": "Valid votes only, turnout and blank votes held constant: a finalist at share s needs (50 - s) divided by the share of the other candidates, of those candidates' voters. Computed from the candidate table in the frozen inputs."},
+    "selic": {
+      "kind": "fact",
+      "value": 13.75,
+      "previous": 14.0,
+      "date": "2026-09-16",
+      "effective": "2026-09-17",
+      "source": "copom_281"
+    },
+    "fed_range": {
+      "kind": "fact",
+      "lower": 3.75,
+      "upper": 4.0,
+      "previous_lower": 3.5,
+      "previous_upper": 3.75,
+      "date": "2026-09-16",
+      "vote": "12-0",
+      "source": "fomc_statement"
+    },
+    "policy_gap": {
+      "kind": "fact",
+      "value": 9.875,
+      "previous": 10.375,
+      "date": "2026-10-02",
+      "source": "derived_gap"
+    },
+    "copom_projection_2028q1": {
+      "kind": "fact",
+      "value": 3.2,
+      "target": 3.0,
+      "date": "2026-09-16",
+      "source": "copom_281"
+    },
+    "copom_cuts_since_march": {
+      "kind": "fact",
+      "value": 1.25,
+      "count": 5,
+      "source": "copom_281"
+    },
+    "fiscal_2027": {
+      "kind": "fact",
+      "government": 18.6,
+      "ifi": -86.1,
+      "date": "2026-09-17",
+      "source": "ifi_ploa2027"
+    },
+    "ptax": {
+      "kind": "pricing",
+      "value": 4.9856,
+      "date": "2026-10-05",
+      "previous": 5.2235,
+      "previous_date": "2026-10-02",
+      "high_since_previous": 4.9856,
+      "high_date": "2026-10-05",
+      "low_since_previous": 4.9856,
+      "low_date": "2026-10-05",
+      "four_month_high": 5.2235,
+      "four_month_high_date": "2026-10-02",
+      "four_month_low": 4.9856,
+      "four_month_low_date": "2026-10-05",
+      "source": "bcb_ptax"
+    },
+    "us_2y": {
+      "kind": "pricing",
+      "value": 4.84,
+      "date": "2026-10-05",
+      "previous": 4.83,
+      "previous_date": "2026-10-02",
+      "high_since_previous": 4.84,
+      "high_date": "2026-10-05",
+      "source": "treasury"
+    },
+    "us_10y": {
+      "kind": "pricing",
+      "value": 5.31,
+      "date": "2026-10-05",
+      "source": "treasury"
+    },
+    "br_1y": {
+      "kind": "pricing",
+      "value": 12.6798,
+      "date": "2026-10-05",
+      "previous": 13.3811,
+      "previous_date": "2026-10-02",
+      "source": "anbima_ettj"
+    },
+    "br_2y": {
+      "kind": "pricing",
+      "value": 12.6001,
+      "date": "2026-10-05",
+      "previous": 13.7085,
+      "previous_date": "2026-10-02",
+      "source": "anbima_ettj"
+    },
+    "br_2y_breakeven": {
+      "kind": "pricing",
+      "value": 5.268,
+      "date": "2026-10-05",
+      "previous": 5.906,
+      "previous_date": "2026-10-02",
+      "source": "anbima_ettj"
+    },
+    "focus_selic": {
+      "kind": "survey",
+      "2026": 13.5,
+      "2027": 12.0,
+      "2028": 10.5,
+      "date": "2026-10-02",
+      "source": "bcb_focus"
+    },
+    "focus_ipca": {
+      "kind": "survey",
+      "2026": 5.0129,
+      "2027": 4.3007,
+      "2028": 3.8007,
+      "date": "2026-10-02",
+      "source": "bcb_focus"
+    },
+    "focus_fx": {
+      "kind": "survey",
+      "2026": 5.2,
+      "2027": 5.28,
+      "2028": 5.3,
+      "date": "2026-10-02",
+      "source": "bcb_focus"
+    },
+    "fed_projection": {
+      "kind": "survey",
+      "2026": 4.1,
+      "2027": 4.1,
+      "june_2026": 3.8,
+      "pce_2026": 3.7,
+      "date": "2026-09-16",
+      "source": "fomc_sep"
+    },
+    "jpmorgan": {
+      "kind": "survey",
+      "date": "2026-09-28",
+      "low": 4.9,
+      "high": 5.5,
+      "event_move": 6.5,
+      "real_rate": 9.5,
+      "real_rate_2022": 6.6,
+      "gross_debt": 83,
+      "gross_debt_2022": 74,
+      "fx_vol": 12.6,
+      "fx_vol_2022": 20.4,
+      "source": "jpmorgan_infomoney"
+    },
+    "runoff_arithmetic": {
+      "kind": "interpretation",
+      "flavio_needs": 36.6,
+      "lula_needs": 63.4,
+      "method": "Valid votes only, turnout and blank votes held constant: a finalist at share s needs (50 - s) divided by the share of the other candidates, of those candidates' voters. Computed from the candidate table in the frozen inputs."
+    },
     "first_round_reactions": {
-      "kind": "interpretation", "source": "bcb_ptax",
+      "kind": "interpretation",
+      "source": "bcb_ptax",
       "windows": [
-        {"year": 2014, "monday_move": -3.35, "giveback": 84.8},
-        {"year": 2018, "monday_move": -2.87, "giveback": -75.2},
-        {"year": 2022, "monday_move": -3.82, "giveback": 70.4}
+        {
+          "year": 2014,
+          "monday_move": -3.35,
+          "giveback": 84.8
+        },
+        {
+          "year": 2018,
+          "monday_move": -2.87,
+          "giveback": -75.2
+        },
+        {
+          "year": 2022,
+          "monday_move": -3.82,
+          "giveback": 70.4
+        }
       ],
       "average_move": -3.34,
       "method": "PTAX (midpoint) on the first business day after the first round against the last close before it; giveback = (Friday before the runoff - Monday) / (Friday before the vote - Monday), so 100 means fully undone and a negative number means the move was extended."
     },
     "volatility": {
-      "kind": "interpretation", "sessions": 20, "horizon_sessions": 15, "daily_sd": 0.573, "horizon_sd": 2.22, "annualised": 9.1, "horizon_brl": 0.116,
-      "entry_distance": -2.36, "abandon_distance": 1.46, "entry_sigma": 1.07, "abandon_sigma": 0.66, "event_sigma": 1.51,
-      "method": "Sample standard deviation of daily log returns of the last 20 PTAX closes, scaled by the square root of 15 sessions (5 Oct to the Friday before the runoff). Distances are measured from the 2 Oct close in percent and in units of that 15-session standard deviation."
+      "kind": "interpretation",
+      "sessions": 20,
+      "window_end": "2026-10-02",
+      "horizon_sessions": 14,
+      "daily_sd": 0.573,
+      "horizon_sd": 2.14,
+      "annualised": 9.1,
+      "horizon_brl": 0.107,
+      "entry_distance": 2.29,
+      "abandon_distance": 6.31,
+      "entry_sigma": 1.07,
+      "abandon_sigma": 2.94,
+      "event_sigma": 1.56,
+      "method": "Sample standard deviation of the 20 daily log returns of PTAX before the 5 October jump (to 2 Oct), scaled by the square root of 14 sessions (6 Oct to the Friday before the runoff). Distances are measured from the 5 Oct close in percent and in units of that 14-session standard deviation; the jump itself is treated separately in the study."
     },
-    "survey_path_average": {"kind": "interpretation", "one_year": 12.996, "two_year": 12.25, "one_year_gap": 0.385, "two_year_gap": 1.458, "cdi_spread": 0.1, "method": "Linear path from today's Selic (13.75%) through the Focus year-end medians (13.50% end-2026, 12.00% end-2027, 10.50% end-2028), minus 0.10 pp for the usual CDI-Selic spread, compounded daily and annualised over one and two years. Compared with ANBIMA's 1-year and 2-year fixed-rate zero-coupon yields. The gap mixes expected policy differences and a risk premium; it cannot separate them."},
-    "carry_per_month": {"kind": "interpretation", "value": 0.76, "method": "((1 + 13.75%) / (1 + 3.875%))^(1/12) - 1, using the Selic target and the Fed target-range midpoint. Ignores costs and the fact that forwards, not PTAX, deliver carry."},
-    "brent_spot": {"kind": "pricing", "value": 113.96, "date": "2026-09-29", "previous": 114.89, "previous_date": "2026-09-22", "peak": 130.8, "peak_date": "2026-09-15", "source": "fred_brent"},
-    "iron_ore": {"kind": "pricing", "value": 101.6, "previous": 103.79, "period": "2026-07", "source": "fred_iron"},
-    "soybeans": {"kind": "pricing", "value": 442.45, "previous": 414.54, "period": "2026-07", "source": "fred_soy"},
-    "sugar": {"kind": "pricing", "value": 14.81, "previous": 13.91, "period": "2026-07", "source": "fred_sugar"}
+    "survey_path_average": {
+      "kind": "interpretation",
+      "one_year": 12.992,
+      "two_year": 12.247,
+      "one_year_gap": -0.313,
+      "two_year_gap": 0.353,
+      "one_year_gap_before": 0.389,
+      "two_year_gap_before": 1.462,
+      "cdi_spread": 0.1,
+      "method": "Linear path from today's Selic (13.75%) through the Focus year-end medians (13.50% end-2026, 12.00% end-2027, 10.50% end-2028), minus 0.10 pp for the usual CDI-Selic spread, compounded daily and annualised over one and two years. Compared with ANBIMA's 1-year and 2-year fixed-rate zero-coupon yields. The gap mixes expected policy differences and a risk premium; it cannot separate them. The 'before' gaps use the 2 Oct curve against the same path."
+    },
+    "carry_per_month": {
+      "kind": "interpretation",
+      "value": 0.76,
+      "method": "((1 + 13.75%) / (1 + 3.875%))^(1/12) - 1, using the Selic target and the Fed target-range midpoint. Ignores costs and the fact that forwards, not PTAX, deliver carry."
+    },
+    "brent_spot": {
+      "kind": "pricing",
+      "value": 113.96,
+      "date": "2026-09-29",
+      "previous": 114.89,
+      "previous_date": "2026-09-22",
+      "peak": 130.8,
+      "peak_date": "2026-09-15",
+      "source": "fred_brent"
+    },
+    "iron_ore": {
+      "kind": "pricing",
+      "value": 101.6,
+      "previous": 103.79,
+      "period": "2026-07",
+      "source": "fred_iron"
+    },
+    "soybeans": {
+      "kind": "pricing",
+      "value": 442.45,
+      "previous": 414.54,
+      "period": "2026-07",
+      "source": "fred_soy"
+    },
+    "sugar": {
+      "kind": "pricing",
+      "value": 14.81,
+      "previous": 13.91,
+      "period": "2026-07",
+      "source": "fred_sugar"
+    },
+    "market_5oct": {
+      "kind": "pricing",
+      "date": "2026-10-05",
+      "usd_close": 5.0022,
+      "usd_change": -4.12,
+      "ibovespa": 206911.89,
+      "ibovespa_change": 7.7,
+      "di_jan28": 12.665,
+      "di_jan28_bp": -84,
+      "di_jan35": 12.8,
+      "di_jan35_bp": -133,
+      "brent_change": -1.89,
+      "petrobras_change": 8.19,
+      "source": "cnn_brasil_0510",
+      "note": "Press-reported, from the live session (DI rates late afternoon). PTAX, the figure used everywhere else, is the official average of four windows and closed at 4.9856."
+    }
   },
   "rules": {
     "direction": "long_brl",
     "earliest_entry": "2026-10-26",
-    "entry_below": 5.10,
+    "entry_below": 5.1,
     "entry_closes": 2,
-    "entry_us2y_max": 5.00,
-    "abandon_above": 5.30,
+    "entry_us2y_max": 5.0,
+    "abandon_above": 5.3,
     "exit_above": 5.22,
     "exit_closes": 2,
-    "exit_us2y_above": 5.10,
+    "exit_us2y_above": 5.1,
     "br2y_max": 14.0,
     "review_low": 4.94,
-    "review_high": 5.00,
+    "review_high": 5.0,
     "review_by": "2026-11-04",
-    "range": {"start": "2026-09-04", "end": "2026-10-02", "low": 5.0853, "high": 5.2235, "midpoint": 5.1544, "width": 0.1382},
+    "range": {
+      "start": "2026-09-04",
+      "end": "2026-10-02",
+      "low": 5.0853,
+      "high": 5.2235,
+      "midpoint": 5.1544,
+      "width": 0.1382
+    },
     "derivation": {
       "timing": "Earliest entry is the first PTAX after the runoff (26 Oct). After the first rounds of 2014 and 2022 the real gave back 85% and 70% of its first-Monday move by the runoff, and a single session can jump every level, so I do not enter before the vote is over.",
       "entry": "5.10 sits near the bottom of the last 20 PTAX closes (5.0853-5.2235), 11% of the range above its low.",
       "abandon": "5.30 is above every PTAX close in the saved four-month history (high 5.2235 on 2 Oct).",
       "exit": "5.22 is the top of the recent range, rounded.",
       "review": "Range low minus range width = 5.0853 - 0.1382 = 4.9471, floored to 4.94 and bracketed to 4.94-5.00; also below the four-month low of 5.0157."
-    }
+    },
+    "derived_from": "2026-10-02"
   },
-  "previous_rules": {"earliest_entry": "2026-10-05", "entry_below": 5.10, "abandon_above": 5.30, "exit_above": 5.20, "entry_us2y_max": 5.00},
-  "previous_evidence": {"poll_lula": 39, "poll_flavio": 36, "poll_margin": 2, "ptax": 5.1792, "us_2y": 4.87, "br_2y": 13.7606, "br_2y_gap": 1.47, "brent": 114.89, "policy_gap": 9.875},
+  "previous_rules": {
+    "earliest_entry": "2026-10-26",
+    "entry_below": 5.1,
+    "abandon_above": 5.3,
+    "exit_above": 5.22,
+    "entry_us2y_max": 5.0
+  },
+  "previous_evidence": {
+    "ptax": 5.2235,
+    "us_2y": 4.83,
+    "br_1y": 13.3811,
+    "br_2y": 13.7085,
+    "br_2y_gap": 1.458,
+    "br_1y_gap": 0.385,
+    "brent": 113.96,
+    "policy_gap": 9.875,
+    "avg_monday_move": 3.34,
+    "event_sigma": 1.51,
+    "entry_sigma": 1.07,
+    "horizon_sd": 2.22
+  },
   "review": [
-    {"id": "trigger", "verdict": "not_triggered"},
-    {"id": "election", "verdict": "partly"},
-    {"id": "cushion", "verdict": "partly"},
-    {"id": "premium", "verdict": "unresolved"},
-    {"id": "us_yields", "verdict": "confirmed"}
+    {
+      "id": "timing",
+      "verdict": "confirmed"
+    },
+    {
+      "id": "size",
+      "verdict": "underweighted"
+    },
+    {
+      "id": "premium",
+      "verdict": "partly"
+    },
+    {
+      "id": "us_yields",
+      "verdict": "confirmed"
+    }
   ],
   "calendar": [
-    {"date": "2026-10-25", "event": "election_runoff"},
-    {"date": "2026-10-28", "event": "fomc"},
-    {"date": "2026-11-04", "event": "copom"},
-    {"date": "2026-12-09", "event": "both"}
+    {
+      "date": "2026-10-25",
+      "event": "election_runoff"
+    },
+    {
+      "date": "2026-10-28",
+      "event": "fomc"
+    },
+    {
+      "date": "2026-11-04",
+      "event": "copom"
+    },
+    {
+      "date": "2026-12-09",
+      "event": "both"
+    }
   ],
   "sources": {
-    "copom_281": {"label": "BCB · Copom 281st meeting minutes (decision of 16 Sep 2026, published 22 Sep)", "url": "https://www.bcb.gov.br/content/copom/atascopom/Copom281-not20260916281.pdf", "date": "2026-09-22"},
-    "copom_calendar": {"label": "BCB · 2026 Copom calendar", "url": "https://www.bcb.gov.br/detalhenoticia/20739/nota", "date": "2026-09-24"},
-    "fomc_statement": {"label": "Federal Reserve · FOMC statement, 16 Sep 2026", "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916a.htm", "date": "2026-09-16"},
-    "fomc_sep": {"label": "Federal Reserve · Summary of Economic Projections, 16 Sep 2026", "url": "https://www.federalreserve.gov/monetarypolicy/fomcprojtabl20260916.htm", "date": "2026-09-16"},
-    "fomc_calendar": {"label": "Federal Reserve · FOMC calendar", "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm", "date": "2026-09-24"},
-    "derived_gap": {"label": "Derived · Selic target minus Fed target-range midpoint", "url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=17/09/2026&dataFinal=01/10/2026", "date": "2026-10-01"},
-    "bcb_ptax": {"label": "BCB · PTAX exchange rates (OData)", "url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/", "date": "2026-10-02"},
-    "bcb_focus": {"label": "BCB · Focus market expectations (OData)", "url": "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/", "date": "2026-09-25"},
-    "treasury": {"label": "U.S. Treasury · Daily par yield curve", "url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve", "date": "2026-10-02"},
-    "nyfed": {"label": "New York Fed · Effective federal funds rate and target range", "url": "https://www.newyorkfed.org/markets/reference-rates/effr", "date": "2026-10-01"},
-    "anbima_ettj": {"label": "ANBIMA · Term structure of interest rates (ETTJ), 2 Oct 2026", "url": "https://www.anbima.com.br/informacoes/est-termo/CZ.asp", "date": "2026-10-02"},
-    "fred_brent": {"label": "EIA via FRED · Brent spot price (DCOILBRENTEU)", "url": "https://fred.stlouisfed.org/series/DCOILBRENTEU", "date": "2026-09-29"},
-    "fred_iron": {"label": "IMF via FRED · Iron ore (PIORECRUSDM)", "url": "https://fred.stlouisfed.org/series/PIORECRUSDM", "date": "2026-07-01"},
-    "fred_soy": {"label": "IMF via FRED · Soybeans, monthly (PSOYBUSDM)", "url": "https://fred.stlouisfed.org/series/PSOYBUSDM", "date": "2026-07-01"},
-    "fred_sugar": {"label": "IMF via FRED · Sugar No. 11 (PSUGAISAUSDM)", "url": "https://fred.stlouisfed.org/series/PSUGAISAUSDM", "date": "2026-07-01"},
-    "tse_results": {"label": "TSE · First-round results, president (count at 99.46%)", "url": "https://resultados.tse.jus.br/oficial/app/index.html#/eleicao/6257/uf/br/cargo/1/vis/nominal/resultados", "date": "2026-10-04"},
-    "datafolha_1003": {"label": "Datafolha poll, 3 Oct 2026, via G1 (TSE BR-01708-2026)", "url": "https://g1.globo.com/politica/eleicoes/2026/pesquisa-eleitoral/noticia/2026/10/03/datafolha-presidente-3-outubro.ghtml", "date": "2026-10-03"},
-    "quaest_1003": {"label": "Quaest poll, 2-3 Oct 2026, via G1 (TSE BR-02197/2026)", "url": "https://g1.globo.com/politica/eleicoes/2026/pesquisa-eleitoral/noticia/2026/10/03/quaest-presidente-3-outubro.ghtml", "date": "2026-10-03"},
-    "jpmorgan_infomoney": {"label": "InfoMoney · JPMorgan scenarios for the dollar around the election, 28 Sep 2026", "url": "https://www.infomoney.com.br/mercados/dolar-a-r-490-ou-r-550-jpmorgan-traca-cenarios-para-cambio-com-eleicao-no-brasil/", "date": "2026-09-28"},
-    "ifi_ploa2027": {"label": "Senate IFI · Assessment of the 2027 budget bill, 17 Sep 2026", "url": "https://www12.senado.leg.br/ifi/noticias/ifi-analisa-ploa-2027-e-apresenta-projecoes-diferentes-das-encaminhadas-pelo-governo-ao-congresso", "date": "2026-09-17"}
-  }
+    "copom_281": {
+      "label": "BCB · Copom 281st meeting minutes (decision of 16 Sep 2026, published 22 Sep)",
+      "url": "https://www.bcb.gov.br/content/copom/atascopom/Copom281-not20260916281.pdf",
+      "date": "2026-09-22"
+    },
+    "copom_calendar": {
+      "label": "BCB · 2026 Copom calendar",
+      "url": "https://www.bcb.gov.br/detalhenoticia/20739/nota",
+      "date": "2026-09-24"
+    },
+    "fomc_statement": {
+      "label": "Federal Reserve · FOMC statement, 16 Sep 2026",
+      "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916a.htm",
+      "date": "2026-09-16"
+    },
+    "fomc_sep": {
+      "label": "Federal Reserve · Summary of Economic Projections, 16 Sep 2026",
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomcprojtabl20260916.htm",
+      "date": "2026-09-16"
+    },
+    "fomc_calendar": {
+      "label": "Federal Reserve · FOMC calendar",
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "date": "2026-09-24"
+    },
+    "derived_gap": {
+      "label": "Derived · Selic target minus Fed target-range midpoint",
+      "url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=17/09/2026&dataFinal=01/10/2026",
+      "date": "2026-10-01"
+    },
+    "bcb_ptax": {
+      "label": "BCB · PTAX exchange rates (OData)",
+      "url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/",
+      "date": "2026-10-02"
+    },
+    "bcb_focus": {
+      "label": "BCB · Focus market expectations (OData)",
+      "url": "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/",
+      "date": "2026-09-25"
+    },
+    "treasury": {
+      "label": "U.S. Treasury · Daily par yield curve",
+      "url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve",
+      "date": "2026-10-02"
+    },
+    "nyfed": {
+      "label": "New York Fed · Effective federal funds rate and target range",
+      "url": "https://www.newyorkfed.org/markets/reference-rates/effr",
+      "date": "2026-10-01"
+    },
+    "anbima_ettj": {
+      "label": "ANBIMA · Term structure of interest rates (ETTJ), 2 and 5 Oct 2026",
+      "url": "https://www.anbima.com.br/informacoes/est-termo/CZ.asp",
+      "date": "2026-10-05"
+    },
+    "fred_brent": {
+      "label": "EIA via FRED · Brent spot price (DCOILBRENTEU)",
+      "url": "https://fred.stlouisfed.org/series/DCOILBRENTEU",
+      "date": "2026-09-29"
+    },
+    "fred_iron": {
+      "label": "IMF via FRED · Iron ore (PIORECRUSDM)",
+      "url": "https://fred.stlouisfed.org/series/PIORECRUSDM",
+      "date": "2026-07-01"
+    },
+    "fred_soy": {
+      "label": "IMF via FRED · Soybeans, monthly (PSOYBUSDM)",
+      "url": "https://fred.stlouisfed.org/series/PSOYBUSDM",
+      "date": "2026-07-01"
+    },
+    "fred_sugar": {
+      "label": "IMF via FRED · Sugar No. 11 (PSUGAISAUSDM)",
+      "url": "https://fred.stlouisfed.org/series/PSUGAISAUSDM",
+      "date": "2026-07-01"
+    },
+    "tse_results": {
+      "label": "TSE · First-round results, president (count at 99.46%)",
+      "url": "https://resultados.tse.jus.br/oficial/app/index.html#/eleicao/6257/uf/br/cargo/1/vis/nominal/resultados",
+      "date": "2026-10-04"
+    },
+    "datafolha_1003": {
+      "label": "Datafolha poll, 3 Oct 2026, via G1 (TSE BR-01708-2026)",
+      "url": "https://g1.globo.com/politica/eleicoes/2026/pesquisa-eleitoral/noticia/2026/10/03/datafolha-presidente-3-outubro.ghtml",
+      "date": "2026-10-03"
+    },
+    "quaest_1003": {
+      "label": "Quaest poll, 2-3 Oct 2026, via G1 (TSE BR-02197/2026)",
+      "url": "https://g1.globo.com/politica/eleicoes/2026/pesquisa-eleitoral/noticia/2026/10/03/quaest-presidente-3-outubro.ghtml",
+      "date": "2026-10-03"
+    },
+    "jpmorgan_infomoney": {
+      "label": "InfoMoney · JPMorgan scenarios for the dollar around the election, 28 Sep 2026",
+      "url": "https://www.infomoney.com.br/mercados/dolar-a-r-490-ou-r-550-jpmorgan-traca-cenarios-para-cambio-com-eleicao-no-brasil/",
+      "date": "2026-09-28"
+    },
+    "ifi_ploa2027": {
+      "label": "Senate IFI · Assessment of the 2027 budget bill, 17 Sep 2026",
+      "url": "https://www12.senado.leg.br/ifi/noticias/ifi-analisa-ploa-2027-e-apresenta-projecoes-diferentes-das-encaminhadas-pelo-governo-ao-congresso",
+      "date": "2026-09-17"
+    },
+    "cnn_brasil_0510": {
+      "label": "CNN Brasil · Market close, 5 Oct 2026 (dollar, Ibovespa, DI futures, Brent)",
+      "url": "https://www.cnnbrasil.com.br/economia/money/mercado/mercado-hoje-5-outubro-2026/",
+      "date": "2026-10-05"
+    },
+    "eia_steo_q3": {
+      "label": "EIA · Today in Energy: Brent futures and spot prices, third quarter 2026",
+      "url": "https://www.eia.gov/todayinenergy/detail.php?id=68245",
+      "date": "2026-10-05"
+    },
+    "comtrade": {
+      "label": "UN Comtrade · Brazil's goods exports to the world, HS 4-digit, 2025",
+      "url": "https://comtradeplus.un.org/",
+      "date": "2026-10-06"
+    },
+    "fred_imf_monthly": {
+      "label": "IMF via FRED · Monthly benchmarks: Brent, coffee (arabica), maize",
+      "url": "https://fred.stlouisfed.org/series/PCOFFOTMUSDM",
+      "date": "2026-07-01"
+    },
+    "hedgepoint_mix": {
+      "label": "Notícias Agrícolas · Hedgepoint on the 2026/27 sugar–ethanol mix (19 May 2026)",
+      "url": "https://www.noticiasagricolas.com.br/noticias/sucroenergetico/421136-safra-2026-27-deve-manter-ampla-oferta-de-cana-mas-etanol-ganha-espaco-no-mix-das-usinas.html",
+      "date": "2026-05-19"
+    },
+    "bioagencia_mix": {
+      "label": "CanaOnline · Bioagência on the 2026/27 ethanol outlook (17 Jun 2026)",
+      "url": "https://www.canaonline.com.br/conteudo/etanol-deve-ganhar-espaco-na-safra-202627-projeta-bioagencia.html",
+      "date": "2026-06-17"
+    }
+  },
+  "study_file": "research/study_2026-10-06.json",
+  "study_inputs_file": "research/study_inputs_2026-10-06.json"
 }

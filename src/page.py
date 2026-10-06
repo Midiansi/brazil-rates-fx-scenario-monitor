@@ -2,7 +2,8 @@
 
 Pure functions (no Streamlit import) so the whole page can be rendered and
 checked in tests.  All prose comes from ``src.content``; every value comes from
-``research/thesis.json`` (dated) or ``research/live_snapshot.json`` (refreshed).
+``research/thesis.json`` (dated), ``research/study_*.json`` (the quantitative
+study) or ``research/live_snapshot.json`` (refreshed).
 """
 from __future__ import annotations
 
@@ -11,32 +12,39 @@ from html import escape
 from typing import Any
 
 from src import formatting as f
-from src.chart import ptax_svg
+from src.chart import bars_svg, curve_svg, events_svg, ptax_svg, scatter_svg
 from src.content import TEXT
 from src.freshness import run_age_days, status as fresh_status
 from src.thesis import fill, placeholders, rule_status
 
 GITHUB = "https://github.com/Midiansi/brazil-rates-fx-scenario-monitor"
 LINKEDIN = "https://www.linkedin.com/in/romeomugnier"
-SECTIONS = ("view", "review", "evidence", "paths", "trade", "commodities", "method")
+SECTIONS = ("view", "review", "quant", "commodities", "trade", "evidence", "method")
+LENSES = ("quant", "commodities")
 TAPE = ("selic_target", "fed_target_range", "brazil_us_policy_differential", "ptax_usd_brl_midpoint", "us_2_year_treasury", "brent")
 EVIDENCE_SOURCES = {
-    "fact": (("tse_results",), ("datafolha_1003", "quaest_1003"), ("copom_281", "fomc_statement", "derived_gap"), ("ifi_ploa2027",)),
-    "pricing": (("bcb_ptax",), ("treasury",), ("anbima_ettj",), ("fred_brent",)),
+    "fact": (("tse_results",), ("datafolha_1003", "quaest_1003"), ("copom_281", "fomc_statement", "derived_gap"), ("cnn_brasil_0510",), ("ifi_ploa2027",)),
+    "pricing": (("bcb_ptax",), ("treasury",), ("anbima_ettj",), ("fred_brent", "eia_steo_q3")),
     "survey": (("bcb_focus",), ("fomc_sep",), ("jpmorgan_infomoney",)),
     "interpretation": (("tse_results",), ("bcb_ptax",), ()),
 }
 VERDICT_ICONS = {"confirmed": "✓", "partly": "~", "unresolved": "?", "not_triggered": "○", "underweighted": "!"}
+CURVE_VERTICES = ("126", "252", "504", "756", "1260", "2520")
+COMMODITY_ORDER = ("brent", "soybeans", "iron_ore", "coffee", "sugar", "maize")
 
 
 def e(text: Any) -> str:
     return escape(str(text), quote=True)
 
 
+def lens_order(lens: str) -> tuple[str, str]:
+    return ("commodities", "quant") if lens == "commodities" else ("quant", "commodities")
+
+
 class Page:
     """Everything needed to render one language, computed once."""
 
-    def __init__(self, lang: str, thesis: dict[str, Any], snapshot: dict[str, Any], today: date):
+    def __init__(self, lang: str, thesis: dict[str, Any], snapshot: dict[str, Any], today: date, lens: str = "quant"):
         self.lang = lang if lang in TEXT else "en"
         self.t = TEXT[self.lang]
         self.thesis = thesis
@@ -44,13 +52,20 @@ class Page:
         self.series = self.snapshot.get("series") if isinstance(self.snapshot.get("series"), dict) else {}
         self.commodities = self.snapshot.get("commodities") if isinstance(self.snapshot.get("commodities"), dict) else {}
         self.today = today
+        self.lens = lens if lens in LENSES else "quant"
         self.values = placeholders(thesis, self.lang) if thesis else {}
+        self.study = (thesis or {}).get("study") or {}
 
     # -- helpers -----------------------------------------------------------
     def s(self, text: str, **extra: str) -> str:
         """Fill placeholders, apply French spacing, escape for HTML."""
 
         return e(fill(text, {**self.values, **extra}, self.lang))
+
+    def raw(self, text: str, **extra: str) -> str:
+        """Fill placeholders without escaping (for SVG text, which escapes itself)."""
+
+        return fill(text, {**self.values, **extra}, self.lang)
 
     def source_link(self, key: str) -> str:
         source = self.thesis.get("sources", {}).get(key)
@@ -63,10 +78,34 @@ class Page:
         intro_html = f'<p class="intro">{intro}</p>' if intro else ""
         return f'<div class="sec-head"><h2 id="{key}-title">{title}</h2>{intro_html}</div>'
 
+    def sub(self, title: str, text: str = "") -> str:
+        body = f'<p class="sub-intro">{text}</p>' if text else ""
+        return f'<h3 class="sub-head">{title}</h3>{body}'
+
     def stamp(self, value: str | None) -> str:
         """Refresh timestamp, or the localized 'n/a' when missing or unreadable."""
 
         return (f.timestamp(value, self.lang) if value else "") or self.t["na"]
+
+    def wrap(self, section: str, inner: str) -> str:
+        return f'<div class="bm" lang="{self.t["html_lang"]}"><section class="sec" id="{section}" aria-labelledby="{section}-title">{inner}</section></div>'
+
+    def table(self, head: list[str], rows: list[Any], css: str = "", label: str = "", numeric_from: int = 1) -> str:
+        """A scrollable table; cells are already escaped HTML.  Columns from ``numeric_from`` are right-aligned."""
+
+        heads = "".join(f'<th scope="col"{" class=n" if i >= numeric_from else ""}>{e(h)}</th>' for i, h in enumerate(head))
+        body = ""
+        for row in rows:
+            cells = row["cells"] if isinstance(row, dict) else row
+            html = "".join(
+                f'<th scope="row">{cell}</th>' if i == 0 else f'<td class="n">{cell}</td>' if i >= numeric_from else f"<td>{cell}</td>"
+                for i, cell in enumerate(cells)
+            )
+            cls = f' class="{row["class"]}"' if isinstance(row, dict) and row.get("class") else ""
+            body += f"<tr{cls}>{html}</tr>"
+        name = f' aria-label="{e(label)}"' if label else ""
+        return (f'<div class="table-wrap {css}" tabindex="0" role="region"{name}><table class="fig-table {css}">'
+                f"<thead><tr>{heads}</tr></thead><tbody>{body}</tbody></table></div>")
 
     # -- series formatting -------------------------------------------------
     def series_value(self, key: str, item: dict[str, Any]) -> str:
@@ -96,7 +135,7 @@ class Page:
         state = fresh_status(observed, frequency, self.today)
         return state, f'<span class="fresh {state}">{e(self.t["fresh"][state])}</span>'
 
-    # -- sections ----------------------------------------------------------
+    # -- top of the page ---------------------------------------------------
     def top_bar(self) -> str:
         t = self.t
         return (
@@ -111,7 +150,9 @@ class Page:
         t = self.t
         result = rule_status(self.thesis, self.snapshot, self.today)
         state = result.get("state", "unavailable")
-        extra = {}
+        extra = {"giveback": t["na"]}
+        if result.get("giveback") is not None:
+            extra["giveback"] = f.pct(result["giveback"], 0, self.lang)
         if "latest" in result:
             extra["latest"] = f.num(result["latest"], 4, self.lang)
             extra["latest_date"] = f.day(result["latest_date"], self.lang, year=False)
@@ -167,10 +208,32 @@ class Page:
             f'<div class="tape-caption"><span>{e(t["tape_label"])}</span><span>{caption}</span></div>{banner}'
         )
 
-    def hero(self) -> str:
+    def reaction(self) -> str:
+        t = self.t
+        tiles = "".join(
+            f'<div><dt>{e(label)}</dt><dd><span class="v num">{self.s(value)}</span><span class="m">{self.s(detail)}</span></dd></div>'
+            for label, value, detail in t["reaction"]
+        )
+        return f'<div class="reaction"><span class="label">{e(t["reaction_label"])}</span><dl>{tiles}</dl></div>'
+
+    def lenses(self) -> str:
+        t = self.t
+        cards = []
+        for key in lens_order(self.lens):
+            title, text = t["lens"][key]
+            first = key == self.lens
+            badge = f'<span class="badge">{e(t["lens_first"])}</span>' if first else ""
+            cards.append(f'<a class="lens-card{" first" if first else ""}" href="#{key}"><span class="lens-title">{e(title)}{badge}</span><span class="lens-text">{e(text)}</span></a>')
+        return (
+            f'<div class="lens"><div class="lens-head"><h2 class="label">{e(t["lens_label"])}</h2><span class="muted">{e(t["lens_intro"])}</span></div>'
+            f'<nav class="lens-cards" aria-label="{e(t["lens_label"])}">{"".join(cards)}</nav></div>'
+        )
+
+    def hero(self) -> tuple[str, str]:
         t = self.t
         why = "".join(f"<div><h3>{self.s(title)}</h3><p>{self.s(body)}</p></div>" for title, body in t["why"])
-        nav = "".join(f'<a href="#{key}">{e(t["nav"][key])}</a>' for key in SECTIONS)
+        keys = ["view", "review", *(lens_order(self.lens) if self.study else ()), "trade", "evidence", "method"]
+        nav = "".join(f'<a href="#{key}">{e(t["nav"][key])}</a>' for key in keys)
         return (
             f'<div class="bm" lang="{t["html_lang"]}"><section class="hero" id="view" aria-labelledby="view-title">'
             f'<div class="hero-head"><h1>{e(t["title"])}</h1><p class="lede">{e(t["intro"])}</p></div>'
@@ -179,12 +242,14 @@ class Page:
             f'<span class="status">{e(t["status_no_position"])}</span>'
             f'<time datetime="{e(self.thesis["as_of"])}">{e(self.values["as_of"])}</time></div>'
             f'<p class="view-headline">{self.s(t["view_headline"])}</p>'
+            f'{self.reaction() if self.study else ""}'
             f'<div class="why" aria-label="{e(t["why_label"])}">{why}</div>'
             f'<div class="decide"><div class="act"><h3>{e(t["act_label"])}</h3><p>{self.s(t["act"])}</p></div>'
             f'<div class="change"><h3>{e(t["change_label"])}</h3><p>{self.s(t["change"])}</p></div></div>'
-            f'{self.monitor()}</article>{self.tape()}</section></div>'
+            f'{self.monitor()}</article>{self.lenses() if self.study else ""}{self.tape()}</section></div>'
         ), f'<div class="bm"><nav class="toc" aria-label="{e(t["nav_label"])}">{nav}</nav></div>'
 
+    # -- review of the 5 October thesis ------------------------------------
     def review(self) -> str:
         t = self.t
         head = "".join(f'<th scope="col">{e(h)}</th>' for h in t["review_head"])
@@ -196,15 +261,204 @@ class Page:
                 f'<tr><td>{self.s(expected)}</td><td>{self.s(happened)}</td>'
                 f'<td><span class="verdict {e(verdict)}"><span class="i" aria-hidden="true">{VERDICT_ICONS[verdict]}</span>{e(t["verdicts"][verdict])}</span></td></tr>'
             )
-        return (
-            f'<div class="bm" lang="{t["html_lang"]}"><section class="sec" id="review" aria-labelledby="review-title">'
-            + self.section_head("review", e(t["review_title"]), self.s(t["review_intro"]))
+        inner = (
+            self.section_head("review", e(t["review_title"]), self.s(t["review_intro"]))
             + f'<div class="sec-body"><div class="table-wrap" tabindex="0" role="region" aria-labelledby="review-title">'
             f'<table class="review"><thead><tr>{head}</tr></thead><tbody>{"".join(rows)}</tbody></table></div>'
             f'<div class="lesson"><span class="label">{e(t["review_lesson_label"])}</span><p>{self.s(t["review_lesson"])}</p></div>'
-            "</div></section></div>"
+            f'<p class="muted small">{e(t["review_history"])}</p></div>'
         )
+        return self.wrap("review", inner)
 
+    # -- Rates, FX and quant -----------------------------------------------
+    def fig(self, svg_wide: str, svg_compact: str, title: str, desc: str, legend: str = "") -> str:
+        """One figure as a single line of HTML (it goes through Markdown, which breaks on blank lines)."""
+
+        return (f'<div class="bm sec-body" lang="{self.t["html_lang"]}"><figure class="figure" aria-label="{e(title)}"><span class="label">{e(title)}</span>'
+                f'{svg_wide}{svg_compact}{legend}<figcaption class="fig-caption">{e(desc)}</figcaption></figure></div>')
+
+    def legend(self, items: list[tuple[str, str]]) -> str:
+        return '<p class="legend always" aria-hidden="true">' + "".join(f'<span><i class="{css}"></i>{e(text)}</span>' for css, text in items) + "</p>"
+
+    def curve_table(self) -> str:
+        t, curve, gap = self.t, self.study["curve"], self.study["survey_gap"]
+        lang, bp = self.lang, t["bp"]
+        rows: list[Any] = []
+        for row in curve["rows"]:
+            if row["vertex"] in CURVE_VERTICES:
+                rows.append([e(t["curve_tenors"][row["vertex"]]), e(f.pct(row["before"], 2, lang)), e(f.pct(row["after"], 2, lang)),
+                             e(f"{f.num(row['change_bp'], 0, lang, signed=True)} {bp}")])
+
+        def memo(label: str, before: float, after: float, fmt: Any) -> dict[str, Any]:
+            return {"class": "memo", "cells": [e(label), e(fmt(before)), e(fmt(after)), e(f"{f.num((after - before) * 100, 0, lang, signed=True)} {bp}")]}
+
+        pct2 = lambda v: f.pct(v, 2, lang)
+        memo_labels = t["curve_memo"]
+        rows += [
+            memo(memo_labels["fwd"], curve["forward_1y1y"]["before"], curve["forward_1y1y"]["after"], pct2),
+            memo(memo_labels["be"], curve["breakeven_2y"]["before"], curve["breakeven_2y"]["after"], pct2),
+            memo(memo_labels["real"], curve["real_2y"]["before"], curve["real_2y"]["after"], pct2),
+            memo(memo_labels["gap"], gap["gap_2y_before"], gap["gap_2y_after"], lambda v: f.pp(v, 2, lang, signed=True)),
+        ]
+        return self.table(list(t["curve_cols"]), rows, "curve", self.raw(t["curve_chart_title"]))
+
+    def curve_chart(self) -> str:
+        t, curve, gap = self.t, self.study["curve"], self.study["survey_gap"]
+        labels = {k: self.raw(v) for k, v in t["curve_labels"].items()}
+        survey = [(1.0, gap["survey_1y"], labels["survey"]), (2.0, gap["survey_2y"], labels["survey"])]
+        fmt = lambda v: f.num(v, 2, self.lang)
+        title, desc = self.raw(t["curve_chart_title"]), self.raw(t["curve_chart_desc"])
+        policy = self.thesis["evidence"]["selic"]["value"]
+        wide = curve_svg(curve["rows"], survey, policy, labels, fmt, title, desc)
+        compact = curve_svg(curve["rows"], survey, policy, labels, fmt, title, desc, compact=True)
+        legend = self.legend([("", labels["after"]), ("before", labels["before"]), ("survey", labels["survey"]), ("prev", labels["selic"])])
+        return self.fig(wide, compact, title, desc, legend)
+
+    def events_chart(self) -> str:
+        t, rules = self.t, self.thesis["rules"]
+        labels = {k: self.raw(v) for k, v in t["events_labels"].items()}
+        paths = []
+        for window in self.study["elections"]:
+            if window["year"] != 2026 and not window["surprise"]:
+                continue  # the quiet Mondays (2002, 2006, 2010) are in the table; a crisis path would flatten the scale
+            kind = "now" if window["year"] == 2026 else "surprise"
+            label = f'{window["year"]} · {f.pct(window["monday_move"], 2, self.lang, signed=True)}' if kind == "now" else None
+            paths.append({"year": window["year"], "points": window["path"], "kind": kind, "label": label})
+        p0 = next(w for w in self.study["elections"] if w["year"] == 2026)["friday_before"][1]
+        levels = [
+            {"value": rules["abandon_above"] / p0 * 100, "kind": "abandon", "label": self.raw(t["chart_labels"]["abandon"])},
+            {"value": rules["exit_above"] / p0 * 100, "kind": "exit", "label": labels["exit"]},
+            {"value": rules["entry_below"] / p0 * 100, "kind": "entry", "label": labels["entry"]},
+        ]
+        fmt = lambda v: f.num(v, 1, self.lang)
+        title, desc = self.raw(t["events_chart_title"]), self.raw(t["events_chart_desc"])
+        wide = events_svg(paths, levels, labels, fmt, title, desc)
+        compact = events_svg(paths, levels, labels, fmt, title, desc, compact=True)
+        legend = self.legend([("now", "2026"), ("surprise", "2014 · 2018 · 2022"), ("entry", labels["entry"]), ("exit", labels["exit"]),
+                              ("abandon", f'{self.raw(t["chart_labels"]["abandon"])} ({f.num(rules["abandon_above"] / p0 * 100, 1, self.lang)})')])
+        return self.fig(wide, compact, title, desc, legend)
+
+    def events_table(self) -> str:
+        t, lang = self.t, self.lang
+        rows = []
+        for w in self.study["elections"]:
+            pending = w["year"] == 2026
+            dash = e(t["events_undefined"])
+            cells = [str(w["year"]), e(f.pct(w["monday_move"], 2, lang, signed=True)), e(f.num(w["z"], 1, lang, signed=True))]
+            if pending:
+                cells += [e(t["events_pending"])] * 3
+            else:
+                g1, g2 = w.get("giveback_runoff_friday"), w.get("giveback_first_close")
+                cells += [e(f.pct(g1, 0, lang)) if g1 is not None else dash, e(f.pct(g2, 0, lang)) if g2 is not None else dash,
+                          e(f.pct(w["runoff_session_move"], 2, lang, signed=True))]
+            css = "now" if pending else "surprise" if w["surprise"] else ""
+            rows.append({"class": css, "cells": cells})
+        return self.table(list(t["events_cols"]), rows, "events") + f'<p class="muted small note">{e(t["events_note"])}</p>'
+
+    def rule_table(self) -> str:
+        t, geometry, rules, lang = self.t, self.study["rule_geometry"], self.thesis["rules"], self.lang
+        walk, walk_lr = geometry["random_walk"]["diffusion"], geometry["random_walk"]["long_run"]
+        spec = {
+            "entry": (f.num(rules["entry_below"], 2, lang), "below_entry"),
+            "exit": (f.num(rules["exit_above"], 2, lang), "above_exit"),
+            "abandon": (f.num(rules["abandon_above"], 2, lang), "above_abandon"),
+        }
+        rows: list[Any] = []
+        for key, (level, field) in spec.items():
+            name, rule, verb = t["rule_rows"][key]
+            sub = f'<span class="sub">{e(verb)}</span>'
+            rows.append([
+                f"<strong>{e(level)}</strong>", f'{e(name)}<span class="sub">{self.s(rule)}</span>',
+                e(f.pct(geometry["giveback"][key], 0, lang)), e(f.pct(geometry["distance_pct"][key], 1, lang, signed=True)),
+                f"{e(f.pct(walk[field], 0, lang))}{sub}", f"{e(f.pct(walk_lr[field], 0, lang))}{sub}",
+            ])
+        name, rule, _ = t["rule_rows"]["review"]
+        low, high = f.num(rules["review_low"], 2, lang), f.num(rules["review_high"], 2, lang)
+        rows.append([
+            f"<strong>{e(low)}–{e(high)}</strong>", f'{e(name)}<span class="sub">{e(rule)}</span>',
+            f'{e(f.pct(geometry["giveback"]["review_low"], 0, lang, signed=True))} … {e(f.pct(geometry["giveback"]["review_high"], 0, lang, signed=True))}',
+            f'{e(f.pct(geometry["distance_pct"]["review_low"], 1, lang, signed=True))} … {e(f.pct(geometry["distance_pct"]["review_high"], 1, lang, signed=True))}', "—", "—",
+        ])
+        return self.table([self.raw(h) for h in t["rule_cols"]], rows, "rules", numeric_from=2)
+
+    def quant_blocks(self) -> list[tuple[str, str]]:
+        t = self.t
+        notes = "".join(f"<div><dt>{e(term)}</dt><dd>{self.s(body)}</dd></div>" for term, body in t["rule_bullets"])
+        limits = "".join(f"<li>{self.s(item)}</li>" for item in t["quant_limits"])
+        head = self.section_head("quant", e(t["quant_title"]), self.s(t["quant_intro"]))
+        wrap = lambda inner: f'<div class="bm" lang="{t["html_lang"]}">{inner}</div>'
+        return [
+            ("html", wrap(f'<section class="sec" id="quant" aria-labelledby="quant-title">{head}<div class="sec-body">'
+                          + self.sub(e(t["quant_curve_title"]), self.s(t["quant_curve_text"])) + "</div></section>")),
+            ("svg", self.curve_chart()),
+            ("html", wrap(f'<div class="sec-body">{self.curve_table()}'
+                          + self.sub(e(t["quant_events_title"]), self.s(t["quant_events_text"])) + "</div>")),
+            ("svg", self.events_chart()),
+            ("html", wrap(f'<div class="sec-body">{self.events_table()}'
+                          + self.sub(e(t["quant_rule_title"]), self.s(t["quant_rule_text"]))
+                          + self.rule_table() + f'<dl class="notes">{notes}</dl>'
+                          f'<details><summary>{e(t["quant_limits_label"])}</summary><div class="inner"><ul>{limits}</ul></div></details>'
+                          "</div>")),
+        ]
+
+    # -- Commodities -------------------------------------------------------
+    def scatter_chart(self) -> str:
+        t, basket = self.t, self.study["basket"]
+        labels = {k: self.raw(v) for k, v in t["scatter_labels"].items()}
+        title, desc = self.raw(t["scatter_title"]), self.raw(t["scatter_desc"])
+        wide = scatter_svg(basket["scatter"], basket["slope"], basket["intercept"], labels, title, desc)
+        compact = scatter_svg(basket["scatter"], basket["slope"], basket["intercept"], labels, title, desc, compact=True)
+        return self.fig(wide, compact, title, desc)
+
+    def bars_chart(self) -> str:
+        t, yoy = self.t, self.study["year_on_year"]
+        rows = [{"name": t["commodity_names"][r["key"]], "usd": r["usd"], "brl": r["brl"]} for r in sorted(yoy["rows"], key=lambda r: COMMODITY_ORDER.index(r["key"]))]
+        labels = t["bars_labels"]
+        fmt = lambda v: f.pct(v, 1, self.lang, signed=True)
+        title, desc = self.raw(t["bars_title"]), self.raw(t["bars_desc"])
+        wide = bars_svg(rows, labels, fmt, title, desc)
+        compact = bars_svg(rows, labels, fmt, title, desc, compact=True)
+        legend = self.legend([("bar-usd", labels["usd"]), ("bar-brl", labels["brl"])])
+        return self.fig(wide, compact, title, desc, legend)
+
+    def producer_table(self) -> str:
+        t, lang = self.t, self.lang
+        share = self.study["weights"]["share_of_exports"]
+        hedge = {item["key"]: item for item in self.study["hedge"]}
+        rows = []
+        for key in COMMODITY_ORDER:
+            item = hedge[key]
+            rows.append([e(t["commodity_names"][key]), e(f.pct(share[key], 1, lang)), e(f.pct(item["vol_usd"], 0, lang)),
+                         e(f.pct(item["vol_brl"], 0, lang)), e(f.num(item["corr_fx"], 2, lang))])
+        return self.table(list(t["producer_cols"]), rows, "producers") + f'<p class="muted small note">{e(t["producer_note"])}</p>'
+
+    def read_table(self) -> str:
+        t = self.t
+        rows = [[f"<strong>{self.s(row[0])}</strong>", *[self.s(cell) for cell in row[1:]]] for row in t["read_rows"]]
+        return self.table(list(t["read_cols"]), rows, "read", numeric_from=99)
+
+    def commodities_blocks(self) -> list[tuple[str, str]]:
+        t = self.t
+        head = self.section_head("commodities", e(t["commodities_title"]), self.s(t["commodities_intro"]))
+        wrap = lambda inner: f'<div class="bm" lang="{t["html_lang"]}">{inner}</div>'
+        oil = "".join(f"<div><h4>{e(title)}</h4><p>{self.s(body)}</p></div>" for title, body in t["c_oil_points"])
+        nxt = "".join(f"<li>{self.s(item)}</li>" for item in t["c_next"])
+        return [
+            ("html", wrap(f'<section class="sec" id="commodities" aria-labelledby="commodities-title">{head}<div class="sec-body">'
+                          + self.sub(e(t["c_link_title"]), self.s(t["c_link_text"])) + "</div></section>")),
+            ("svg", self.scatter_chart()),
+            ("html", wrap(f'<div class="sec-body"><p class="muted small note">{self.s(t["c_link_note"])}</p>'
+                          + self.sub(e(t["c_producer_title"]), self.s(t["c_producer_text"])) + "</div>")),
+            ("svg", self.bars_chart()),
+            ("html", wrap(f'<div class="sec-body">{self.producer_table()}'
+                          + self.sub(e(t["c_oil_title"])) + f'<div class="points">{oil}</div>'
+                          + self.sub(e(t["c_sugar_title"]), self.s(t["c_sugar_text"]))
+                          + self.sub(e(t["c_read_title"]), self.s(t["c_read_intro"])) + self.read_table()
+                          + self.sub(e(t["c_next_title"])) + f'<ul class="plain">{nxt}</ul>'
+                          "</div>")),
+        ]
+
+    # -- Evidence ----------------------------------------------------------
     def focus_table(self) -> str:
         t, ev = self.t, self.thesis["evidence"]
         years = ("2026", "2027", "2028")
@@ -238,48 +492,25 @@ class Page:
                 f'<div class="kind {kind}"><h3><span class="tag {kind}">{e(t["kinds"][kind])}</span>'
                 f'<small>{e(t["kind_help"][kind])}</small></h3><ul>{"".join(items)}</ul></div>'
             )
-        return (
-            f'<div class="bm" lang="{t["html_lang"]}"><section class="sec" id="evidence" aria-labelledby="evidence-title">'
-            + self.section_head("evidence", e(t["evidence_title"]), self.s(t["evidence_intro"]))
-            + f'<div class="sec-body"><div class="kinds">{"".join(blocks)}</div>{self.focus_table()}</div></section></div>'
+        inner = (
+            self.section_head("evidence", e(t["evidence_title"]), self.s(t["evidence_intro"]))
+            + f'<div class="sec-body"><div class="kinds">{"".join(blocks)}</div>{self.focus_table()}</div>'
         )
+        return self.wrap("evidence", inner)
 
-    def paths(self) -> str:
-        t = self.t
-        cards = []
-        for i, (title, signals, meaning, action) in enumerate(t["paths"]):
-            outside = " outside" if i == len(t["paths"]) - 1 else ""
-            letter = "ABCD"[i]
-            cards.append(
-                f'<article class="path{outside}"><h3><span class="n">{letter}</span>{self.s(title)}</h3><dl>'
-                f'<div><dt>{e(t["path_fields"][0])}</dt><dd>{self.s(signals)}</dd></div>'
-                f'<div><dt>{e(t["path_fields"][1])}</dt><dd>{self.s(meaning)}</dd></div>'
-                f'<div><dt>{e(t["path_fields"][2])}</dt><dd class="do">{self.s(action)}</dd></div></dl></article>'
-            )
-        dates = "".join(
-            f'<li><time datetime="{e(item["date"])}">{e(f.day(item["date"], self.lang))}</time>{e(t["calendar"][item["event"]])}</li>'
-            for item in self.thesis["calendar"]
-        )
-        return (
-            f'<div class="bm" lang="{t["html_lang"]}"><section class="sec" id="paths" aria-labelledby="paths-title">'
-            + self.section_head("paths", self.s(t["paths_title"]), e(t["paths_intro"]))
-            + f'<div class="sec-body"><div class="paths">{"".join(cards)}</div>'
-            f'<div class="calendar-wrap"><span class="label">{e(t["calendar_label"])}</span><ul class="calendar">{dates}</ul></div>'
-            "</div></section></div>"
-        )
-
+    # -- Paper trade, scenarios and the PTAX chart ---------------------------
     def trade_top(self) -> str:
         t = self.t
         rows = []
         for i, (term, body) in enumerate(t["trade_rows"]):
-            key = " key" if i in (4, 5, 6) else ""
-            rows.append(f'<div class="{key.strip()}"><dt>{e(term)}</dt><dd>{self.s(body)}</dd></div>')
-        return (
-            f'<div class="bm" lang="{t["html_lang"]}"><section class="sec" id="trade" aria-labelledby="trade-title">'
-            + self.section_head("trade", e(t["trade_title"]))
+            key = "key" if i in (4, 5, 6) else ""
+            rows.append(f'<div class="{key}"><dt>{e(term)}</dt><dd>{self.s(body)}</dd></div>')
+        inner = (
+            self.section_head("trade", e(t["trade_title"]))
             + f'<div class="sec-body"><p class="trade-status"><span class="status">{self.s(t["trade_status"])}</span></p>'
-            f'<dl class="rules">{"".join(rows)}</dl></div></section></div>'
+            f'<dl class="rules">{"".join(rows)}</dl></div>'
         )
+        return self.wrap("trade", inner)
 
     def chart(self) -> str:
         """Inline SVG needs st.markdown (st.html strips SVG), so keep it on one line."""
@@ -296,7 +527,7 @@ class Page:
             {"value": focus, "kind": "prev", "label": labels["prev"], "nudge": 7},
             {"value": r["entry_below"], "kind": "entry", "label": labels["entry"]},
         ]
-        events = [{"date": "2026-09-16", "label": labels["event"]}]
+        events = [{"date": "2026-09-16", "label": labels["event"]}, {"date": self.thesis["election"]["first_round"], "label": labels["vote"]}]
         title = fill(t["chart_title"], {**self.values, "n": str(len(history))}, self.lang)
         desc = fill(t["chart_desc"], {**self.values, "start": f.day(history[0][0], self.lang), "end": f.day(history[-1][0], self.lang),
                                        "latest": f.num(float(history[-1][1]), 4, self.lang)}, self.lang)
@@ -322,62 +553,35 @@ class Page:
             f"{wide}{compact}{legend}<figcaption class=\"fig-caption\">{e(desc)}</figcaption>{table}</figure></div>"
         )
 
-    def trade_bottom(self) -> str:
+    def paths(self) -> str:
         t = self.t
+        cards = []
+        for i, (title, signals, meaning, action) in enumerate(t["paths"]):
+            outside = " outside" if i == len(t["paths"]) - 1 else ""
+            letter = "ABCD"[i]
+            cards.append(
+                f'<article class="path{outside}"><h3><span class="n">{letter}</span>{self.s(title)}</h3><dl>'
+                f'<div><dt>{e(t["path_fields"][0])}</dt><dd>{self.s(signals)}</dd></div>'
+                f'<div><dt>{e(t["path_fields"][1])}</dt><dd>{self.s(meaning)}</dd></div>'
+                f'<div><dt>{e(t["path_fields"][2])}</dt><dd class="do">{self.s(action)}</dd></div></dl></article>'
+            )
+        dates = "".join(
+            f'<li><time datetime="{e(item["date"])}">{e(f.day(item["date"], self.lang))}</time>{e(t["calendar"][item["event"]])}</li>'
+            for item in self.thesis["calendar"]
+        )
         risks = "".join(f"<li>{self.s(item)}</li>" for item in t["trade_risks"])
         return (
-            f'<div class="bm sec-body more" lang="{t["html_lang"]}"><details><summary>{e(t["trade_more"])}</summary><div class="inner">'
+            f'<div class="bm sec-body paths-block" lang="{t["html_lang"]}">'
+            + self.sub(self.s(t["paths_title"]), e(t["paths_intro"]))
+            + f'<div class="paths">{"".join(cards)}</div>'
+            f'<div class="calendar-wrap"><span class="label">{e(t["calendar_label"])}</span><ul class="calendar">{dates}</ul></div>'
+            f'<details class="more"><summary>{e(t["trade_more"])}</summary><div class="inner">'
             f'<h4>{e(t["trade_risks_label"])}</h4><ul>{risks}</ul>'
-            f'<h4>{e(t["trade_change_label"])}</h4><p>{self.s(t["trade_change"])}</p>'
-            f'<h4>{e(t["trade_channels_label"])}</h4><p>{self.s(t["trade_channels"])}</p>'
-            f'<h4>{e(t["trade_math_label"])}</h4><p class="num">{self.s(t["trade_math"])}</p>'
-            "</div></details></div>"
+            f'<h4>{e(t["trade_change_label"])}</h4><p>{self.s(t["trade_change"])}</p></div></details>'
+            "</div>"
         )
 
-    def commodities_section(self) -> str:
-        t = self.t
-        head = "".join(f'<th scope="col">{e(h)}</th>' for h in t["commodity_cols"])
-        rows = []
-        for key in ("brent", "iron_ore", "soybeans", "sugar"):
-            item = self.commodities.get(key)
-            verdict, reason = t["commodity_verdicts"][key]
-            if not item:
-                rows.append(f'<tr><th scope="row">{e(t["commodity_names"][key])}</th><td colspan="2">{e(t["unavailable"])}</td>'
-                            f"<td><strong>{e(verdict)}</strong>{self.s(reason)}</td></tr>")
-                continue
-            frequency = item.get("frequency", "Daily")
-            try:
-                change = (float(item["latest"]) / float(item["previous"]) - 1) * 100
-                change_text = f.pct(change, 1, self.lang, signed=True)
-            except (KeyError, TypeError, ValueError, ZeroDivisionError):
-                change_text = t["na"]
-            state, chip = self.freshness_chip(item.get("latest_date"), frequency)
-            flag = f'<span class="sub">{chip}</span>' if state != "fresh" else ""
-            period = f.period(item["latest_date"], frequency, self.lang)
-            previous = f.period(item["previous_date"], frequency, self.lang)
-            rows.append(
-                f'<tr><th scope="row">{e(t["commodity_names"][key])}<span class="sub">{self.source_link({"brent": "fred_brent", "iron_ore": "fred_iron", "soybeans": "fred_soy", "sugar": "fred_sugar"}[key])}</span></th>'
-                f'<td>{e(self.commodity_value(key, item))}<span class="sub">{e(period)} · {e(t["freq"].get(frequency.lower(), frequency))}</span>{flag}</td>'
-                f'<td>{e(change_text)}<span class="sub">{e(t["vs"])} {e(previous)}</span></td>'
-                f"<td><strong>{e(verdict)}</strong>{self.s(reason)}</td></tr>"
-            )
-        return (
-            f'<div class="bm" lang="{t["html_lang"]}"><section class="sec" id="commodities" aria-labelledby="commodities-title">'
-            + self.section_head("commodities", e(t["commodities_title"]), e(t["commodities_intro"]))
-            + f'<div class="sec-body"><div class="table-wrap" tabindex="0" role="region" aria-labelledby="commodities-title">'
-            f'<table class="commodities"><thead><tr>{head}</tr></thead><tbody>{"".join(rows)}</tbody></table></div>'
-            + self.equity()
-            + "</div></section></div>"
-        )
-
-    def equity(self) -> str:
-        t = self.t
-        steps = "".join(f"<div><h3>{e(title)}</h3><p>{e(body)}</p></div>" for title, body in t["equity_steps"])
-        return (
-            f'<h3 class="sub-head">{e(t["equity_title"])}</h3><p class="sub-intro">{e(t["equity_intro"])}</p>'
-            f'<div class="steps">{steps}</div><p class="examples"><span class="label">{e(t["equity_examples_label"])}</span>{e(t["equity_examples"])}</p>'
-        )
-
+    # -- Method, data and about ----------------------------------------------
     def data_table(self) -> str:
         t = self.t
         head = "".join(f'<th scope="col">{e(h)}</th>' for h in t["data_cols"])
@@ -426,18 +630,18 @@ class Page:
             f'<li><a href="{e(src["url"])}" target="_blank" rel="noopener">{e(labels.get(key, src["label"]))}</a> <span class="d">{e(f.day(src["date"], self.lang))}</span></li>'
             for key, src in sorted(self.thesis["sources"].items(), key=lambda item: labels.get(item[0], item[1]["label"]))
         )
-        return (
-            f'<div class="bm" lang="{t["html_lang"]}"><section class="sec" id="method" aria-labelledby="method-title">'
-            + self.section_head("method", e(t["method_title"]))
+        inner = (
+            self.section_head("method", e(t["method_title"]))
             + '<div class="sec-body">'
             f'<details><summary>{e(t["method_calc_label"])}</summary><div class="inner"><dl class="defs">{calc}</dl></div></details>'
             f'<details><summary>{e(t["data_label"])}</summary><div class="inner">{self.data_table()}</div></details>'
             f'<details><summary>{e(t["refresh_label"])}</summary><div class="inner"><p>{e(t["refresh_text"])}</p><p>{status_line}</p>{failed_html}<p class="muted">{e(t["refresh_history"])}</p></div></details>'
             f'<details><summary>{e(t["limits_label"])}</summary><div class="inner"><ul>{limits}</ul></div></details>'
             f'<details><summary>{e(t["sources_label"])}</summary><div class="inner"><p class="muted">{e(t["sources_note"])}</p><ul class="sources">{sources}</ul>'
-            f'<h4>{e(t["archive_label"])}</h4><p>{e(t["archive"])} <a href="{GITHUB}/blob/main/research/thesis_2026-09-24.json" target="_blank" rel="noopener">GitHub</a></p></div></details>'
-            "</div></section></div>"
+            f'<h4>{e(t["archive_label"])}</h4><p>{e(t["archive"])} <a href="{GITHUB}/tree/main/research" target="_blank" rel="noopener">GitHub</a></p></div></details>'
+            "</div>"
         )
+        return self.wrap("method", inner)
 
     def about(self) -> str:
         t = self.t
@@ -451,19 +655,36 @@ class Page:
         )
 
 
-def render(lang: str, thesis: dict[str, Any], snapshot: dict[str, Any], today: date) -> dict[str, str]:
-    """Return the page blocks in display order, keyed by name."""
+def _pack(items: list[tuple[str, str]]) -> dict[str, str]:
+    """Merge neighbouring HTML blocks and number the blocks: body_1, chart_1, body_2, ..."""
 
-    page = Page(lang, thesis, snapshot, today)
+    out: dict[str, str] = {}
+    counts = {"body": 0, "chart": 0}
+    last = None
+    for kind, markup in items:
+        if not markup:
+            continue
+        name = "body" if kind == "html" else "chart"
+        if kind == "html" and last == "html":
+            out[f"body_{counts['body']}"] += markup
+        else:
+            counts[name] += 1
+            out[f"{name}_{counts[name]}"] = markup
+        last = kind
+    return out
+
+
+def render(lang: str, thesis: dict[str, Any], snapshot: dict[str, Any], today: date, lens: str = "quant") -> dict[str, str]:
+    """Return the page blocks in display order, keyed by name (``chart_*`` blocks are SVG, the rest HTML)."""
+
+    page = Page(lang, thesis, snapshot, today, lens)
     if not thesis:
         message = e(page.t["unavailable"])
         return {"top": page.top_bar(), "hero": f'<div class="bm"><h1>{e(page.t["title"])}</h1><p class="banner">{message}</p></div>'}
     hero, toc = page.hero()
-    return {
-        "top": page.top_bar(),
-        "hero": hero,
-        "toc": toc,
-        "body_1": page.review() + page.evidence() + page.paths() + page.trade_top(),
-        "chart": page.chart(),
-        "body_2": page.trade_bottom() + page.commodities_section() + page.method() + page.about(),
-    }
+    items: list[tuple[str, str]] = [("html", page.review())]
+    if page.study:
+        for key in lens_order(page.lens):
+            items += page.quant_blocks() if key == "quant" else page.commodities_blocks()
+    items += [("html", page.trade_top()), ("svg", page.chart()), ("html", page.paths() + page.evidence() + page.method() + page.about())]
+    return {"top": page.top_bar(), "hero": hero, "toc": toc, **_pack(items)}

@@ -9,7 +9,7 @@ import pytest
 from src.content import TEXT
 from src.thesis import placeholders
 
-RUNTIME = {"latest", "latest_date", "date", "value", "n", "start", "end", "year", "attempted", "ok", "total", "names"}
+RUNTIME = {"latest", "latest_date", "date", "value", "n", "start", "end", "year", "attempted", "ok", "total", "names", "giveback"}
 
 
 def shape(value):
