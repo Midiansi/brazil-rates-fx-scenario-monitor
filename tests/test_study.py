@@ -20,9 +20,29 @@ def log_returns(values: list[float]) -> list[float]:
     return [math.log(b / a) * 100 for a, b in zip(values, values[1:])]
 
 
+def assert_same(saved, fresh, path="study") -> None:
+    """Recursive comparison with a tight tolerance: libm differs in the last digit between machines."""
+
+    if isinstance(saved, dict):
+        assert isinstance(fresh, dict) and saved.keys() == fresh.keys(), path
+        for key in saved:
+            assert_same(saved[key], fresh[key], f"{path}.{key}")
+    elif isinstance(saved, list):
+        assert isinstance(fresh, list) and len(saved) == len(fresh), path
+        for index, (a, b) in enumerate(zip(saved, fresh)):
+            assert_same(a, b, f"{path}[{index}]")
+    elif isinstance(saved, float):
+        assert fresh == pytest.approx(saved, rel=1e-9, abs=1e-12), f"{path}: {saved} != {fresh}"
+    else:
+        assert saved == fresh, f"{path}: {saved!r} != {fresh!r}"
+
+
 def test_saved_results_match_the_frozen_inputs(thesis, study_inputs) -> None:
     fresh = json.loads(json.dumps(study.build(study_inputs, thesis)))
-    assert thesis["study"] == fresh, "research/study_2026-10-06.json is out of date: run python scripts/build_study.py"
+    try:
+        assert_same(thesis["study"], fresh)
+    except AssertionError as error:
+        raise AssertionError(f"research/study_2026-10-06.json is out of date (run python scripts/build_study.py): {error}") from None
     assert thesis["study"]["inputs_file"] == thesis["study_inputs_file"]
 
 
