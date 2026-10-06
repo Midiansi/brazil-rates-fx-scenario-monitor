@@ -325,7 +325,7 @@
 
 /* ---- Study: reaction strip, lenses, figures ---------------------------- */
 .reaction { margin: 0 0 1.9rem; }
-.reaction dl { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0.6rem 0 0; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface-2); }
+.reaction dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0.6rem 0 0; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface-2); }
 .reaction dl > div { padding: 0.95rem 1.1rem 1rem; border-right: 1px solid var(--line); min-width: 0; }
 .reaction dl > div:last-child { border-right: 0; }
 .reaction dt { font-size: 0.78rem; color: var(--muted); line-height: 1.3; min-height: 2.1em; }
@@ -349,6 +349,10 @@
 .badge { font-family: var(--mono); font-size: 0.64rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal); border: 1px solid rgba(60, 198, 176, 0.5); border-radius: 999px; padding: 0.05rem 0.5rem; }
 
 .bm .small { font-size: 0.82rem; }
+.bm .take { margin: 0.4rem 0 0.9rem; max-width: 70ch; font-size: 1.05rem; line-height: 1.5; font-weight: 600; color: var(--teal); }
+.bm .sub-head + .take + .sub-intro { margin-top: 0; }
+.bm details.numbers { margin: 1.4rem 0 0.4rem; }
+.bm details.numbers > .inner { padding-left: 0; padding-top: 0.4rem; }
 .bm .note { margin-top: 0.7rem; max-width: 80ch; }
 .bm .sub-head { margin-top: 3.4rem; }
 .sec-body > .sub-head:first-child, .sec-body > .table-wrap + .sub-head { margin-top: 3.4rem; }
@@ -410,9 +414,6 @@
 
 /* ---- Responsive --------------------------------------------------------- */
 @media (max-width: 1080px) {
-  .reaction dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .reaction dl > div:nth-child(2n) { border-right: 0; }
-  .reaction dl > div:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
   .tape { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .tape > div:nth-child(3n) { border-right: 0; }
   .tape > div:nth-child(-n+3) { border-bottom: 1px solid var(--line); }
@@ -447,9 +448,15 @@
   .legend { display: flex; }
   .review td:first-child { width: auto; }
 }
+@media (max-width: 640px) {
+  .reaction dl { grid-template-columns: minmax(0, 1fr); }
+  .reaction dl > div { border-right: 0; border-bottom: 1px solid var(--line); }
+  .reaction dl > div:last-child { border-bottom: 0; }
+  .reaction dt { min-height: 0; }
+}
 @media (max-width: 560px) {
-  .reaction .v { font-size: 1.3rem; }
-  .reaction dl > div { padding: 0.8rem 0.85rem 0.85rem; }
+  .reaction .v { font-size: 1.4rem; }
+  .reaction dl > div { padding: 0.8rem 0.95rem 0.85rem; }
   .tape { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .tape > div { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
   .tape > div:nth-child(3n) { border-right: 1px solid var(--line); }
