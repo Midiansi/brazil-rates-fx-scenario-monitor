@@ -4,19 +4,19 @@
 
 ## My current view — No position
 
-Brazil’s markets priced in Flávio Bolsonaro’s first-round lead within a single day. I am not chasing it: I would only act after the 25 October runoff, and only if the real holds its gains.
+Brazil’s markets priced in Flávio Bolsonaro’s first-round lead within a single day. I would only act after the 25 October runoff, and only if the real holds its gains.
 
 - **Dollar against the real (USD/BRL):** 4.9856 (−4.55% · was 5.2235)
 - **Brazil’s two-year interest rate:** 12.60% (down 1.11 points · was 13.71%)
 - **Brazilian stocks (Ibovespa):** +7.7% (record close, 206,912 points)
 
 1. **The biggest first-day reaction in seven elections.** The dollar fell 4.55% against the real in one session, more than after the first rounds of 2014, 2018 or 2022 (2.9%–3.8%), and interest rates fell even more than the currency. The surprise: the final polls had Lula ahead, but Flávio finished first with 47.1% of valid votes to 45.0%.
-2. **Rallies like this were partly reversed before.** In 2014 and 2022 the real gave back 85% and 70% of its first-day gain before the runoff; in 2018 it kept rising. After each runoff the path differed again: the vote itself, not the first day, set the level.
+2. **Rallies like this were partly reversed before.** In 2014 and 2022 the real gave back 85% and 70% of its first-day gain before the runoff; in 2018 it kept rising. After each runoff the path differed again, so the runoff result mattered more than the first day.
 3. **Little good news is left to buy.** The real is at 4.9856, only 1.7% from the 4.90 that JPMorgan sees if fiscal signals turn out favourable. Buying after a move this size means paying for most of it.
 
-**What I would do.** Nothing before the runoff. From 26 October I would open a paper trade (hypothetical: no money, no execution) buying the real, but only if the dollar closes below 5.10 reais on two days in a row and the U.S. two-year yield is at or below 5.00%. That would show the rally survived the vote. Because the real is already near 4.9856, I would treat it as a prompt to review, not a green light.
+**What I would do.** Nothing before the runoff. From 26 October I would open a paper trade (hypothetical: no money, no execution) buying the real, but only if the dollar closes below 5.10 reais on two days in a row and the U.S. two-year yield is at or below 5.00%. That would show the rally survived the vote. Because the real is already near 4.9856, I would only treat it as a reason to review the idea again.
 
-**What would change my mind.** A close above 5.30 before any entry, a Brazilian two-year rate above 14%, or a U.S. two-year yield above 5.10%. Each would mean risk is rising, not falling.
+**What would change my mind.** A close above 5.30 before any entry, a Brazilian two-year rate above 14%, or a U.S. two-year yield above 5.10%. Each would mean risk is rising.
 
 ## Track record: a one-day-old call, checked
 
@@ -29,7 +29,7 @@ On 5 October, before markets reopened, I published a first version of this view:
 | Brazil’s two-year interest rate carries a 1.46 pp risk premium over the economists’ own forecast path, and the runoff would test it. | The premium fell to +0.35 pp in one session (one year: −0.31 pp). It compressed straight after the first round, earlier than I expected, and the economists’ survey still predates the vote. | Partly |
 | The U.S. two-year yield stays at or below 5.00%. | 4.83% → 4.84%. The condition held. | Confirmed |
 
-**What I took from it.** My levels are unchanged: a rule adjusted after seeing the outcome is not a rule. What changed is how I read them. The entry level used to ask whether the market would pay for fiscal credibility; after a move this size it asks whether the market keeps what it has already paid.
+**What I took from it.** My levels are unchanged, because adjusting a rule after seeing the outcome would defeat its purpose. What changed is how I read them. The entry level used to ask whether the market would pay for fiscal credibility; after a move this size it asks whether the market keeps what it has already paid.
 
 ## Rates, FX and quant: what the first day tells us
 
@@ -37,7 +37,7 @@ Three questions a rates desk would ask after a 4.55% move in one day: how did th
 
 **The interest-rate curve moved more than the currency.** Short-term rates barely moved, because the central bank’s Selic rate (13.75%) anchors them. But the further out you look, the bigger the fall: 33 basis points (bp; 1 bp is 0.01 percentage points) at six months, 111 bp at two years and 137 bp at five. Against the economists’ own forecast for the Selic, the market is now −0.31 pp at one year but still 1.01 pp higher in the second year (the rate implied for year two: 12.52% against 11.51%): it expects cuts sooner, but not as deep. About 61% of the two-year fall is lower expected inflation (5.91% → 5.27%); the rest is a lower real rate (7.37% → 6.97%). The economists’ survey dates from before the vote, so part of the gap will close when they update.
 
-**Seven elections: how first-day rallies played out.** I measured the first trading day after each first round since 2002 against the normal volatility of the 20 days before it. Only 2014, 2018 and 2022 were true surprises (more than twice normal volatility), and 5 October 2026 (4.55%, 8.1 σ) is larger than all three. In 2014 and 2022 the real gave back most of the gain before the runoff; in 2018 it kept going. After the runoff the paths split again, from a full reversal in 2014 to a further rally in 2018. Three cases are a base rate, not proof.
+**Seven elections: how first-day rallies played out.** I measured the first trading day after each first round since 2002 against the normal volatility of the 20 days before it. Only 2014, 2018 and 2022 were true surprises (more than twice normal volatility), and 5 October 2026 (4.55%, 8.1 σ) is larger than all three. In 2014 and 2022 the real gave back most of the gain before the runoff; in 2018 it kept going. After the runoff the paths split again, from a full reversal in 2014 to a further rally in 2018. Three cases are too few to prove anything.
 
 **How demanding is my own rule?.** The levels in my paper trade were set on 2 October, for a real at 5.2235. After the fall to 4.9856 they mean something different. I express each one as the share of the 5 October rally that would have to reverse, and compare it with a coin-flip model: a random walk starting from today’s rate.
 
@@ -54,11 +54,11 @@ Oil, soybeans and iron ore make up 34% of Brazil’s goods exports; with coffee,
 
 **What producers actually earn.** A producer sells in dollars and pays costs in reais, so the price that matters is the dollar price times USD/BRL. Over the twelve months to Jul 2026 the dollar fell 7.5% against the real on average, taking about seven to nine points off the reais return of every commodity here. The real is only a partial natural hedge: it steadies the reais price of oil by up to 10% and of soybeans by 3%, and not at all for iron ore, coffee or maize. On 5 October the real strengthened while oil fell, so every dollar-priced export lost 4.55% in reais at unchanged dollar prices.
 
-- **Spot and futures disagree.** The EIA’s spot price for Brent was $113.96 on 29 September, against a peak of $130.80 on 15 September. In September, spot ran well above the futures price (about $132 against $109 at their peaks) because disrupted supply left buyers short of physical barrels. I read spot as a gauge of physical tightness, not as the price a hedger faces.
+- **Spot and futures disagree.** The EIA’s spot price for Brent was $113.96 on 29 September, against a peak of $130.80 on 15 September. In September, spot ran well above the futures price (about $132 against $109 at their peaks) because disrupted supply left buyers short of physical barrels. I read spot as a gauge of physical tightness; a hedger would look at futures.
 - **Why Brazil cares.** Crude is Brazil’s largest export (12.8% of 2025 goods exports), so the oil price supports the external accounts and the real. It also feeds inflation (economists expect 5.0% for 2026, above the 4.5% ceiling of the target band) and keeps the central bank cautious. A reopening of the Strait of Hormuz would remove both supports at once.
-- **A commodity is not a company.** On 5 October Petrobras shares rose 8.2% while Brent fell 1.9%: an equity move on governance and fiscal risk, not on oil. The commodity and the state-controlled company are different trades.
+- **Oil and Petrobras can move differently.** On 5 October Petrobras shares rose 8.2% while Brent fell 1.9%: a move driven by governance and fiscal risk, since oil itself fell. Oil and the state-controlled company are separate trades.
 
-**Sugar, ethanol and the real.** Sugar is priced in dollars; ethanol in reais, against gasoline. A stronger real cuts the reais price of sugar (down 16.3% over twelve months, against 9.5% in dollars) and dearer oil makes ethanol more valuable, so mills favour ethanol. Industry forecasts made before September’s oil spike had the 2026/27 crop near 47% sugar and ethanol at 61% of the gasoline price, which favours ethanol. Hedgepoint saw sugar finding a floor near 14.2 US¢/lb, where ethanol gains competitiveness, and the IMF’s July average (14.81) sat just above it. Less sugar at the margin would support New York prices. This is a mechanism to check against UNICA’s crush reports, not a call.
+**Sugar, ethanol and the real.** Sugar is priced in dollars; ethanol in reais, against gasoline. A stronger real cuts the reais price of sugar (down 16.3% over twelve months, against 9.5% in dollars) and dearer oil makes ethanol more valuable, so mills favour ethanol. Industry forecasts made before September’s oil spike had the 2026/27 crop near 47% sugar and ethanol at 61% of the gasoline price, which favours ethanol. Hedgepoint saw sugar finding a floor near 14.2 US¢/lb, where ethanol gains competitiveness, and the IMF’s July average (14.81) sat just above it. Less sugar at the margin would support New York prices. I would check this mechanism against UNICA’s crush reports before relying on it.
 
 ## The paper trade and its rules
 
@@ -69,14 +69,14 @@ No position open · earliest entry 26 October
 - **Already in the price.** On 5 October the real reached 4.9856 and the two-year rate 12.60%. That rate is now +0.35 pp from the economists’ forecast path, and JPMorgan’s favourable case (4.90) is only 1.7% below today’s rate.
 - **Key dates.** Runoff 25 October; Fed decision 28 October; Brazil’s central bank (Copom) 4 November.
 - **Entry.** From 26 October, the first rate published after the runoff: two daily closes in a row below 5.10, with the U.S. two-year yield at or below 5.00%. Earlier closes, including the 5 October rally, do not count.
-- **Drop the idea (before entry).** Any close above 5.30, higher than anything in the past four months (peak 5.2235 on 2 October). The idea is dropped, not reversed.
+- **Drop the idea (before entry).** Any close above 5.30, higher than anything in the past four months (peak 5.2235 on 2 October). The idea is dropped; I do not switch to the opposite trade.
 - **Exit (after entry).** Two closes in a row above 5.22 (the top of the pre-vote range), or a U.S. two-year yield above 5.10%.
-- **Review.** Around 4.94–5.00 (the pre-vote low minus the width of that range), or 4 November at the latest. A reason to reassess, not a target.
-- **Where it stands.** The real is at 4.9856, 2.3% below the entry level, so the price condition is already met and only the start date holds the rule back. The levels were set on 2 October from the 20 trading days before the vote, and I have deliberately not adjusted them: a rule changed after seeing the outcome is not a rule.
+- **Review.** Around 4.94–5.00 (the pre-vote low minus the width of that range), or 4 November at the latest. At these levels I reassess the position.
+- **Where it stands.** The real is at 4.9856, 2.3% below the entry level, so the price condition is already met and only the start date holds the rule back. The levels were set on 2 October from the 20 trading days before the vote, and I have deliberately not adjusted them, because changing a rule after seeing the outcome would defeat its purpose.
 
 ## What could happen before and after 25 October
 
-- **A. The rally holds** — The dollar stays below 5.10 reais through 25 October (less than 48% of the 5 October rally reversed); the two-year rate stays near 12.60%; the winner shows a credible fiscal plan. The market keeps paying for fiscal credibility, but little is left to buy: I would be entering near my own review zone. *The rule can trigger from 26 October if the U.S. two-year yield is at or below 5.00%. I treat that as a review, not a green light.*
+- **A. The rally holds** — The dollar stays below 5.10 reais through 25 October (less than 48% of the 5 October rally reversed); the two-year rate stays near 12.60%; the winner shows a credible fiscal plan. The market keeps paying for fiscal credibility, but little is left to buy: I would be entering near my own review zone. *The rule can trigger from 26 October if the U.S. two-year yield is at or below 5.00%. I would only use that as a reason to review the idea.*
 - **B. The rally fades** — The dollar climbs back above 5.10 reais (more than 48% of the rally reversed) before the vote or on 26 October; polls tighten. The market doubts the first-round signal, as it did before the 2014 and 2022 runoffs. *No position. Wait for the next confirmation.*
 - **C. The risk premium returns** — A close above 5.30 (132% of the rally reversed); the two-year rate rises above 14%; inflation expectations climb back toward 5.91%. Fiscal worries dominate again; a weaker real plus expensive oil could make the central bank pause its cuts. *Drop the idea. A dollar trade would need new rules.*
 - **D. Outside shock: U.S. rates or oil** — The U.S. two-year yield rises above 5.10%, or Brent falls sharply as Hormuz reopens. Emerging-market currencies tend to weaken together; cheaper oil removes a support. *No long-real position; exit if already in one.*
@@ -103,7 +103,7 @@ No position open · earliest entry 26 October
 
 **My interpretation**
 - Runoff arithmetic: holding turnout and blank votes constant, Flávio needs 37% of the 7.8% who voted for others, and Lula 63%. No candidate in that group is on the left, so I read this as favouring Flávio, without attaching a probability.
-- First-day reactions: after the 2014, 2018 and 2022 first rounds, USD/BRL fell between 2.9% and 3.8% on the first business day, and by the Friday before the runoff had given back 85% (2014) and 70% (2022) of that fall; in 2018 it extended it. On 5 October it fell 4.55%, the largest of seven elections. Three comparable cases are a base rate, not a test.
+- First-day reactions: after the 2014, 2018 and 2022 first rounds, USD/BRL fell between 2.9% and 3.8% on the first business day, and by the Friday before the runoff had given back 85% (2014) and 70% (2022) of that fall; in 2018 it extended it. On 5 October it fell 4.55%, the largest of seven elections. Three comparable cases prove nothing on their own.
 - My levels in the units of the rally: entry (5.10) means 48% of the 5 October rally reversed, exit (5.22) 99% and the drop level (5.30) 132%. A 14-session move has a standard deviation of 2.1% (9.1% a year): the entry level sits 1.1 σ above today’s rate and the drop level 2.9 σ above it.
 
 ## Sources
