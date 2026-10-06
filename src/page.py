@@ -232,8 +232,9 @@ class Page:
             first = key == self.lens
             badge = f'<span class="badge">{e(t["lens_first"])}</span>' if first else ""
             cards.append(f'<a class="lens-card{" first" if first else ""}" href="#{key}"><span class="lens-title">{e(title)}{badge}</span><span class="lens-text">{e(text)}</span></a>')
+        intro = f'<span class="muted">{e(t["lens_intro"])}</span>' if t["lens_intro"] else ""
         return (
-            f'<div class="lens"><div class="lens-head"><h2 class="label">{e(t["lens_label"])}</h2><span class="muted">{e(t["lens_intro"])}</span></div>'
+            f'<div class="lens"><div class="lens-head"><h2 class="label">{e(t["lens_label"])}</h2>{intro}</div>'
             f'<nav class="lens-cards" aria-label="{e(t["lens_label"])}">{"".join(cards)}</nav></div>'
         )
 

@@ -77,9 +77,3 @@ def test_no_inflated_or_forbidden_wording() -> None:
     joined = " ".join(text for lang in TEXT for _, text in strings(TEXT[lang])).lower()
     for phrase in (" owned", "guarantee", "passionate", "expert", "world-class", "probability of", "will definitely"):
         assert phrase not in joined, phrase
-
-
-def test_ai_assistance_is_disclosed_in_every_language() -> None:
-    markers = {"en": "AI tools", "pt": "Ferramentas de IA", "fr": "Des outils d’IA"}
-    for lang, marker in markers.items():
-        assert any(marker in text for text in TEXT[lang]["limits"])

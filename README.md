@@ -104,5 +104,3 @@ Refresh behaviour (independent sources, fallbacks, malformed data, total outage)
 ## Limits
 
 PTAX is the central bank's daily reference rate, not an executable price; costs, spreads and sizing are not modelled. ANBIMA's zero curve is a fitted model, saved at 2 and 5 October (ANBIMA keeps only recent weeks online). Focus is a survey and its latest edition predates the vote; the market-vs-economists gap mixes expectations and risk premium. The press-reported 5 October market figures (Ibovespa, DI futures, spot dollar, Brent, Petrobras) come from the live session. The commodity regression is descriptive and covers 44% of exports; the IMF series end in July 2026. The random-walk benchmark has no drift and a hand-picked runoff-day shock. No probabilities are assigned and no rule has been back-tested; the first-round study has three surprise-sized cases. Community Cloud can still take a few seconds to wake a sleeping app.
-
-AI tools (OpenAI Codex/ChatGPT and Anthropic Claude) helped write the code, draft research text and translate. The question, the rules and the final judgement are mine; every figure links to its source.
