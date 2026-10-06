@@ -163,7 +163,7 @@ def study_placeholders(thesis: dict[str, Any], lang: str) -> dict[str, str]:
         "mon_move_abs": pct(abs(now["monday_move"]), 2, lang),
         "mon_z": num(abs(now["z"]), 1, lang),
         "event_rank_ord": ordinal(vol["event_rank"], lang),
-        "d1y_bp": bp("252"), "d2y_bp": bp("504"), "d5y_bp": bp("1260"), "d10y_bp": bp("2520"), "d6m_bp": bp("126"),
+        "d2y_pp": num(abs(rows["504"]["change_bp"]) / 100, 2, lang), "d1y_bp": bp("252"), "d2y_bp": bp("504"), "d5y_bp": bp("1260"), "d10y_bp": bp("2520"), "d6m_bp": bp("126"),
         "be_share": pct(curve["breakeven_share"], 0, lang),
         "fwd_before": pct(curve["forward_1y1y"]["before"], 2, lang), "fwd_after": pct(curve["forward_1y1y"]["after"], 2, lang),
         "real_2y": pct(curve["real_2y"]["after"], 2, lang), "real_2y_prev": pct(curve["real_2y"]["before"], 2, lang),

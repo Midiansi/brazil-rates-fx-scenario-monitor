@@ -54,7 +54,7 @@ def test_pdf_is_searchable_localized_and_short(generated, lang) -> None:
 @pytest.mark.parametrize("lang", ["pt", "fr"])
 def test_translated_pdf_has_no_english_headings(generated, lang) -> None:
     text = normalize(text_of(generated[0][lang]))
-    for english in ("What would make me act", "The paper trade", "What happened to my", "Main risks", "Key figures"):
+    for english in ("What I would do", "The paper trade", "Track record", "Main risks", "Key figures", "What would change my mind"):
         assert english not in text
     if lang == "pt":
         assert "matérias-primas" not in text.lower()

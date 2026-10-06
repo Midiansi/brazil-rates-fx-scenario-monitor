@@ -78,9 +78,17 @@ class Page:
         intro_html = f'<p class="intro">{intro}</p>' if intro else ""
         return f'<div class="sec-head"><h2 id="{key}-title">{title}</h2>{intro_html}</div>'
 
-    def sub(self, title: str, text: str = "") -> str:
+    def sub(self, title: str, text: str = "", take: str = "") -> str:
+        """A subsection heading, an optional one-line takeaway, and an optional paragraph."""
+
+        lead = f'<p class="take">{take}</p>' if take else ""
         body = f'<p class="sub-intro">{text}</p>' if text else ""
-        return f'<h3 class="sub-head">{title}</h3>{body}'
+        return f'<h3 class="sub-head">{title}</h3>{lead}{body}'
+
+    def numbers(self, inner: str) -> str:
+        """Dense tables stay one click away, so the first read is the takeaway and the figure."""
+
+        return f'<details class="numbers"><summary>{e(self.t["show_numbers"])}</summary><div class="inner">{inner}</div></details>'
 
     def stamp(self, value: str | None) -> str:
         """Refresh timestamp, or the localized 'n/a' when missing or unreadable."""
@@ -232,7 +240,7 @@ class Page:
     def hero(self) -> tuple[str, str]:
         t = self.t
         why = "".join(f"<div><h3>{self.s(title)}</h3><p>{self.s(body)}</p></div>" for title, body in t["why"])
-        keys = ["view", "review", *(lens_order(self.lens) if self.study else ()), "trade", "evidence", "method"]
+        keys = ["view", *(lens_order(self.lens) if self.study else ()), "trade", "review", "evidence", "method"]
         nav = "".join(f'<a href="#{key}">{e(t["nav"][key])}</a>' for key in keys)
         return (
             f'<div class="bm" lang="{t["html_lang"]}"><section class="hero" id="view" aria-labelledby="view-title">'
@@ -389,15 +397,16 @@ class Page:
         wrap = lambda inner: f'<div class="bm" lang="{t["html_lang"]}">{inner}</div>'
         return [
             ("html", wrap(f'<section class="sec" id="quant" aria-labelledby="quant-title">{head}<div class="sec-body">'
-                          + self.sub(e(t["quant_curve_title"]), self.s(t["quant_curve_text"])) + "</div></section>")),
+                          + self.sub(e(t["quant_curve_title"]), self.s(t["quant_curve_text"]), e(t["quant_curve_take"])) + "</div></section>")),
             ("svg", self.curve_chart()),
-            ("html", wrap(f'<div class="sec-body">{self.curve_table()}'
-                          + self.sub(e(t["quant_events_title"]), self.s(t["quant_events_text"])) + "</div>")),
+            ("html", wrap(f'<div class="sec-body">{self.numbers(self.curve_table())}'
+                          + self.sub(e(t["quant_events_title"]), self.s(t["quant_events_text"]), e(t["quant_events_take"])) + "</div>")),
             ("svg", self.events_chart()),
-            ("html", wrap(f'<div class="sec-body">{self.events_table()}'
-                          + self.sub(e(t["quant_rule_title"]), self.s(t["quant_rule_text"]))
-                          + self.rule_table() + f'<dl class="notes">{notes}</dl>'
-                          f'<details><summary>{e(t["quant_limits_label"])}</summary><div class="inner"><ul>{limits}</ul></div></details>'
+            ("html", wrap(f'<div class="sec-body">{self.numbers(self.events_table())}'
+                          + self.sub(e(t["quant_rule_title"]), self.s(t["quant_rule_text"]), e(t["quant_rule_take"]))
+                          + f'<p class="sub-intro">{self.s(t["quant_rule_summary"])}</p>'
+                          + self.numbers(self.rule_table() + f'<dl class="notes">{notes}</dl>')
+                          + f'<details><summary>{e(t["quant_limits_label"])}</summary><div class="inner"><ul>{limits}</ul></div></details>'
                           "</div>")),
         ]
 
@@ -445,15 +454,15 @@ class Page:
         nxt = "".join(f"<li>{self.s(item)}</li>" for item in t["c_next"])
         return [
             ("html", wrap(f'<section class="sec" id="commodities" aria-labelledby="commodities-title">{head}<div class="sec-body">'
-                          + self.sub(e(t["c_link_title"]), self.s(t["c_link_text"])) + "</div></section>")),
+                          + self.sub(e(t["c_link_title"]), self.s(t["c_link_text"]), e(t["c_link_take"])) + "</div></section>")),
             ("svg", self.scatter_chart()),
             ("html", wrap(f'<div class="sec-body"><p class="muted small note">{self.s(t["c_link_note"])}</p>'
-                          + self.sub(e(t["c_producer_title"]), self.s(t["c_producer_text"])) + "</div>")),
+                          + self.sub(e(t["c_producer_title"]), self.s(t["c_producer_text"]), e(t["c_producer_take"])) + "</div>")),
             ("svg", self.bars_chart()),
-            ("html", wrap(f'<div class="sec-body">{self.producer_table()}'
-                          + self.sub(e(t["c_oil_title"])) + f'<div class="points">{oil}</div>'
-                          + self.sub(e(t["c_sugar_title"]), self.s(t["c_sugar_text"]))
-                          + self.sub(e(t["c_read_title"]), self.s(t["c_read_intro"])) + self.read_table()
+            ("html", wrap(f'<div class="sec-body">{self.numbers(self.producer_table())}'
+                          + self.sub(e(t["c_oil_title"]), "", e(t["c_oil_take"])) + f'<div class="points">{oil}</div>'
+                          + self.sub(e(t["c_sugar_title"]), self.s(t["c_sugar_text"]), e(t["c_sugar_take"]))
+                          + self.sub(e(t["c_read_title"]), self.s(t["c_read_intro"]), e(t["c_read_take"])) + self.read_table()
                           + self.sub(e(t["c_next_title"])) + f'<ul class="plain">{nxt}</ul>'
                           "</div>")),
         ]
@@ -506,7 +515,7 @@ class Page:
             key = "key" if i in (4, 5, 6) else ""
             rows.append(f'<div class="{key}"><dt>{e(term)}</dt><dd>{self.s(body)}</dd></div>')
         inner = (
-            self.section_head("trade", e(t["trade_title"]))
+            self.section_head("trade", e(t["trade_title"]), e(t["trade_intro"]))
             + f'<div class="sec-body"><p class="trade-status"><span class="status">{self.s(t["trade_status"])}</span></p>'
             f'<dl class="rules">{"".join(rows)}</dl></div>'
         )
@@ -682,9 +691,9 @@ def render(lang: str, thesis: dict[str, Any], snapshot: dict[str, Any], today: d
         message = e(page.t["unavailable"])
         return {"top": page.top_bar(), "hero": f'<div class="bm"><h1>{e(page.t["title"])}</h1><p class="banner">{message}</p></div>'}
     hero, toc = page.hero()
-    items: list[tuple[str, str]] = [("html", page.review())]
+    items: list[tuple[str, str]] = []
     if page.study:
         for key in lens_order(page.lens):
             items += page.quant_blocks() if key == "quant" else page.commodities_blocks()
-    items += [("html", page.trade_top()), ("svg", page.chart()), ("html", page.paths() + page.evidence() + page.method() + page.about())]
+    items += [("html", page.trade_top()), ("svg", page.chart()), ("html", page.paths() + page.review() + page.evidence() + page.method() + page.about())]
     return {"top": page.top_bar(), "hero": hero, "toc": toc, **_pack(items)}

@@ -106,6 +106,28 @@ def test_the_chosen_lens_comes_first(thesis, snapshot) -> None:
     assert 'class="lens-card first" href="#commodities"' in "".join(render("en", thesis, snapshot, THESIS_DATE, "commodities").values())
 
 
+def plain(markup: str) -> str:
+    return unescape(re.sub(r"<[^>]+>", " ", markup))
+
+
+@pytest.mark.parametrize("lang", ["en", "pt", "fr"])
+def test_the_first_screen_reads_cold(thesis, snapshot, lang) -> None:
+    """A recruiter who has never seen the site must understand the first screen without history or jargon."""
+
+    hero = plain(render(lang, thesis, snapshot, THESIS_DATE)["hero"]).lower()
+    for word in ("σ", "giveback", "bipower", "random walk", "passeio aleatório", "marche aléatoire", "underweight", "bp ", "1y1y"):
+        assert word not in hero, word
+    for phrase in ("i wrote", "my 5 october", "earlier version", "previous", "tese de 5", "ma thèse du", "minha tese", "first monday", "primeira segunda", "premier lundi"):
+        assert phrase not in hero, phrase
+
+
+def test_every_section_leads_with_a_takeaway_and_hides_dense_tables(thesis, snapshot) -> None:
+    body = "".join(block for name, block in render("en", thesis, snapshot, THESIS_DATE).items() if name.startswith("body_"))
+    assert body.count('class="take"') == 8  # three rates/FX/quant questions and five commodity ones
+    assert body.count('<details class="numbers">') == 4  # curve, events, rule and producer tables are one click away
+    assert body.index('id="trade"') < body.index('id="review"') < body.index('id="evidence"')  # the track record sits after the current view
+
+
 def test_study_tables_show_their_figures(thesis, snapshot) -> None:
     page = html(thesis, snapshot)
     for fragment in ("−111 bp", "−4.55%", "+0.35 pp", "pending", "below 2σ", "slope −0.40", "206,912"):
@@ -137,8 +159,8 @@ def test_monitor_reports_how_much_of_the_first_monday_move_is_given_back(thesis,
     half = with_history(snapshot, [["2026-10-06", 5.10]])
     result = rule_status(thesis, half, date(2026, 10, 6))
     assert result["giveback"] == pytest.approx((5.10 - 4.9856) / (5.2235 - 4.9856) * 100, abs=0.01)
-    assert "0% of the first-Monday move" in html(thesis, snapshot)
-    assert "48% of the first-Monday move" in html(thesis, half, today=date(2026, 10, 6))
+    assert "0% of the 5 October rally reversed" in html(thesis, snapshot)
+    assert "48% of the 5 October rally reversed" in html(thesis, half, today=date(2026, 10, 6))
 
 
 def test_monitor_ignores_closes_before_the_runoff_is_over(thesis, snapshot) -> None:
