@@ -51,7 +51,7 @@ def test_stale_data_is_flagged_not_hidden(thesis, snapshot) -> None:
     # The refresh has not run for weeks: say so, keep the values with their dates.
     assert "has not run since" in page
     assert 'class="fresh stale"' in page
-    assert "5.2235" in page
+    assert "4.9856" in page
 
 
 def test_one_failed_feed_does_not_blank_the_page(thesis, snapshot) -> None:
@@ -59,7 +59,7 @@ def test_one_failed_feed_does_not_blank_the_page(thesis, snapshot) -> None:
     broken["series"]["us_2_year_treasury"] = {"value": "oops"}
     del broken["commodities"]["brent"]
     page = html(thesis, broken)
-    assert "13.75%" in page and "5.2235" in page
+    assert "13.75%" in page and "4.9856" in page and "5.2235" in page
     assert "Unavailable" in page
 
 
@@ -76,12 +76,40 @@ def test_missing_thesis_degrades_gracefully(snapshot) -> None:
     assert "body_1" not in blocks
 
 
-def test_chart_has_both_variants_and_accessible_text(thesis, snapshot) -> None:
-    chart = render("en", thesis, snapshot, THESIS_DATE)["chart"]
-    assert chart.count("<svg") == 2 and "chart-compact" in chart and "chart-wide" in chart
-    assert "<title" in chart and "<desc" in chart
-    assert "\n\n" not in chart  # st.markdown would break the SVG on a blank line
-    assert "Show the chart data as a table" in chart
+def charts(thesis, snapshot, lens="quant") -> dict[str, str]:
+    return {name: block for name, block in render("en", thesis, snapshot, THESIS_DATE, lens).items() if name.startswith("chart_")}
+
+
+def test_every_chart_has_both_variants_and_accessible_text(thesis, snapshot) -> None:
+    blocks = charts(thesis, snapshot)
+    assert len(blocks) == 5  # curve, event paths, commodity scatter, producer prices, PTAX with the decision levels
+    for name, chart in blocks.items():
+        assert chart.count("<svg") == 2 and "chart-compact" in chart and "chart-wide" in chart, name
+        assert "<title" in chart and "<desc" in chart and "<figcaption" in chart, name
+        assert "\n\n" not in chart, name  # st.markdown would break the SVG on a blank line
+        assert "{" not in re.sub(r"<[^>]+>", "", chart), name  # no unfilled placeholder in figure text
+    ptax = next(chart for chart in blocks.values() if "fig-latest" in chart)
+    assert "Show the chart data as a table" in ptax
+
+
+@pytest.mark.parametrize("lang", ["en", "pt", "fr"])
+def test_chart_text_is_localized(thesis, snapshot, lang) -> None:
+    text = " ".join(render(lang, thesis, snapshot, THESIS_DATE)[name] for name in charts(thesis, snapshot))
+    expected = {"en": "Selic 13.75%", "pt": "Selic 13,75%", "fr": "Selic 13,75"}[lang]
+    assert expected in text
+
+
+def test_the_chosen_lens_comes_first(thesis, snapshot) -> None:
+    for lens, first, second in (("quant", 'id="quant"', 'id="commodities"'), ("commodities", 'id="commodities"', 'id="quant"'), ("nonsense", 'id="quant"', 'id="commodities"')):
+        page = "".join(render("en", thesis, snapshot, THESIS_DATE, lens).values())
+        assert page.index(first) < page.index(second), lens
+    assert 'class="lens-card first" href="#commodities"' in "".join(render("en", thesis, snapshot, THESIS_DATE, "commodities").values())
+
+
+def test_study_tables_show_their_figures(thesis, snapshot) -> None:
+    page = html(thesis, snapshot)
+    for fragment in ("−111 bp", "−4.55%", "+0.35 pp", "pending", "below 2σ", "slope −0.40", "206,912"):
+        assert fragment in page, fragment
 
 
 # --- the mechanical rule monitor -------------------------------------------------
@@ -103,10 +131,14 @@ def test_monitor_abandons_above_5_30(thesis, snapshot) -> None:
     assert result["state"] == "abandoned" and result["date"] == "2026-10-06"
 
 
-def test_monitor_counts_the_first_session_after_the_data_date(thesis, snapshot) -> None:
-    # The thesis is dated 5 Oct but its data ends on 2 Oct: Monday's close must still be checked.
-    data = with_history(snapshot, [["2026-10-05", 5.31]])
-    assert rule_status(thesis, data, date(2026, 10, 5))["state"] == "abandoned"
+def test_monitor_reports_how_much_of_the_first_monday_move_is_given_back(thesis, snapshot) -> None:
+    waiting = rule_status(thesis, snapshot, THESIS_DATE)
+    assert waiting["state"] == "waiting" and waiting["giveback"] == pytest.approx(0, abs=0.01)
+    half = with_history(snapshot, [["2026-10-06", 5.10]])
+    result = rule_status(thesis, half, date(2026, 10, 6))
+    assert result["giveback"] == pytest.approx((5.10 - 4.9856) / (5.2235 - 4.9856) * 100, abs=0.01)
+    assert "0% of the first-Monday move" in html(thesis, snapshot)
+    assert "48% of the first-Monday move" in html(thesis, half, today=date(2026, 10, 6))
 
 
 def test_monitor_ignores_closes_before_the_runoff_is_over(thesis, snapshot) -> None:

@@ -2,21 +2,22 @@
 
 A student research log on how Brazilian and U.S. interest rates, the Brazilian real and Brazil's main commodity exports move together. Each view is dated, backed by official data, and paired with the rules that would make me act or change my mind — and each old view is reviewed after the fact.
 
-Public site: https://brasilmacro.streamlit.app/ (English, `?lang=pt` Português, `?lang=fr` Français)
+Public site: https://brasilmacro.streamlit.app/ (English, `?lang=pt` Português, `?lang=fr` Français). Two ways in, shareable by URL: `?lens=quant` (rates, FX and quant first, the default) and `?lens=commodities` (commodities first), e.g. `https://brasilmacro.streamlit.app/?lens=commodities&lang=pt`.
 
 Educational research, not investment advice. No real positions and no claimed performance.
 
-![First screen of the site: the dated view, why, and what would make me act or change my mind](assets/dashboard.png)
+![First screen of the site: the dated view, the first-Monday reaction strip, and the two lenses](assets/dashboard.png)
 
-## Current thesis (5 October 2026)
+## Current thesis (6 October 2026)
 
-**Flávio Bolsonaro's first-round lead is a surprise, not a verdict. In two of the last three elections the real gave back most of its post-vote rally before the runoff, so I stay out until 25 October and act only if prices confirm.**
+**The market paid for Flávio Bolsonaro's first-round lead in one session: on 5 October USD/BRL fell 4.55% and the two-year zero rate fell 111 bp. I stay out until 25 October, because my entry rule has become a test of whether that payment is kept.**
 
-- Flávio Bolsonaro took 47.1% of valid votes to Lula's 45.0% (99.5% of ballot boxes counted), with 7.8% going to other candidates: to reach 50% he needs 37% of them, Lula 63%. The final Datafolha and Quaest polls had Lula ahead and missed the margin by 5.1 and 3.1 points.
-- On the first Monday after the 2014, 2018 and 2022 first rounds USD/BRL fell 2.9–3.8%; by the Friday before the runoff it had given back 85% (2014) and 70% (2022) of the move, while 2018 extended it. At recent volatility (9% a year) the entry level is 1.1 standard deviations below Friday's close and the drop level 0.7 above it, so a single session can jump both.
-- Conditional paper trade: from 26 October, the first PTAX after the runoff, buy the real (short USD/BRL) only on two PTAX closes below 5.10 with the U.S. two-year yield at or below 5.00%. Drop the idea on any close above 5.30; exit on two closes above 5.22 or a U.S. two-year yield above 5.10%; review at 4.94–5.00 or on 4 November.
+- The 5 October note (written before the markets reopened) said not to pay for the first Monday. The first Monday was the largest of the seven elections since 2002 (8.1 daily standard deviations, the 8th-largest one-day gain of the real in the data), and the curve moved more than the currency: 61% of the two-year fall is lower implied inflation, and the gap to the economists' own rate path went from +1.46 pp to +0.35 pp. The page reviews that note against what happened (confirmed, underweighted, partly, confirmed).
+- **Rules are unchanged on purpose** (entry below 5.10 from 26 October with the U.S. two-year yield at or below 5.00%; drop above 5.30; exit above 5.22; review 4.94–5.00 or 4 November): a rule rewritten after the move is not a pre-commitment. What changed is how they read. In the units of the move, entry is "less than 48% of Monday's move given back", so a trigger tells little; if it fires near today's level the position starts inside the review zone, and a trigger is a prompt to review.
+- **Rates, FX and quant:** the ANBIMA zero curve before and after the first round (with the economists' path and the second-year forward), an event study across seven first rounds (only 2014, 2018 and 2022 were surprise-sized; the real's path after the runoff split from full reversal to further rally), jump-versus-diffusion volatility (realised, jump-robust, long-run), carry-to-volatility, and a random-walk benchmark for the rule.
+- **Commodities:** a Brazil-weighted six-commodity basket (2025 export values, UN Comtrade) explains 28% of the variance of monthly USD/BRL changes since 2005 (slope −0.40, stable across halves of the sample); the real is only a partial natural hedge for producers (up to 10% for oil, none for iron ore, coffee, maize); twelve-month changes in dollars versus reais; the oil channel (EIA's spot-versus-futures gap, Petrobras +8.2% against Brent −1.9% on 5 October); the sugar–ethanol–real switch; and a runoff read-through by commodity.
 
-Market prices are from 2 October, the last session before the vote. The full reasoning (review of the 24 September call, evidence sorted into facts, market pricing, surveys and interpretation, paths around the runoff, commodity channels and sources) is on the site and in the printable briefs in `outputs/`. The previous thesis is preserved unchanged in `research/thesis_2026-09-24.json` and `research/thesis_snapshot_2026-09-24.json`; the 13 September case is in `research/data_snapshot.json` and `research/scenario_trade.md`.
+Market prices are from the close of 5 October. The full reasoning, the evidence sorted by type and the sources are on the site and in the printable briefs in `outputs/`. Earlier theses are preserved unchanged: `research/thesis_2026-10-05.json`, `research/thesis_2026-09-24.json` (with their saved inputs) and `research/data_snapshot.json` (13 September).
 
 ## How it works
 
@@ -24,7 +25,8 @@ Market prices are from 2 October, the last session before the vote. The full rea
 GitHub Actions (weekdays, 22:17 UTC)                      Streamlit Community Cloud
 scripts/refresh_market_data.py                            app.py
   ├─ BCB: PTAX, Selic (SGS 432), Focus survey               reads research/thesis.json      (dated thesis, numbers only)
-  ├─ New York Fed → Fed target range  (FRED fallback)       reads research/live_snapshot.json (refreshed data)
+  ├─ New York Fed → Fed target range  (FRED fallback)       reads research/study_*.json     (the quantitative study)
+  ├─ ...                                                    reads research/live_snapshot.json (refreshed data)
   ├─ U.S. Treasury → 2y/10y yields   (FRED fallback)        renders cached HTML per language; no network, no pandas
   └─ FRED: Brent (EIA), iron ore / soy / sugar (IMF)
         │ each source validated independently
@@ -36,7 +38,7 @@ scripts/check_freshness.py   ──▶ run fails (owner notified) if key figures
 - **Visitors never trigger a data request.** The page reads two small JSON files and pre-generated PDFs. HTML is built once per language and data version and cached in memory.
 - **One failed feed never blanks or freezes the others.** Each source keeps its last good value, original date and an error message in `refresh.sources`; the page flags delayed or stale values instead of hiding them.
 - **Honest refresh claims.** The page states when the job last ran and how many sources updated. Until 24 September 2026 the job reported success while every FRED request timed out on GitHub's runners, and the all-or-nothing build also discarded valid BCB data; the page kept showing 13 September figures. Sources are now independent, U.S. data has official fallbacks, and staleness turns the run red.
-- **The thesis is never rewritten by the updater.** Prose lives in `src/content.py` (EN/PT/FR); every number comes from `research/thesis.json`, and the data frozen at the thesis date is in `research/thesis_snapshot_2026-10-05.json`, so tests can recompute each figure. The only automatic element is a mechanical check of the pre-committed rules against new PTAX closes.
+- **The thesis is never rewritten by the updater.** Prose lives in `src/content.py` (EN/PT/FR); every number comes from `research/thesis.json` and the quantitative study `research/study_2026-10-06.json`, built offline by `src/study.py` from the frozen inputs (`research/thesis_snapshot_2026-10-06.json`, `research/study_inputs_2026-10-06.json`), so tests can recompute each figure. The only automatic elements are a mechanical check of the pre-committed rules against new PTAX closes (including how much of the first-Monday move has been given back) and the refreshed tape.
 
 ## Run locally
 
@@ -52,9 +54,11 @@ python -m streamlit run app.py
 Open http://localhost:8501 (add `?lang=pt` or `?lang=fr`).
 
 ```bash
-python -m pytest -q                                   # 114 tests
+python -m pytest -q                                   # 134 tests
 python scripts/refresh_market_data.py                 # fetch official data (network)
 python scripts/check_freshness.py                     # exit 1 if key data is stale
+python scripts/collect_study_inputs.py               # fetch the study's raw inputs (network): PTAX since 2002, ANBIMA curves, IMF monthly prices, UN Comtrade
+python scripts/build_study.py                         # recompute research/study_2026-10-06.json from those inputs (offline)
 python scripts/generate_market_brief.py               # regenerate the three PDFs + Markdown brief
 ```
 
@@ -72,30 +76,32 @@ This is best-effort availability: [GitHub can delay or drop scheduled runs and d
 
 ## Updating the thesis
 
-1. Archive the old thesis (`cp research/thesis.json research/thesis_<its date>.json`), then save the data as of the new date: copy `research/live_snapshot.json` to `research/thesis_snapshot_<date>.json`.
+1. Archive the old thesis (`cp research/thesis.json research/thesis_<its date>.json`), then save the data as of the new date: copy `research/live_snapshot.json` to `research/thesis_snapshot_<date>.json`. Collect the study's raw inputs (`scripts/collect_study_inputs.py`; ANBIMA keeps only the last few weeks of curves online, so collect them while they are available).
 2. Write the new numbers, rules, review verdicts and sources in `research/thesis.json` (point `inputs_file` and `previous_file` at the right files; when markets have not yet reopened on the thesis date, set `data_as_of` to the last session so the rule monitor still checks the first close).
 3. Edit the prose in `src/content.py` in all three languages — placeholders only, no literal figures.
-4. `python scripts/generate_market_brief.py`, then `python -m pytest -q`. The tests fail if a number cannot be reproduced from the saved inputs, a language is missing a string, or the committed PDFs are out of date.
+4. `python scripts/build_study.py`, `python scripts/generate_market_brief.py`, then `python -m pytest -q`. The tests fail if a number cannot be reproduced from the saved inputs (the study tests recompute the headline figures by hand), a language is missing a string, or the committed PDFs are out of date.
 
 ## Tests
 
-Refresh behaviour (independent sources, fallbacks, malformed data, total outage), freshness thresholds and the CI gate, thesis consistency (every figure recomputed from saved inputs, including vote shares, runoff arithmetic, poll misses, the first-round event study and volatility bands; verdicts checked against the data), the rule monitor, EN/PT/FR structure and placeholder parity, French typography, "commodities" in Portuguese, page completeness and robustness to missing or malformed data, network isolation of the production render, PDF content/localization/searchability and that the committed PDFs match the current content, and static responsive-layout checks. Browser review covers 1440×900, 1280×720 and 375×812 in all three languages.
+Refresh behaviour (independent sources, fallbacks, malformed data, total outage), freshness thresholds and the CI gate, thesis consistency (every figure recomputed from saved inputs, including vote shares, runoff arithmetic, poll misses, the first-round event study and volatility bands; verdicts checked against the data), the quantitative study (first Mondays and givebacks, jump-versus-diffusion volatility, forwards and the inflation/real decomposition, the commodity regression and natural hedge, the rule's giveback geometry and random-walk benchmark, all recomputed independently of `src/study.py`), the rule monitor, EN/PT/FR structure and placeholder parity, French typography, "commodities" in Portuguese, page completeness and robustness to missing or malformed data, network isolation of the production render, PDF content/localization/searchability and that the committed PDFs match the current content, and static responsive-layout checks. Browser review covers 1440×900, 1280×720 and 375×812 in all three languages.
 
 ## Files
 
 - `app.py` — production entrypoint (Streamlit shell, caching, language switch).
-- `src/page.py`, `src/chart.py`, `src/style.css` — HTML sections, the one inline-SVG chart, the design system.
+- `src/page.py`, `src/chart.py`, `src/style.css` — HTML sections (two lenses, ordered by `?lens=`), five inline-SVG figures (PTAX with the decision levels, zero curves, event paths, commodity scatter, producer prices), the design system.
+- `src/study.py` — the quantitative study (pure standard library): event study, volatility, curve, commodity basket, rule geometry.
 - `src/content.py` — every visible sentence in English, Portuguese and French.
 - `src/thesis.py`, `src/formatting.py`, `src/freshness.py` — thesis loading, rule check, calculations, locale formatting, freshness rules.
 - `src/live_refresh.py`, `src/data.py`, `src/analytics.py` — scheduled refresh, source parsers, calculations (refresh job only).
 - `src/pdf_brief.py` — printable brief and Markdown companion (offline only).
-- `research/thesis.json`, `research/thesis_snapshot_2026-10-05.json`, `research/live_snapshot.json` — dated thesis, its frozen inputs (refreshed data plus the election count, final polls, ANBIMA curve and the 2014/2018/2022 PTAX windows), refreshed data.
-- `research/thesis_2026-09-24.json`, `research/thesis_snapshot_2026-09-24.json` — the previous thesis and its inputs, preserved unchanged.
+- `research/thesis.json`, `research/thesis_snapshot_2026-10-06.json`, `research/live_snapshot.json` — dated thesis, its frozen inputs (refreshed data plus the election count, final polls, ANBIMA curves and the 2014/2018/2022 PTAX windows), refreshed data.
+- `research/study_inputs_2026-10-06.json`, `research/study_2026-10-06.json` — the study's raw inputs (PTAX since 2002, ANBIMA curves, IMF monthly prices, UN Comtrade export values) and its computed results.
+- `research/thesis_2026-10-05.json`, `research/thesis_snapshot_2026-10-05.json`, `research/thesis_2026-09-24.json`, `research/thesis_snapshot_2026-09-24.json` — the previous theses and their inputs, preserved unchanged.
 - `research/data_snapshot.json`, `research/commodity_snapshot.json`, `research/scenario_trade.md` — archived 13 September case.
 - `outputs/` — the three PDFs. `tests/` — automated checks.
 
 ## Limits
 
-PTAX is the central bank's daily reference rate, not an executable price; costs, spreads and sizing are not modelled. ANBIMA's curve is a dated manual observation. Focus is a survey. The market-vs-economists gap mixes expectations and risk premium. No probabilities are assigned and no rule has been back-tested; the first-round study covers only three elections. Community Cloud can still take a few seconds to wake a sleeping app.
+PTAX is the central bank's daily reference rate, not an executable price; costs, spreads and sizing are not modelled. ANBIMA's zero curve is a fitted model, saved at 2 and 5 October (ANBIMA keeps only recent weeks online). Focus is a survey and its latest edition predates the vote; the market-vs-economists gap mixes expectations and risk premium. The press-reported 5 October market figures (Ibovespa, DI futures, spot dollar, Brent, Petrobras) come from the live session. The commodity regression is descriptive and covers 44% of exports; the IMF series end in July 2026. The random-walk benchmark has no drift and a hand-picked runoff-day shock. No probabilities are assigned and no rule has been back-tested; the first-round study has three surprise-sized cases. Community Cloud can still take a few seconds to wake a sleeping app.
 
 AI tools (OpenAI Codex/ChatGPT and Anthropic Claude) helped write the code, draft research text and translate. The question, the rules and the final judgement are mine; every figure links to its source.

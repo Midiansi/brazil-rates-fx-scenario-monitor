@@ -9,9 +9,9 @@ import pytest
 from streamlit.testing.v1 import AppTest
 
 EXPECTED = {
-    "EN": ("Brazil macro, from policy to price.", "What would make me act", "What happened to my 24 September thesis"),
-    "PT": ("Brasil macro: da política monetária aos preços.", "O que me faria agir", "O que aconteceu com a minha tese de 24 de setembro"),
-    "FR": ("Le Brésil, de la politique monétaire aux marchés.", "Ce qui me ferait agir", "Ce qu’est devenue ma thèse du 24 septembre"),
+    "EN": ("Brazil macro, from policy to price.", "What would make me act", "What happened to my 5 October thesis"),
+    "PT": ("Brasil macro: da política monetária aos preços.", "O que me faria agir", "O que aconteceu com a minha tese de 5 de outubro"),
+    "FR": ("Le Brésil, de la politique monétaire aux marchés.", "Ce qui me ferait agir", "Ce qu’est devenue ma thèse du 5 octobre"),
 }
 
 
@@ -55,8 +55,8 @@ def test_render_imports_no_heavy_or_network_modules(monkeypatch) -> None:
 
 def test_page_is_a_handful_of_elements() -> None:
     app = run()
-    assert len(app.get("html")) <= 6
-    assert len(app.markdown) <= 1
+    assert len(app.get("html")) <= 12  # large blocks, not hundreds of widgets
+    assert len(app.markdown) <= 6  # the five inline-SVG figures
     assert len(app.button_group) == 1
 
 
@@ -72,6 +72,13 @@ def test_every_language_renders_completely(label, no_network) -> None:
     assert app.query_params.get("lang", ["en"]) == [label.lower()]
     assert not re.search(r"\{[a-z_0-9]+\}", text), "unfilled placeholder"
     assert no_network == []
+
+
+def test_lens_can_be_shared_by_url() -> None:
+    quant = page_text(run())
+    commodities = page_text(run(lens="commodities"))
+    assert quant.index("Rates, FX and quant: pricing") < quant.index("Commodities: Brazil sells dollars")
+    assert commodities.index("Commodities: Brazil sells dollars") < commodities.index("Rates, FX and quant: pricing")
 
 
 def test_language_can_be_shared_by_url() -> None:

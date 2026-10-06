@@ -7,7 +7,7 @@ from datetime import date, timedelta
 
 import pytest
 
-from src.thesis import first_round_reaction, monthly_carry, placeholders, poll_margin_miss, survey_path_average, vote_shares, volatility
+from src.thesis import first_round_reaction, monthly_carry, placeholders, poll_margin_miss, rule_status, survey_path_average, vote_shares, volatility
 
 from conftest import ROOT
 
@@ -51,8 +51,12 @@ def test_ptax_evidence_matches_history(thesis, frozen) -> None:
 
 
 def test_decision_levels_follow_from_the_range(thesis, frozen) -> None:
-    rules = thesis["rules"]
-    recent = [v for _, v in frozen["history"]["ptax"][-20:]]
+    rules, ev = thesis["rules"], thesis["evidence"]
+    # The levels were derived on 2 October from the 20 closes before the vote and were not recomputed after the first Monday.
+    history = [(d, v) for d, v in frozen["history"]["ptax"] if d <= rules["range"]["end"]]
+    recent = [v for _, v in history[-20:]]
+    assert rules["range"]["end"] == rules["derived_from"] < thesis["data_as_of"]
+    assert history[-20][0] == rules["range"]["start"]
     assert rules["range"]["low"] == pytest.approx(min(recent), abs=1e-4)
     assert rules["range"]["high"] == pytest.approx(max(recent), abs=1e-4)
     assert rules["range"]["width"] == pytest.approx(max(recent) - min(recent), abs=1e-4)
@@ -61,9 +65,9 @@ def test_decision_levels_follow_from_the_range(thesis, frozen) -> None:
     # entry near the bottom of the range; exit at its top; abandonment above the four-month high
     assert rules["range"]["low"] < rules["entry_below"] < rules["range"]["midpoint"]
     assert rules["exit_above"] == round(rules["range"]["high"], 2)
-    assert rules["abandon_above"] > thesis["evidence"]["ptax"]["four_month_high"]
-    # The last close can sit above the exit level: exit only applies once a position exists.
-    assert rules["review_high"] < rules["entry_below"] < thesis["evidence"]["ptax"]["value"] < rules["abandon_above"]
+    assert rules["abandon_above"] > ev["ptax"]["four_month_high"]
+    # After the first Monday the real sits below every level: armed in price, held back only by the date clause.
+    assert ev["ptax"]["value"] < rules["review_high"] < rules["entry_below"] < rules["exit_above"] < rules["abandon_above"]
     assert rules["entry_us2y_max"] < rules["exit_us2y_above"]
     assert rules["entry_closes"] == rules["exit_closes"] == 2
 
@@ -144,18 +148,20 @@ def test_first_round_reactions_are_recomputed(thesis, frozen) -> None:
 
 def test_levels_are_expressed_in_volatility_units(thesis, frozen) -> None:
     ev, rules = thesis["evidence"], thesis["rules"]
-    series = [v for _, v in frozen["history"]["ptax"]]
+    history = frozen["history"]["ptax"]
     saved = ev["volatility"]
+    # The standard deviation comes from the sessions before the 5 October jump (the jump is treated in the study).
+    series = [v for d, v in history if d <= saved["window_end"]]
     vol = volatility(series, saved["sessions"], saved["horizon_sessions"])
     assert vol["daily_sd"] == pytest.approx(saved["daily_sd"], abs=0.001)
     assert vol["horizon_sd"] == pytest.approx(saved["horizon_sd"], abs=0.01)
     assert vol["annualised"] == pytest.approx(saved["annualised"], abs=0.1)
-    last = series[-1]
+    last = history[-1][1]
     assert saved["horizon_brl"] == pytest.approx(last * vol["horizon_sd"] / 100, abs=0.001)
     entry = (rules["entry_below"] / last - 1) * 100
     abandon = (rules["abandon_above"] / last - 1) * 100
     assert entry == pytest.approx(saved["entry_distance"], abs=0.01) and abandon == pytest.approx(saved["abandon_distance"], abs=0.01)
-    assert abs(entry) / vol["horizon_sd"] == pytest.approx(saved["entry_sigma"], abs=0.01)
+    assert entry / vol["horizon_sd"] == pytest.approx(saved["entry_sigma"], abs=0.01)
     assert abandon / vol["horizon_sd"] == pytest.approx(saved["abandon_sigma"], abs=0.01)
     typical = abs(ev["first_round_reactions"]["average_move"])
     assert typical / vol["horizon_sd"] == pytest.approx(saved["event_sigma"], abs=0.02)
@@ -189,41 +195,50 @@ def test_market_evidence_matches_saved_series(thesis, frozen) -> None:
     assert curve["date"] == ev["br_2y"]["date"]
     assert curve["fixed_rate"]["252"] == ev["br_1y"]["value"] and curve["fixed_rate"]["504"] == ev["br_2y"]["value"]
     assert curve["implied_inflation"]["504"] == ev["br_2y_breakeven"]["value"]
+    before = curve["previous"]
+    assert before["date"] == ev["br_2y"]["previous_date"]
+    assert before["fixed_rate"]["252"] == ev["br_1y"]["previous"] and before["fixed_rate"]["504"] == ev["br_2y"]["previous"]
+    assert before["implied_inflation"]["504"] == ev["br_2y_breakeven"]["previous"]
 
 
 def test_review_verdicts_match_what_happened(thesis, frozen) -> None:
-    ev, rules, before = thesis["evidence"], thesis["previous_rules"], thesis["previous_evidence"]
+    ev, rules, before = thesis["evidence"], thesis["rules"], thesis["previous_evidence"]
     verdicts = {item["id"]: item["verdict"] for item in thesis["review"]}
-    since = closes(frozen, start=thesis["previous_id"])
-    # The 24 September rules: nothing could trigger before the vote, and the drop level was never hit.
-    assert all(d < rules["earliest_entry"] for d, _ in since)
-    assert max(v for _, v in since) < rules["abandon_above"]
-    assert verdicts["trigger"] == "not_triggered"
-    # Polls had Lula ahead in the first round; Flávio finished first, in a runoff.
-    first = ev["election_first_round"]
-    assert before["poll_lula"] > before["poll_flavio"] and first["flavio"] > first["lula"] and max(first["flavio"], first["lula"]) < 50
-    assert verdicts["election"] == "partly"
-    # The gap did not move and the dollar rose: the cushion held the range without strengthening the real.
-    assert ev["policy_gap"]["value"] == before["policy_gap"] and ev["ptax"]["value"] > before["ptax"]
-    assert verdicts["cushion"] == "partly"
-    # The two-year premium over the economists' path stayed about where it was.
-    assert abs(ev["survey_path_average"]["two_year_gap"] - before["br_2y_gap"]) < 0.25
-    assert verdicts["premium"] == "unresolved"
-    assert ev["us_2y"]["high_since_previous"] <= rules["entry_us2y_max"]
+    # Timing: the first Monday went through the entry level and into the review zone, and only the date clause held the rule back.
+    assert ev["ptax"]["date"] < rules["earliest_entry"]
+    assert rules["review_low"] < ev["ptax"]["value"] <= rules["review_high"] < rules["entry_below"]
+    assert rule_status(thesis, frozen, date.fromisoformat(thesis["as_of"]))["state"] == "waiting"
+    assert verdicts["timing"] == "confirmed"
+    # Size: larger than each of the three Mondays the 5 October note was sized on.
+    prior = [abs(w["monday_move"]) for w in ev["first_round_reactions"]["windows"]]
+    move = abs((ev["ptax"]["value"] / ev["ptax"]["previous"] - 1) * 100)
+    assert move > max(prior) and before["avg_monday_move"] < move
+    assert verdicts["size"] == "underweighted"
+    # Premium: the two-year gap over the economists' path was above 1 pp and is now below half a point.
+    sp = ev["survey_path_average"]
+    assert sp["two_year_gap_before"] == pytest.approx(before["br_2y_gap"], abs=0.01)
+    assert before["br_2y_gap"] > 1.0 and sp["two_year_gap"] < 0.5 and sp["one_year_gap"] < 0
+    assert verdicts["premium"] == "partly"
+    # The U.S. two-year condition held.
+    assert ev["us_2y"]["high_since_previous"] <= rules["entry_us2y_max"] and before["us_2y"] <= rules["entry_us2y_max"]
     assert verdicts["us_yields"] == "confirmed"
-    assert set(verdicts) == {"trigger", "election", "cushion", "premium", "us_yields"}
+    assert set(verdicts) == {"timing", "size", "premium", "us_yields"}
 
 
 def test_previous_case_is_preserved(thesis) -> None:
     previous = json.loads((ROOT / thesis["previous_file"]).read_text(encoding="utf-8"))
     assert previous["id"] == previous["as_of"] == thesis["previous_id"]
     for key in ("earliest_entry", "entry_below", "abandon_above", "exit_above", "entry_us2y_max"):
-        assert previous["rules"][key] == thesis["previous_rules"][key], key
+        assert previous["rules"][key] == thesis["previous_rules"][key] == thesis["rules"][key], key  # not rewritten after the move
     saved, then = thesis["previous_evidence"], previous["evidence"]
-    assert (saved["poll_lula"], saved["poll_flavio"], saved["poll_margin"]) == (then["poll_first_round"]["lula"], then["poll_first_round"]["flavio"], then["poll_first_round"]["margin"])
     assert saved["ptax"] == then["ptax"]["value"] and saved["us_2y"] == then["us_2y"]["value"]
-    assert saved["br_2y"] == then["br_2y"]["value"] and saved["br_2y_gap"] == pytest.approx(then["survey_path_average"]["two_year_gap"], abs=0.005)
+    assert saved["br_1y"] == then["br_1y"]["value"] and saved["br_2y"] == then["br_2y"]["value"]
+    assert saved["br_2y_gap"] == pytest.approx(then["survey_path_average"]["two_year_gap"], abs=0.005)
+    assert saved["br_1y_gap"] == pytest.approx(then["survey_path_average"]["one_year_gap"], abs=0.005)
     assert saved["brent"] == then["brent_spot"]["value"] and saved["policy_gap"] == then["policy_gap"]["value"]
+    assert saved["avg_monday_move"] == pytest.approx(abs(then["first_round_reactions"]["average_move"]), abs=0.005)
+    assert saved["event_sigma"] == then["volatility"]["event_sigma"] and saved["horizon_sd"] == then["volatility"]["horizon_sd"]
+    assert saved["entry_sigma"] == then["volatility"]["entry_sigma"]
     assert (ROOT / previous["inputs_file"]).is_file()
     assert (ROOT / previous["previous_file"]).is_file()
 
@@ -248,6 +263,8 @@ def test_sources_are_dated_https_links(thesis) -> None:
 def test_placeholders_use_local_decimal_marks(thesis, lang) -> None:
     values = placeholders(thesis, lang)
     if lang == "en":
-        assert values["ptax"] == "5.2235" and values["selic"] == "13.75%" and values["fl_share"] == "47.1%"
+        assert values["ptax"] == "4.9856" and values["selic"] == "13.75%" and values["fl_share"] == "47.1%"
+        assert values["mon_move"] == "−4.55%" and values["gap_2y_now"] == "+0.35 pp"
     else:
-        assert values["ptax"] == "5,2235" and values["selic"].startswith("13,75") and values["fl_share"].startswith("47,1")
+        assert values["ptax"] == "4,9856" and values["selic"].startswith("13,75") and values["fl_share"].startswith("47,1")
+        assert values["mon_move"].startswith("−4,55") and values["gap_2y_now"].startswith("+0,35")

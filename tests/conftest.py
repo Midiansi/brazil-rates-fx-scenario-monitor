@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-THESIS_DATE = date(2026, 10, 5)
+THESIS_DATE = date(2026, 10, 6)
 
 
 def load(name: str) -> dict:
@@ -18,7 +18,16 @@ def load(name: str) -> dict:
 
 @pytest.fixture
 def thesis() -> dict:
-    return load("thesis.json")
+    """The thesis as the page loads it: thesis.json plus the saved study results."""
+
+    from src.thesis import load_thesis
+
+    return load_thesis(ROOT / "research" / "thesis.json")
+
+
+@pytest.fixture
+def study_inputs(thesis) -> dict:
+    return json.loads((ROOT / thesis["study_inputs_file"]).read_text(encoding="utf-8"))
 
 
 @pytest.fixture
