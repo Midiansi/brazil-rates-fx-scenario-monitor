@@ -1,6 +1,6 @@
 """Brazil Macro — production entrypoint.
 
-Every visit reads two small local JSON files and pre-generated PDFs; nothing
+Every visit reads saved local JSON summaries and pre-generated PDFs; nothing
 here touches the network, generates a PDF or runs pandas.  The page is a few
 large HTML blocks, cached per language and per data-file version, so the first
 render and language switches stay fast.
@@ -16,16 +16,18 @@ from pathlib import Path
 
 import streamlit as st
 
-from src import chart, content, formatting, freshness, page, thesis
+from src import chart, content, formatting, freshness, lab_content, risk, page, thesis, lab
 
 ROOT = Path(__file__).resolve().parent
 THESIS_PATH = ROOT / "research" / "thesis.json"
 SNAPSHOT_PATH = ROOT / "research" / "live_snapshot.json"
 STUDY_PATH = ROOT / "research" / "study_2026-10-06.json"
+RISK_PATH = ROOT / "research" / "risk_2026-10-07.json"
+RISK_CSV_PATH = ROOT / "research" / "risk_forecasts.csv"
 CSS_PATH = ROOT / "src" / "style.css"
 LANGUAGES = {"EN": "en", "PT": "pt", "FR": "fr"}
 PDF_NAMES = {"en": "Brazil_Rates_FX_Trade_Brief.pdf", "pt": "Brazil_Rates_FX_Trade_Brief_PT.pdf", "fr": "Brazil_Rates_FX_Trade_Brief_FR.pdf"}
-MODULES = (formatting, content, freshness, chart, thesis, page)  # dependency order
+MODULES = (formatting, content, lab_content, freshness, chart, thesis, risk, page, lab)  # dependency order
 
 
 def _mtime(path: Path | str) -> float:
@@ -69,7 +71,8 @@ def _css(version: float) -> str:
 def _blocks(lang: str, lens: str, today: str, versions: tuple[float, ...]) -> dict[str, str]:
     saved_thesis = thesis.load_thesis(THESIS_PATH)
     snapshot = thesis.read_json(SNAPSHOT_PATH)
-    return page.render(lang, saved_thesis, snapshot, datetime.fromisoformat(today).date(), lens)
+    report = thesis.read_json(RISK_PATH)
+    return page.render(lang, saved_thesis, snapshot, datetime.fromisoformat(today).date(), lens, report)
 
 
 @lru_cache(maxsize=8)
@@ -113,7 +116,7 @@ if st.query_params.get("lang", "en") != lang:
     st.query_params["lang"] = lang
 
 today = datetime.now(timezone.utc).date().isoformat()
-blocks = _blocks(lang, _lens(), today, (code_version, _mtime(THESIS_PATH), _mtime(SNAPSHOT_PATH), _mtime(STUDY_PATH)))
+blocks = _blocks(lang, _lens(), today, (code_version, _mtime(THESIS_PATH), _mtime(SNAPSHOT_PATH), _mtime(STUDY_PATH), _mtime(RISK_PATH)))
 with top_left:
     st.html(blocks["top"])
 st.html(blocks["hero"])
@@ -129,7 +132,15 @@ if pdf_bytes:
 if "toc" in blocks:  # its own element so CSS can pin it while the sections scroll
     st.html(blocks["toc"])
 for name, markup in blocks.items():
-    if name.startswith("body_"):
+    if name == "lab":
+        st.html(markup)
+        lab.render(lang, thesis.load_thesis(THESIS_PATH), _lens())
+    elif name == "risk":
+        st.html(markup)
+        csv_bytes = _pdf(str(RISK_CSV_PATH), _mtime(RISK_CSV_PATH))
+        if csv_bytes:
+            st.download_button(lab_content.TEXT[lang]["risk_download"], csv_bytes, "brazilmacro_risk_forecasts.csv", "text/csv", on_click="ignore")
+    elif name.startswith("body_"):
         st.html(markup)
     elif name.startswith("chart_"):  # inline SVG survives only through Markdown
         st.markdown(markup, unsafe_allow_html=True)
