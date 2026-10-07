@@ -17,6 +17,25 @@ from src import risk
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def _assert_reproducible(actual, expected, path: str = "root") -> None:
+    """Keep schema and discrete facts exact; allow platform libm rounding only."""
+    assert type(actual) is type(expected), f"{path}: value types differ"
+    if isinstance(expected, dict):
+        assert actual.keys() == expected.keys(), f"{path}: schema keys differ"
+        for key in expected:
+            _assert_reproducible(actual[key], expected[key], f"{path}.{key}")
+    elif isinstance(expected, list):
+        assert len(actual) == len(expected), f"{path}: list lengths differ"
+        for index, (value, reference) in enumerate(zip(actual, expected)):
+            _assert_reproducible(value, reference, f"{path}[{index}]")
+    elif isinstance(expected, float):
+        # math.erfc/log/exp can differ by a few ULPs across macOS and Linux.
+        assert actual == pytest.approx(expected, rel=1e-12, abs=1e-12), path
+    else:
+        # Includes integers, booleans, dates, labels, filenames, hashes and None.
+        assert actual == expected, path
+
+
 @pytest.fixture(scope="module")
 def inputs() -> dict:
     return json.loads((ROOT / "research/study_inputs_2026-10-06.json").read_text(encoding="utf-8"))
@@ -36,9 +55,20 @@ def test_generated_report_and_csv_reproduce_offline(inputs, report, saved_report
     computed = risk.build(inputs)
     raw = (ROOT / "research/study_inputs_2026-10-06.json").read_bytes()
     computed["input_sha256"] = hashlib.sha256(raw).hexdigest()
-    assert {key: value for key, value in computed.items() if key != "timeline"} == saved_report
+    _assert_reproducible({key: value for key, value in computed.items() if key != "timeline"}, saved_report)
     assert "timeline" not in saved_report
-    assert (ROOT / "research/risk_forecasts.csv").read_text(encoding="utf-8") == risk.forecast_csv(report).replace("\r\n", "\n")
+    saved_csv = csv.DictReader(io.StringIO((ROOT / "research/risk_forecasts.csv").read_text(encoding="utf-8")))
+    computed_csv = csv.DictReader(io.StringIO(risk.forecast_csv(report)))
+    assert computed_csv.fieldnames == saved_csv.fieldnames
+    numeric_columns = {"previous_spot", "spot", "log_return_pct", "loss_pct", "var99_pct", "es99_pct", "sigma_daily_pct"}
+
+    def typed_rows(reader):
+        # CSV dates/model labels, breach flags, training counts and blanks stay
+        # exact strings. Only explicitly enumerated float columns get tolerance.
+        return [{key: float(value) if key in numeric_columns and value != "" else value
+                 for key, value in row.items()} for row in reader]
+
+    _assert_reproducible(typed_rows(computed_csv), typed_rows(saved_csv), "csv")
     assert no_network == []
 
 
