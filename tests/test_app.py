@@ -9,9 +9,9 @@ import pytest
 from streamlit.testing.v1 import AppTest
 
 EXPECTED = {
-    "EN": ("Brazil macro, from policy to price.", "What I would do", "Track record: a one-day-old call, checked"),
-    "PT": ("Brasil macro: da política monetária aos preços.", "O que eu faria", "Histórico: uma visão de um dia atrás, conferida"),
-    "FR": ("Le Brésil, de la politique monétaire aux marchés.", "Ce que je ferais", "une vue vieille d’un jour, vérifiée"),
+    "EN": ("Brazil macro, from policy to price.", "What I would do", "Thesis review: the previous view, checked"),
+    "PT": ("Brasil macro: da política monetária aos preços.", "O que eu faria", "Revisão da tese: a visão anterior, conferida"),
+    "FR": ("Le Brésil, de la politique monétaire aux marchés.", "Ce que je ferais", "Revue de la thèse"),
 }
 
 
@@ -55,7 +55,7 @@ def test_render_imports_no_heavy_or_network_modules(monkeypatch) -> None:
 
 def test_page_is_a_handful_of_elements() -> None:
     app = run()
-    assert len(app.get("html")) <= 12  # large blocks, not hundreds of widgets
+    assert len(app.get("html")) <= 16  # research blocks plus the interactive lab
     assert len(app.markdown) <= 6  # the five inline-SVG figures
     assert len(app.button_group) == 1
 

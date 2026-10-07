@@ -14,12 +14,13 @@ from typing import Any
 from src import formatting as f
 from src.chart import bars_svg, curve_svg, events_svg, ptax_svg, scatter_svg
 from src.content import TEXT
+from src.lab_content import TEXT as LAB_TEXT
 from src.freshness import run_age_days, status as fresh_status
 from src.thesis import fill, placeholders, rule_status
 
 GITHUB = "https://github.com/Midiansi/brazil-rates-fx-scenario-monitor"
 LINKEDIN = "https://www.linkedin.com/in/romeomugnier"
-SECTIONS = ("view", "review", "quant", "commodities", "trade", "evidence", "method")
+SECTIONS = ("view", "lab", "risk", "review", "quant", "commodities", "trade", "evidence", "method")
 LENSES = ("quant", "commodities")
 TAPE = ("selic_target", "fed_target_range", "brazil_us_policy_differential", "ptax_usd_brl_midpoint", "us_2_year_treasury", "brent")
 EVIDENCE_SOURCES = {
@@ -44,7 +45,7 @@ def lens_order(lens: str) -> tuple[str, str]:
 class Page:
     """Everything needed to render one language, computed once."""
 
-    def __init__(self, lang: str, thesis: dict[str, Any], snapshot: dict[str, Any], today: date, lens: str = "quant"):
+    def __init__(self, lang: str, thesis: dict[str, Any], snapshot: dict[str, Any], today: date, lens: str = "quant", risk_report: dict[str, Any] | None = None):
         self.lang = lang if lang in TEXT else "en"
         self.t = TEXT[self.lang]
         self.thesis = thesis
@@ -55,6 +56,8 @@ class Page:
         self.lens = lens if lens in LENSES else "quant"
         self.values = placeholders(thesis, self.lang) if thesis else {}
         self.study = (thesis or {}).get("study") or {}
+        self.lab_text = LAB_TEXT[self.lang]
+        self.risk_report = risk_report if isinstance(risk_report, dict) else {}
 
     # -- helpers -----------------------------------------------------------
     def s(self, text: str, **extra: str) -> str:
@@ -148,7 +151,7 @@ class Page:
         t = self.t
         return (
             f'<div class="bm"><a class="skip" href="#view">{e(t["skip"])}</a>'
-            '<div class="bm-top"><strong translate="no">Romeo Mugnier de Almeida</strong>'
+            '<div class="bm-top"><span class="brand-mark" aria-hidden="true">B/M</span><strong translate="no">Romeo Mugnier de Almeida</strong>'
             f'<span class="byline">{e(t["byline"])}</span><span class="links">'
             f'<a href="{GITHUB}" target="_blank" rel="noopener">GitHub</a>'
             f'<a href="{LINKEDIN}" target="_blank" rel="noopener">LinkedIn</a></span></div></div>'
@@ -239,24 +242,79 @@ class Page:
         )
 
     def hero(self) -> tuple[str, str]:
-        t = self.t
+        t, lt = self.t, self.lab_text
         why = "".join(f"<div><h3>{self.s(title)}</h3><p>{self.s(body)}</p></div>" for title, body in t["why"])
-        keys = ["view", *(lens_order(self.lens) if self.study else ()), "trade", "review", "evidence", "method"]
-        nav = "".join(f'<a href="#{key}">{e(t["nav"][key])}</a>' for key in keys)
+        keys = ["view", "lab", "risk", *(lens_order(self.lens) if self.study else ()), "trade", "review", "method"]
+        labels = {**t["nav"], "lab": lt["lab_nav"], "risk": lt["risk_nav"]}
+        nav = "".join(f'<a href="#{key}">{e(labels[key])}</a>' for key in keys)
+        scope = ""
+        if self.study:
+            values = [self.study["volatility"]["observations"] + 1, self.study["basket"]["n"], sum(not w.get("pending") for w in self.study["elections"])]
+            scope = '<dl class="research-scope">' + "".join(
+                f'<div><dt>{e(label)}</dt><dd>{e(f.num(value, 0, self.lang))}</dd></div>'
+                for label, value in zip(lt["scope_labels"], values)) + f'</dl><p class="scope-note">{e(lt["scope_note"])}</p>'
         return (
             f'<div class="bm" lang="{t["html_lang"]}"><section class="hero" id="view" aria-labelledby="view-title">'
-            f'<div class="hero-head"><h1>{e(t["title"])}</h1><p class="lede">{e(t["intro"])}</p></div>'
+            f'<div class="hero-grid"><div class="hero-head"><p class="eyebrow">{e(lt["kicker"])}</p><p class="profile-line">{e(lt["scope"])}</p><h1>{e(t["title"])}</h1><p class="lede">{e(lt["intro"])}</p>'
+            f'<div class="hero-actions"><a class="primary-link" href="#lab">{e(lt["lab_cta"])} <span aria-hidden="true">↗</span></a>'
+            f'<a href="{GITHUB}/tree/main/research" target="_blank" rel="noopener">{e(lt["code_cta"])}</a></div>{scope}</div>'
             f'<article class="view" aria-labelledby="view-title"><div class="view-meta">'
             f'<h2 class="eyebrow" id="view-title">{e(t["view_label"])}</h2>'
             f'<span class="status">{e(t["status_no_position"])}</span>'
             f'<time datetime="{e(self.thesis["as_of"])}">{e(self.values["as_of"])}</time></div>'
+            f'<p class="dated-label">{e(lt["dated"])}</p>'
             f'<p class="view-headline">{self.s(t["view_headline"])}</p>'
             f'{self.reaction() if self.study else ""}'
+            '</article></div>'
+            f'<details class="thesis-detail"><summary>{e(lt["reasoning"])}</summary><div class="inner">'
             f'<div class="why" aria-label="{e(t["why_label"])}">{why}</div>'
             f'<div class="decide"><div class="act"><h3>{e(t["act_label"])}</h3><p>{self.s(t["act"])}</p></div>'
             f'<div class="change"><h3>{e(t["change_label"])}</h3><p>{self.s(t["change"])}</p></div></div>'
-            f'{self.monitor()}</article>{self.lenses() if self.study else ""}{self.tape()}</section></div>'
+            f'{self.monitor()}</div></details>{self.lenses() if self.study else ""}{self.tape()}</section></div>'
         ), f'<div class="bm"><nav class="toc" aria-label="{e(t["nav_label"])}">{nav}</nav></div>'
+
+    def lab(self) -> str:
+        t = self.lab_text
+        return self.wrap("lab", self.section_head("lab", e(t["lab_title"]), e(t["lab_intro"])) + f'<p class="small muted">{e(t["scenario_source"])}</p>')
+
+    def risk(self) -> str:
+        t, report, lang = self.lab_text, self.risk_report, self.lang
+        head = self.section_head("risk", e(t["risk_title"]), e(t["risk_intro"]))
+        if not report.get("models") or not report.get("evaluation") or not report.get("latest"):
+            return self.wrap("risk", head + f'<p class="study-unavailable">{e(t["risk_failure"])}</p>')
+        try:
+            return self._risk_report_body(head)
+        except (KeyError, TypeError, ValueError, OverflowError, AttributeError):
+            return self.wrap("risk", head + f'<p class="study-unavailable">{e(t["risk_failure"])}</p>')
+
+    def _risk_report_body(self, head: str) -> str:
+        t, report, lang = self.lab_text, self.risk_report, self.lang
+        import math
+        if {m["key"] for m in report["models"]} != set(t["model_names"]):
+            raise ValueError("missing calibration model")
+        for m in report["models"]:
+            if m["key"] not in t["model_names"] or not 0 <= m["breaches"] <= m["n"] or m["n"] <= 0:
+                raise ValueError("invalid calibration counts")
+            if not math.isfinite(m["breach_rate_pct"]) or not 0 <= m["breach_rate_pct"] <= 100 or not 0 <= m["kupiec_p"] <= 1:
+                raise ValueError("invalid calibration rate")
+        if set(report["latest"]["models"]) != set(t["model_names"]):
+            raise ValueError("missing latest model")
+        for m in report["latest"]["models"].values():
+            if not all(math.isfinite(m[k]) for k in ("var_pct", "es_pct")):
+                raise ValueError("nonfinite loss estimate")
+        rows = [[e(t["model_names"].get(m["key"], m["label"])), f'{m["breaches"]} / {m["n"]}',
+                 e(f.pct(m["breach_rate_pct"], 2, lang)), e(f.num(m["kupiec_p"], 3, lang)) if m["kupiec_p"] >= .001 else "&lt;" + e(f.num(.001, 3, lang))] for m in report["models"]]
+        tails = [[e(t["model_names"].get(key, key)), e(f.pct(v["var_pct"], 2, lang)), e(f.pct(v["es_pct"], 2, lang))] for key, v in report["latest"]["models"].items()]
+        evaluation = report["evaluation"]
+        period = f'{f.day(evaluation["start"], lang)} — {f.day(evaluation["end"], lang)}'
+        links = "".join(f'<a href="{GITHUB}/{path}" target="_blank" rel="noopener">{e(t[label])} <span aria-hidden="true">↗</span></a>' for path, label in (
+            ("blob/main/research/risk_method.md", "risk_method"), ("blob/main/research/study_inputs_2026-10-06.json", "risk_inputs"), ("blob/main/src/risk.py", "risk_code")))
+        inner = head + f'<p class="take">{e(t["risk_take"])}</p><p class="research-date">{e(t["risk_date"])} {e(f.day(report["data_as_of"], lang))}</p>'
+        inner += f'<div class="risk-meta"><span>{e(t["risk_scope"])} · {e(period)}</span><span>{e(t["risk_target"])} · 1%</span></div>'
+        inner += self.table(t["risk_cols"], rows, "risk-table", label=t["risk_title"])
+        inner += f'<p class="fig-caption">{e(t["risk_note"])}</p><div class="research-links">{links}</div>'
+        inner += f'<details><summary>{e(t["tail_title"])}</summary><div class="inner">{self.table(t["tail_cols"], tails, label=t["tail_title"])}<p class="small muted">{e(t["tail_note"])}</p></div></details>'
+        return self.wrap("risk", inner)
 
     # -- review of the 5 October thesis ------------------------------------
     def review(self) -> str:
@@ -658,7 +716,7 @@ class Page:
         return (
             f'<div class="bm" lang="{t["html_lang"]}"><section class="sec" id="about" aria-labelledby="about-title">'
             f'<div class="sec-head"><h2 id="about-title">{e(t["about_title"])}</h2></div>'
-            f'<div class="sec-body about"><div><p>{e(t["about"])}</p><p>{e(t["about_build"])}</p></div>'
+            f'<div class="sec-body about"><div><p>{e(t["about"])}</p><p>{e(t["about_build"])}</p><p>{e(LAB_TEXT[self.lang]["about_lab"])}</p></div>'
             f'<div class="links"><a href="{GITHUB}" target="_blank" rel="noopener">{e(t["links"]["code"])}</a>'
             f'<a href="{LINKEDIN}" target="_blank" rel="noopener">{e(t["links"]["linkedin"])}</a></div></div>'
             f'<p class="footer">{self.s(t["footer"])}</p></section></div>'
@@ -684,10 +742,10 @@ def _pack(items: list[tuple[str, str]]) -> dict[str, str]:
     return out
 
 
-def render(lang: str, thesis: dict[str, Any], snapshot: dict[str, Any], today: date, lens: str = "quant") -> dict[str, str]:
+def render(lang: str, thesis: dict[str, Any], snapshot: dict[str, Any], today: date, lens: str = "quant", risk_report: dict[str, Any] | None = None) -> dict[str, str]:
     """Return the page blocks in display order, keyed by name (``chart_*`` blocks are SVG, the rest HTML)."""
 
-    page = Page(lang, thesis, snapshot, today, lens)
+    page = Page(lang, thesis, snapshot, today, lens, risk_report)
     if not thesis:
         message = e(page.t["unavailable"])
         return {"top": page.top_bar(), "hero": f'<div class="bm"><h1>{e(page.t["title"])}</h1><p class="banner">{message}</p></div>'}
@@ -697,4 +755,4 @@ def render(lang: str, thesis: dict[str, Any], snapshot: dict[str, Any], today: d
         for key in lens_order(page.lens):
             items += page.quant_blocks() if key == "quant" else page.commodities_blocks()
     items += [("html", page.trade_top()), ("svg", page.chart()), ("html", page.paths() + page.review() + page.evidence() + page.method() + page.about())]
-    return {"top": page.top_bar(), "hero": hero, "toc": toc, **_pack(items)}
+    return {"top": page.top_bar(), "hero": hero, "toc": toc, "lab": page.lab(), "risk": page.risk(), **_pack(items)}
