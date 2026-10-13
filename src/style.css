@@ -31,7 +31,10 @@
 
 /* ---- Streamlit shell ------------------------------------------------- */
 .stApp { background: var(--bg); color: var(--ink); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-[data-testid="stHeader"] { background: transparent; height: 0; }
+/* Once Community Cloud adds toolbar items, Streamlit makes its header take
+   clicks and keeps it 3.75rem tall via min-height; hidden, it would still sit
+   over the language control and swallow its clicks. */
+[data-testid="stHeader"] { background: transparent; height: 0; min-height: 0; pointer-events: none; }
 [data-testid="stToolbar"], [data-testid="stDecoration"], [data-testid="stStatusWidget"] { visibility: hidden; }
 /* Anchors and keyboard focus land below the pinned section nav. */
 [data-testid="stMain"] { scroll-padding-top: var(--nav-h); }
