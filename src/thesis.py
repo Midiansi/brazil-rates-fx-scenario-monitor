@@ -37,6 +37,9 @@ def load_thesis(path: Path | None = None) -> dict[str, Any]:
     # The quantitative study is saved next to the thesis; without it the page still renders its core.
     study = read_json(ROOT / thesis["study_file"]) if isinstance(thesis.get("study_file"), str) else {}
     thesis["study"] = study
+    # A dated follow-up does not rewrite the earlier study or its inputs.
+    update_file = thesis.get("current_update_file")
+    thesis["current_update"] = read_json(ROOT / update_file) if isinstance(update_file, str) else {}
     return thesis
 
 

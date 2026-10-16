@@ -7,6 +7,7 @@ import pytest
 from pypdf import PdfReader
 
 from src.content import TEXT
+from src.update_content import TEXT as UPDATE_TEXT
 from src.pdf_brief import markdown_brief, render_pdf
 
 from conftest import ROOT
@@ -39,16 +40,19 @@ def generated(tmp_path_factory):
 def test_pdf_is_searchable_localized_and_short(generated, lang) -> None:
     paths, _ = generated
     reader = PdfReader(paths[lang])
-    assert 2 <= len(reader.pages) <= 5
+    assert len(reader.pages) == 2
     text = normalize(text_of(paths[lang]))
     t = TEXT[lang]
-    for key in ("pdf_title", "view_label", "act_label", "change_label", "trade_title", "review_title"):
+    for key in ("act_label", "change_label"):
         assert normalize(t[key]).split(":")[0][:30].lower() in text.lower(), key
+    for key in ("title", "rates_title", "fx_title", "commodities_title", "decision_title", "review_title"):
+        assert normalize(UPDATE_TEXT[lang][key]).lower() in text.lower(), key
     assert ("5,10" if lang != "en" else "5.10") in text
-    assert ("5,2235" if lang != "en" else "5.2235") in text
+    assert ("5,0518" if lang != "en" else "5.0518") in text
+    assert ("5,0902" if lang != "en" else "5.0902") in text
     assert reader.metadata.author == "Romeo Mugnier de Almeida"
     annotations = sum(len(page.get("/Annots") or []) for page in reader.pages)
-    assert annotations >= 20  # clickable sources
+    assert annotations >= 9  # clickable sources for this publication
 
 
 @pytest.mark.parametrize("lang", ["pt", "fr"])
@@ -60,9 +64,10 @@ def test_translated_pdf_has_no_english_headings(generated, lang) -> None:
         assert "matérias-primas" not in text.lower()
 
 
-def test_arrow_and_decimal_marks_survive_extraction(generated) -> None:
-    assert "→" in text_of(generated[0]["en"])
-    assert "13,75" in text_of(generated[0]["fr"])
+def test_formula_and_decimal_marks_survive_extraction(generated) -> None:
+    assert "×" in text_of(generated[0]["en"])
+    assert "5,0902" in text_of(generated[0]["fr"])
+    assert "−14.5%" in text_of(generated[0]["en"])
 
 
 @pytest.mark.parametrize("lang", ["en", "pt", "fr"])
