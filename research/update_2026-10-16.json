@@ -1,0 +1,209 @@
+{
+  "schema_version": 1,
+  "id": "2026-10-16",
+  "as_of": "2026-10-16",
+  "data_as_of": "2026-10-15",
+  "status": "no_position",
+  "inputs_file": "research/thesis_snapshot_2026-10-16.json",
+  "previous_file": "research/thesis_2026-10-06.json",
+  "historical_study_date": "2026-10-06",
+  "rules": {
+    "direction": "long_brl",
+    "earliest_entry": "2026-10-26",
+    "entry_below": 5.1,
+    "entry_closes": 2,
+    "entry_us2y_max": 5.0,
+    "abandon_above": 5.3,
+    "exit_above": 5.22,
+    "exit_closes": 2,
+    "exit_us2y_above": 5.1,
+    "br2y_max": 14.0,
+    "review_low": 4.94,
+    "review_high": 5.0,
+    "review_by": "2026-11-04",
+    "range": {
+      "start": "2026-09-04",
+      "end": "2026-10-02",
+      "low": 5.0853,
+      "high": 5.2235,
+      "midpoint": 5.1544,
+      "width": 0.1382
+    },
+    "derivation": {
+      "timing": "Earliest entry is the first PTAX after the runoff (26 Oct). After the first rounds of 2014 and 2022 the real gave back 85% and 70% of its first-Monday move by the runoff, and a single session can jump every level, so I do not enter before the vote is over.",
+      "entry": "5.10 sits near the bottom of the last 20 PTAX closes (5.0853-5.2235), 11% of the range above its low.",
+      "abandon": "5.30 is above every PTAX close in the saved four-month history (high 5.2235 on 2 Oct).",
+      "exit": "5.22 is the top of the recent range, rounded.",
+      "review": "Range low minus range width = 5.0853 - 0.1382 = 4.9471, floored to 4.94 and bracketed to 4.94-5.00; also below the four-month low of 5.0157."
+    },
+    "derived_from": "2026-10-02"
+  },
+  "ptax": {
+    "date": "2026-10-15",
+    "value": 5.0518,
+    "pre_vote": 5.2235,
+    "first_day": 4.9856,
+    "giveback_pct": 27.826817990752552,
+    "since_first_day_pct": 1.327824133504496
+  },
+  "curve": [
+    {
+      "date": "2026-10-02",
+      "nominal": 13.7085,
+      "breakeven": 5.906,
+      "real": 7.3673
+    },
+    {
+      "date": "2026-10-05",
+      "nominal": 12.6001,
+      "breakeven": 5.268,
+      "real": 6.9651
+    },
+    {
+      "date": "2026-10-15",
+      "nominal": 12.7161,
+      "breakeven": 5.5362,
+      "real": 6.8032
+    }
+  ],
+  "policy": {
+    "selic": 13.75,
+    "fed_midpoint": 3.875,
+    "monthly_carry_pct": 0.7596609322517267,
+    "one_month_fx_breakeven": 5.090176550975492,
+    "us2y": 4.77,
+    "us2y_date": "2026-10-15"
+  },
+  "focus": {
+    "focus_selic": {
+      "date": "2026-10-09",
+      "values": {
+        "2026": 13.25,
+        "2027": 12.0,
+        "2028": 10.5,
+        "2029": 10.0
+      }
+    },
+    "focus_ipca": {
+      "date": "2026-10-09",
+      "values": {
+        "2026": 5.2245,
+        "2027": 4.3,
+        "2028": 3.79,
+        "2029": 3.5
+      }
+    },
+    "focus_fx": {
+      "date": "2026-10-09",
+      "values": {
+        "2026": 5.1535,
+        "2027": 5.26,
+        "2028": 5.3,
+        "2029": 5.3
+      }
+    }
+  },
+  "oil": {
+    "date": "2026-10-14",
+    "base_date": "2026-10-02",
+    "usd_now": 126.55,
+    "usd_base": 135.51,
+    "fx_now": 5.0438,
+    "fx_base": 5.2235,
+    "usd_change_pct": -6.612058150689981,
+    "fx_change_pct": -3.440222073322474,
+    "brl_change_pct": -9.824810740011515
+  },
+  "producer": {
+    "commodity_shocks": [
+      -0.1,
+      0.0,
+      0.1
+    ],
+    "fx_shocks": [
+      -0.05,
+      0.0,
+      0.05
+    ],
+    "revenue_change_pct": [
+      [
+        -14.500000000000002,
+        -9.999999999999998,
+        -5.499999999999994
+      ],
+      [
+        -5.000000000000004,
+        0.0,
+        5.000000000000004
+      ],
+      [
+        4.499999999999993,
+        10.000000000000009,
+        15.500000000000025
+      ]
+    ],
+    "offset_commodity_pct": 5.263157894736836
+  },
+  "sources": [
+    {
+      "key": "ptax",
+      "label": "BCB · PTAX midpoint",
+      "date": "2026-10-15",
+      "url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/"
+    },
+    {
+      "key": "curve",
+      "label": "ANBIMA · ETTJ, 2 / 5 / 15 Oct",
+      "date": "2026-10-15",
+      "url": "https://www.anbima.com.br/informacoes/est-termo/CZ.asp"
+    },
+    {
+      "key": "focus",
+      "label": "BCB · Focus survey",
+      "date": "2026-10-09",
+      "url": "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/"
+    },
+    {
+      "key": "treasury",
+      "label": "U.S. Treasury · Par yields",
+      "date": "2026-10-15",
+      "url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve"
+    },
+    {
+      "key": "oil",
+      "label": "EIA / FRED · Brent spot",
+      "date": "2026-10-14",
+      "url": "https://fred.stlouisfed.org/series/DCOILBRENTEU"
+    },
+    {
+      "key": "selic",
+      "label": "BCB · Selic target",
+      "date": "2026-09-17",
+      "url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=17/09/2026&dataFinal=16/10/2026"
+    },
+    {
+      "key": "policy",
+      "label": "New York Fed · EFFR and target range",
+      "date": "2026-10-14",
+      "url": "https://www.newyorkfed.org/markets/reference-rates/effr"
+    },
+    {
+      "key": "runoff",
+      "label": "TSE · Election calendar",
+      "date": "2026-10-16",
+      "url": "https://www.tse.jus.br/eleicoes/eleicoes-2026/calendario-eleitoral"
+    },
+    {
+      "key": "fomc",
+      "label": "Federal Reserve · FOMC calendar",
+      "date": "2026-10-16",
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+    },
+    {
+      "key": "copom",
+      "label": "BCB · Copom calendar",
+      "date": "2026-10-16",
+      "url": "https://www.bcb.gov.br/detalhenoticia/20739/nota"
+    }
+  ]
+}

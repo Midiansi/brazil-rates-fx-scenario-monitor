@@ -18,12 +18,14 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.platypus import KeepTogether, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
+from reportlab.platypus import KeepTogether, PageBreak, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 from src import formatting as f
 from src.content import TEXT
 from src.page import GITHUB
 from src.thesis import fill, placeholders
+from src.update import update_values
+from src.update_content import TEXT as UPDATE_TEXT
 
 INK = colors.HexColor("#102431")
 INK_2 = colors.HexColor("#3A5260")
@@ -73,6 +75,8 @@ def _pdf_text(text: str) -> str:
 
 
 def render_pdf(thesis: dict[str, Any], snapshot: dict[str, Any], output: Path | str, lang: str = "en") -> Path:
+    if thesis.get("current_update"):
+        return render_current_pdf(thesis, output, lang)
     t, values = TEXT[lang], placeholders(thesis, lang)
     st = _styles()
 
@@ -303,6 +307,9 @@ def render_pdf(thesis: dict[str, Any], snapshot: dict[str, Any], output: Path | 
 def markdown_brief(thesis: dict[str, Any]) -> str:
     """English Markdown companion, generated from the same content."""
 
+    if thesis.get("current_update"):
+        return current_markdown(thesis)
+
     t, values = TEXT["en"], placeholders(thesis, "en")
 
     def s(text: str) -> str:
@@ -338,3 +345,101 @@ def markdown_brief(thesis: dict[str, Any]) -> str:
     lines += [f"- [{t['source_labels'].get(key, src['label'])}]({src['url']}) — {src['date']}" for key, src in sorted(thesis["sources"].items())]
     lines += ["", s(t["footer"]), ""]
     return "\n".join(lines)
+
+
+def render_current_pdf(thesis: dict[str, Any], output: Path | str, lang: str = "en") -> Path:
+    """Two-page current note; previous briefs are preserved in outputs/archive/."""
+    report, u = thesis['current_update'], UPDATE_TEXT[lang]
+    values = {**placeholders(thesis, lang), **update_values(report, lang)}
+    styles = _styles()
+    styles['body'].fontSize, styles['body'].leading = 8.2, 11.4
+
+    def s(text):
+        return _pdf_text(fill(text, values, lang))
+
+    def p(text, style='body'):
+        return Paragraph(s(text), styles[style])
+
+    def heading(key):
+        return p(u[key], 'h2')
+
+    def table(headers, rows, widths):
+        data = [[p(h, 'label') for h in headers]] + [[p(cell, 'cell') for cell in row] for row in rows]
+        result = Table(data, colWidths=widths, repeatRows=1, hAlign='LEFT')
+        result.setStyle(TableStyle([
+            ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+            ('BACKGROUND', (0, 0), (-1, 0), PANEL),
+            ('LEFTPADDING', (0, 0), (-1, -1), 5), ('RIGHTPADDING', (0, 0), (-1, -1), 7),
+            ('TOPPADDING', (0, 0), (-1, -1), 5), ('BOTTOMPADDING', (0, 0), (-1, -1), 5),
+            ('LINEBELOW', (0, 0), (-1, -1), 0.4, LINE),
+        ]))
+        return result
+
+    story = [p('BRAZIL MACRO · ROMEO MUGNIER DE ALMEIDA · EPFL', 'eyebrow'),
+             p(u['title'], 'title'), p(u['dated'], 'subtitle'),
+             p(u['headline'], 'lead'), p(u['intro']),
+             heading('rates_title'), p(u['rates'])]
+    rows = [[label, *(f.pct(row[key], 2, lang) for row in report['curve'])]
+            for label, key in zip(u['curve_rows'], ('nominal', 'breakeven', 'real'))]
+    story += [table(u['curve_head'], rows, [WIDTH * .43, *([WIDTH * .19] * 3)]),
+              p(u['survey']), heading('fx_title'), p(u['fx']),
+              p(TEXT[lang]['act_label'], 'h2'), p(u['act']),
+              p(TEXT[lang]['change_label'], 'h2'), p(u['change']),
+              PageBreak(), p(u['dated'], 'eyebrow'), heading('commodities_title'), p(u['commodities'])]
+    rows = [[f.pct(c * 100, 0, lang, signed=True), *(f.pct(v, 1, lang, signed=True) for v in row)]
+            for c, row in zip(report['producer']['commodity_shocks'], report['producer']['revenue_change_pct'])]
+    story += [p(u['producer_title'], 'label'),
+              table(u['producer_head'], rows, [WIDTH * .34, *([WIDTH * .22] * 3)]),
+              p(u['producer']), heading('decision_title')]
+    # Short paragraphs keep the decision criteria readable at print size.
+    for observed, decision in u['decisions']:
+        story.append(Paragraph(f'<b>{s(observed)}.</b> {s(decision)}', styles['body']))
+    story += [p(u['calendar'], 'small'), heading('review_title'), p(u['review']), p(u['risk'], 'small')]
+    source_links = []
+    for label, source in zip(u['source_names'], report['sources']):
+        source_links.append(f'<a href="{escape(source["url"], quote=True)}" color="#0B7F70">{_pdf_text(label)}</a> ({_pdf_text(f.day(source["date"], lang, year=False))})')
+    story += [p(u['sources_title'], 'label'), Paragraph(' · '.join(source_links), styles['tiny']),
+              p(u['sources_note'], 'tiny')]
+
+    def decorate(canvas, doc):
+        canvas.saveState()
+        canvas.setStrokeColor(TEAL)
+        canvas.setLineWidth(1.6)
+        canvas.line(MARGIN, A4[1] - 30, A4[0] - MARGIN, A4[1] - 30)
+        canvas.setFont('Sans', 6.6)
+        canvas.setFillColor(MUTED)
+        canvas.drawString(MARGIN, 24, fill(u['footer'], values, lang).replace(' ', ' '))
+        canvas.drawRightString(A4[0] - MARGIN, 12, str(doc.page))
+        canvas.restoreState()
+
+    destination = Path(output)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    doc = SimpleDocTemplate(str(destination), pagesize=A4, leftMargin=MARGIN, rightMargin=MARGIN,
+                            topMargin=46, bottomMargin=43, title=fill(u['title'], values, lang),
+                            author='Romeo Mugnier de Almeida', subject=fill(u['dated'], values, lang),
+                            lang=TEXT[lang]['html_lang'], creator='Brazil Macro')
+    doc.build(story, onFirstPage=decorate, onLaterPages=decorate)
+    return destination
+
+
+def current_markdown(thesis: dict[str, Any]) -> str:
+    report, u = thesis['current_update'], UPDATE_TEXT['en']
+    values = {**placeholders(thesis, 'en'), **update_values(report, 'en')}
+    s = lambda text: fill(text, values, 'en')
+    lines = [f'# {u["title"]}', '', s(u['dated']), '', s(u['headline']), '', s(u['intro']), '']
+    for title, body in [('rates_title', 'rates'), ('fx_title', 'fx'), ('commodities_title', 'commodities')]:
+        lines += [f'## {u[title]}', '', s(u[body]), '']
+        if title == 'rates_title':
+            lines += ['| ' + ' | '.join(u['curve_head']) + ' |', '|---|---:|---:|---:|']
+            for label, key in zip(u['curve_rows'], ('nominal', 'breakeven', 'real')):
+                lines.append('| ' + ' | '.join([label, *(f.pct(row[key], 2, 'en') for row in report['curve'])]) + ' |')
+            lines += ['', s(u['survey']), '']
+    lines += [f'### {u["producer_title"]}', '', '| ' + ' | '.join(u['producer_head']) + ' |', '|---|---:|---:|---:|']
+    for c, row in zip(report['producer']['commodity_shocks'], report['producer']['revenue_change_pct']):
+        lines.append('| ' + ' | '.join([f.pct(c * 100, 0, 'en', signed=True), *(f.pct(v, 1, 'en', signed=True) for v in row)]) + ' |')
+    lines += ['', s(u['producer']), '', f'## {u["decision_title"]}', '', s(u['act']), '', s(u['change']), '']
+    lines += [f'- **{s(a)}.** {s(b)}' for a, b in u['decisions']]
+    lines += ['', s(u['calendar']), '', s(u['risk']), '', f'## {u["review_title"]}', '', s(u['review']), '', f'## {u["sources_title"]}', '', u['sources_note'], '']
+    lines += [f'- [{name}]({source["url"]}) — {source["date"]}' for name, source in zip(u['source_names'], report['sources'])]
+    lines += ['', u['footer'], '']
+    return '\n'.join(lines)

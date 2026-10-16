@@ -7,7 +7,7 @@
   "previous_id": "2026-10-05",
   "previous_file": "research/thesis_2026-10-05.json",
   "inputs_file": "research/thesis_snapshot_2026-10-06.json",
-  "note": "Numbers only. Prose lives in src/content.py and reads these values, so every language shows the same figures. Values are frozen at the thesis date; the automatically refreshed figures are in research/live_snapshot.json and the quantitative study in research/study_2026-10-06.json. Market prices are from the close of 5 October, the first session after the first-round result.",
+  "note": "Historical 6 October thesis and study, retained for reproducibility. The active publication is current_update_file; it has separately frozen inputs, a dated review and current decision. The daily updater changes neither publication.",
   "election": {
     "first_round": "2026-10-04",
     "runoff": "2026-10-25"
@@ -524,5 +524,6 @@
     }
   },
   "study_file": "research/study_2026-10-06.json",
-  "study_inputs_file": "research/study_inputs_2026-10-06.json"
+  "study_inputs_file": "research/study_inputs_2026-10-06.json",
+  "current_update_file": "research/update_2026-10-16.json"
 }

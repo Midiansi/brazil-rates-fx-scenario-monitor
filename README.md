@@ -8,17 +8,19 @@ Educational research, not investment advice. No real positions and no claimed pe
 
 ![First screen of the site: the research scope, dated market view and risk-lab entry](assets/dashboard.jpg)
 
-## Current thesis (6 October 2026)
+## Current thesis (16 October 2026)
 
-**The market paid for Flávio Bolsonaro's first-round lead in one session: on 5 October USD/BRL fell 4.55% and the two-year zero rate fell 111 bp. I stay out until 25 October, because my entry rule has become a test of whether that payment is kept.**
+**The real has kept most of its first-round rally, but inflation pricing has weakened. I remain flat into the runoff.** Market observations are frozen through 15 October, with Brent through 14 October and Focus dated 9 October.
 
-- The first trading day after the vote was the largest first-day reaction of the seven elections since 2002 (8.1 daily standard deviations, the 8th-largest one-day gain of the real in the data). The curve repriced sharply: about 61% of the additive two-year inflation/real-yield decomposition is lower breakeven inflation, which includes inflation-risk and liquidity premia. The gap to the economists' rate path went from +1.46 pp to +0.35 pp; this gap mixes expectations and premia. A "thesis review" checks the previous view against what happened.
-- **Rules are unchanged on purpose** (entry below 5.10 from 26 October with the U.S. two-year yield at or below 5.00%; drop above 5.30; exit above 5.22; review 4.94–5.00 or 4 November): a rule changed after seeing the outcome is not a rule. In the units of the move, entry is "less than 48% of the 5 October rally reversed", so a trigger tells little; if it fires near today's level the position starts inside the review zone, and a trigger is a prompt to review.
-- **Written for a first-time reader:** the homepage puts research scope and a compact dated view together, with direct links to the risk lab and saved research. The reasoning and decision rules expand on demand; sections lead with a takeaway and dense tables sit behind "Show the numbers".
-- **Rates, FX and quant:** the ANBIMA zero curve before and after the first round (with the economists' path and the second-year forward), an event study across seven first rounds (among completed elections, only 2014, 2018 and 2022 exceeded twice prior volatility; this measures large price moves, not expectations surprises), jump-versus-diffusion volatility (realised, jump-robust, long-run), indicative policy-rate carry-to-volatility, and a single-close random-walk benchmark distinct from the full trade rule.
-- **Commodities:** a six-commodity basket with fixed 2025 export weights (UN Comtrade), applied retrospectively, accounts for 28% of monthly USD/BRL return variance since 2005 (slope −0.40, with similar associations in both sample halves). This is descriptive, not causal or predictive; residual variance is not attributed to specific factors. The page also covers partial natural hedges (up to 10% for oil, none for iron ore, coffee, maize), twelve-month dollar versus real prices, the oil channel (EIA spot versus futures, Petrobras +8.2% against Brent −1.9% on 5 October), the sugar–ethanol–real switch and runoff read-throughs.
+- **FX:** PTAX is 5.0518. About 28% of the initial fall from 5.2235 to 4.9856 has reversed; 72% remains, measured in USD/BRL quote units. The U.S. two-year yield is 4.77%, within the existing entry filter. This is evidence that the currency rally held, not evidence that the entry has an edge.
+- **Rates:** the two-year ANBIMA nominal zero yield is only 12 bp above 5 October, at 12.72%. Underneath that small change, breakeven inflation rose 27 bp to 5.54% while the real yield fell 16 bp to 6.80%. The update tests the inflation-credibility interpretation rather than extending the first-day narrative. Breakevens include risk and liquidity premia.
+- **Carry:** unchanged policy-rate proxies give 0.76% over a month, with break-even USD/BRL of 5.0902 from 5.0518. The 1.33% increase since 5 October already exceeds that monthly cushion. This is a hypothetical relative-cash calculation, not a forward quote.
+- **Exporters:** matched EIA spot and PTAX observations from 2 to 14 October show Brent down 6.6% in dollars and USD/BRL down 3.4%; their product fell 9.8% in reais. The new joint-shock table separates gross receipts from margins and explains why uncertain export volumes matter for FX hedging.
+- **Decision:** no position before the runoff. The original thresholds remain available for audit; a mechanical trigger now prompts a fresh, separately dated decision. The update distinguishes a broad credibility improvement from an FX rally with persistently high breakevens, and from an external U.S.-rate shock. It does not assign scenario probabilities.
 
-Market prices are from the close of 5 October. The full reasoning, the evidence sorted by type and the sources are on the site and in the printable briefs in `outputs/`. Earlier theses are preserved unchanged: `research/thesis_2026-10-05.json`, `research/thesis_2026-09-24.json` (with their saved inputs) and `research/data_snapshot.json` (13 September).
+The current note is available in English, Portuguese and French on the homepage and as **two-page printable briefs** in `outputs/`. Its [frozen inputs](research/thesis_snapshot_2026-10-16.json) include the raw dated ANBIMA CSV; [the saved publication](research/update_2026-10-16.json) reproduces offline with `python scripts/build_update.py`. [The method note](research/update_method.md) records definitions, date alignment and the changed decision standard.
+
+The original [6 October thesis](research/thesis_2026-10-06.json), its inputs, the election/commodity study and the 7 October risk diagnostic remain unchanged. Their sections are marked as earlier research, and their printable briefs are preserved under `outputs/archive/2026-10-06/`. The original study covers seven first-round elections, a six-commodity export-weighted basket and the geometry of the recorded trade rule; its figures retain their original cutoff. `research/thesis.json` retains that historical study context and points to the current publication through `current_update_file`.
 
 ## Risk lab and model diagnostic (7 October 2026)
 
@@ -47,8 +49,9 @@ Run `python scripts/build_risk.py` offline to reproduce [the risk summary](resea
 ```
 GitHub Actions (weekdays, 22:17 UTC)                      Streamlit Community Cloud
 scripts/refresh_market_data.py                            app.py
-  ├─ BCB: PTAX, Selic (SGS 432), Focus survey               reads research/thesis.json      (dated thesis, numbers only)
-  ├─ New York Fed → Fed target range  (FRED fallback)       reads research/study_*.json     (the quantitative study)
+  ├─ BCB: PTAX, Selic (SGS 432), Focus survey               reads research/thesis.json      (historical study + current publication pointer)
+  ├─ New York Fed → Fed target range  (FRED fallback)       reads research/update_*.json    (current dated decision)
+  ├─ ...                                                    reads research/study_*.json     (the quantitative study)
   ├─ ...                                                    reads research/risk_*.json      (frozen risk diagnostic)
   ├─ ...                                                    reads research/live_snapshot.json (refreshed data)
   ├─ U.S. Treasury → 2y/10y yields   (FRED fallback)        renders cached HTML per language; no network, no pandas
@@ -62,7 +65,7 @@ scripts/check_freshness.py   ──▶ run fails (owner notified) if key figures
 - **Visitors never trigger a data request.** The page reads local thesis, study, risk and refreshed-data files plus pre-generated PDFs. HTML is cached per language, lens and data version; scenario changes run local calculations only.
 - **One failed feed never blanks or freezes the others.** Each source keeps its last good value, original date and an error message in `refresh.sources`; the page flags delayed or stale values instead of hiding them.
 - **Honest refresh claims.** The page states when the job last ran and how many sources updated. Until 24 September 2026 the job reported success while every FRED request timed out on GitHub's runners, and the all-or-nothing build also discarded valid BCB data; the page kept showing 13 September figures. Sources are now independent, U.S. data has official fallbacks, and staleness turns the run red.
-- **The thesis is never rewritten by the updater.** Research prose lives in `src/content.py` (EN/PT/FR); thesis figures come from `research/thesis.json` and the quantitative study `research/study_2026-10-06.json`, built offline by `src/study.py` from frozen inputs (`research/thesis_snapshot_2026-10-06.json`, `research/study_inputs_2026-10-06.json`). The new risk diagnostic uses that same saved study input and is built separately by `scripts/build_risk.py`; it does not change the existing macro study or receive live updates. Homepage and lab copy lives in `src/lab_content.py`. The scheduled updater only refreshes market data; the page mechanically checks the pre-committed rules against new PTAX closes, including reversal of the first-Monday move.
+- **The thesis is never rewritten by the updater.** Current prose lives in `src/update_content.py` (EN/PT/FR), with numbers from `research/update_2026-10-16.json`. The earlier research prose lives in `src/content.py` (EN/PT/FR); thesis figures come from `research/thesis.json` and the quantitative study `research/study_2026-10-06.json`, built offline by `src/study.py` from frozen inputs (`research/thesis_snapshot_2026-10-06.json`, `research/study_inputs_2026-10-06.json`). The new risk diagnostic uses that same saved study input and is built separately by `scripts/build_risk.py`; it does not change the existing macro study or receive live updates. Homepage and lab copy lives in `src/lab_content.py`. The scheduled updater only refreshes market data; the page mechanically checks the pre-committed rules against new PTAX closes, including reversal of the first-Monday move.
 
 ## Run locally
 
@@ -82,6 +85,7 @@ python -m pytest -q                                   # mathematical, data, rend
 python scripts/refresh_market_data.py                 # fetch official data (network)
 python scripts/check_freshness.py                     # exit 1 if key data is stale
 python scripts/collect_study_inputs.py               # fetch the study's raw inputs (network): PTAX since 2002, ANBIMA curves, IMF monthly prices, UN Comtrade
+python scripts/build_update.py                        # reproduce the current note from frozen inputs
 python scripts/build_study.py                         # recompute research/study_2026-10-06.json from those inputs (offline)
 python scripts/build_risk.py                          # reproduce risk summary JSON and per-day audit CSV (offline)
 python scripts/generate_market_brief.py               # regenerate the three PDFs + Markdown brief
@@ -101,10 +105,15 @@ This is best-effort availability: [GitHub can delay or drop scheduled runs and d
 
 ## Updating the thesis
 
-1. Archive the old thesis (`cp research/thesis.json research/thesis_<its date>.json`), then save the data as of the new date: copy `research/live_snapshot.json` to `research/thesis_snapshot_<date>.json`. Collect the study's raw inputs (`scripts/collect_study_inputs.py`; ANBIMA keeps only the last few weeks of curves online, so collect them while they are available).
-2. Write the new numbers, rules, review verdicts and sources in `research/thesis.json` (point `inputs_file` and `previous_file` at the right files; when markets have not yet reopened on the thesis date, set `data_as_of` to the last session so the rule monitor still checks the first close).
-3. Edit the prose in `src/content.py` in all three languages — placeholders only, no literal figures.
-4. `python scripts/build_study.py`, `python scripts/generate_market_brief.py`, then `python -m pytest -q`. The tests fail if a number cannot be reproduced from the saved inputs (the study tests recompute the headline figures by hand), a language is missing a string, or the committed PDFs are out of date. Keep the 7 October risk diagnostic frozen; a later risk publication should preserve this version, document its input cutoff and evaluation choices, and reproduce its JSON/CSV offline.
+Each publication owns its input cutoff, saved report, prose and decision. A follow-up must not rewrite an earlier event study or imply that a rule was published before it existed.
+
+For the current publication:
+
+1. Preserve the 6 October thesis and its frozen study/risk files. Freeze the refreshed snapshot separately, recording the date of each feed. Add a dated ANBIMA download, retaining its raw CSV and request parameters. Do not substitute the latest monthly commodity observation for a current daily price.
+2. Update `src/update.py` and `src/update_content.py` in all three languages, then run `python scripts/build_update.py`. Keep calculations independent of the live snapshot. The report records the original rules and the file it reviews; `current_update_file` selects the active follow-up.
+3. Run `python scripts/generate_market_brief.py`, inspect the PDFs, then run `python -m pytest -q`. The tests check independent numerical calculations, common-date oil/FX conversion, the unchanged historical study, language consistency, current-date rendering and committed PDF reproducibility.
+
+The original study rebuild remains available through `scripts/build_study.py`. The 7 October risk diagnostic is frozen; any later risk publication must retain this version and document its own cutoff and evaluation choices.
 
 ## Tests
 
@@ -119,7 +128,9 @@ Risk tests independently verify the exact BRL loss convention, Normal tail integ
 - `src/study.py` — the quantitative study (pure standard library): event study, volatility, curve, commodity basket, rule geometry.
 - `src/risk.py` — retrospective risk-model evaluation and deterministic scenario arithmetic (pure standard library).
 - `src/lab.py`, `src/lab_content.py` — interactive scenario controls, CSV exports, and localized homepage/lab copy.
-- `src/content.py` — research copy in English, Portuguese and French.
+- `src/update.py`, `src/update_content.py` — current publication calculations and EN/PT/FR prose.
+- `scripts/build_update.py`, `research/update_2026-10-16.json`, `research/thesis_snapshot_2026-10-16.json` — offline publication builder, saved report and frozen official inputs.
+- `src/content.py` — archived research copy in English, Portuguese and French.
 - `src/thesis.py`, `src/formatting.py`, `src/freshness.py` — thesis loading, rule check, calculations, locale formatting, freshness rules.
 - `src/live_refresh.py`, `src/data.py`, `src/analytics.py` — scheduled refresh, source parsers, calculations (refresh job only).
 - `src/pdf_brief.py` — printable brief and Markdown companion (offline only).
