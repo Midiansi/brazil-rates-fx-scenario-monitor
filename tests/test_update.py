@@ -25,7 +25,11 @@ def previous():
 
 
 def test_publication_reproduces_offline(thesis, inputs, previous):
-    assert build_update(inputs, previous) == thesis['current_update']
+    expected = copy.deepcopy(thesis['current_update'])
+    # Float summation can vary across Python versions; keep all other fields exact.
+    for key in ('path_2y', 'gap_2y'):
+        expected['survey'][key] = pytest.approx(expected['survey'][key], rel=1e-12, abs=1e-12)
+    assert build_update(inputs, previous) == expected
     assert previous['rules'] == thesis['current_update']['rules'] == thesis['rules']
     for key in ('evidence', 'review', 'previous_file', 'inputs_file', 'study_file'):
         assert thesis[key] == previous[key]
