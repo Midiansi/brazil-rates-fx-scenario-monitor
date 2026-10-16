@@ -1,16 +1,41 @@
 """The 16 October publication, computed only from its frozen inputs."""
 from __future__ import annotations
 
+import math
+import statistics
+from datetime import date
 from typing import Any
 
 from src import formatting as f
+from src.thesis import survey_path_average
+
+TRADING_DAYS = 252
+BREAKEVEN_TENORS = (252, 1512)  # one to six years, in ANBIMA business days
 
 
-def build_update(snapshot: dict[str, Any], rules: dict[str, Any]) -> dict[str, Any]:
+def _forward(curve: dict[str, float], start: int, end: int) -> float:
+    """Forward rate between two vertices of an ANBIMA zero curve, in %."""
+
+    growth = (1 + curve[str(end)] / 100) ** (end / TRADING_DAYS) / (1 + curve[str(start)] / 100) ** (start / TRADING_DAYS)
+    return (growth ** (TRADING_DAYS / (end - start)) - 1) * 100
+
+
+def _brl_move(oil: dict[str, float], ptax: dict[str, float], base: str, end: str) -> dict[str, Any]:
+    return {'date': base,
+            'usd_change_pct': (oil[end] / oil[base] - 1) * 100,
+            'fx_change_pct': (ptax[end] / ptax[base] - 1) * 100,
+            'brl_change_pct': (oil[end] * ptax[end] / (oil[base] * ptax[base]) - 1) * 100}
+
+
+def build_update(snapshot: dict[str, Any], baseline: dict[str, Any]) -> dict[str, Any]:
+    """``baseline`` is the 6 October thesis this publication reviews; its rules and survey are not altered."""
+
+    rules, before = baseline['rules'], baseline['evidence']
     ptax = dict(snapshot['history']['ptax'])
     oil = dict(snapshot['history']['brent'])
     curves = snapshot['anbima_ettj']
     latest = snapshot['market_cutoff']
+    as_of = '2026-10-16'
     p0, p1, spot = (ptax[d] for d in ('2026-10-02', '2026-10-05', latest))
     series = snapshot['series']
     selic = series['selic_target']['value']
@@ -18,11 +43,29 @@ def build_update(snapshot: dict[str, Any], rules: dict[str, Any]) -> dict[str, A
     relative_growth = (1 + selic / 100) / (1 + fed / 100)
     monthly = relative_growth ** (1 / 12) - 1
     # Match the two series by date, rather than multiplying each feed's latest observation.
-    oil_date = max(d for d in set(ptax) & set(oil) if d <= latest)
+    common = sorted(d for d in set(ptax) & set(oil) if d <= latest)
+    oil_date = common[-1]
     oil_base = '2026-10-02'
     fx_shocks, commodity_shocks = (-0.05, 0.0, 0.05), (-0.10, 0.0, 0.10)
+    # Volatility of the 20 sessions to the pre-vote close, as in the 6 October study.
+    dates = sorted(ptax)
+    window = dates[dates.index(oil_base) - 20:dates.index(oil_base) + 1]
+    returns = [math.log(ptax[b] / ptax[a]) for a, b in zip(window, window[1:])]
+    prevote_vol = statistics.stdev(returns) * math.sqrt(TRADING_DAYS) * 100
+    event_move = (p1 / p0 - 1) * 100
+    # Breakevens across the curve, and the two-to-five-year forward, first post-vote session to cutoff.
+    inflation = {d: curves[d]['implied_inflation'] for d in ('2026-10-05', latest)}
+    shifts = [(inflation[latest][t] - inflation['2026-10-05'][t]) * 100
+              for t in inflation[latest] if BREAKEVEN_TENORS[0] <= int(t) <= BREAKEVEN_TENORS[1]]
+    fwd_before, fwd_after = (_forward(inflation[d], 504, 1260) for d in ('2026-10-05', latest))
+    # Two-year zero rate minus the economists' Selic path, measured as in the 6 October study.
+    medians_before = {int(y): v for y, v in before['focus_selic'].items() if y.isdigit()}
+    medians_after = {int(y): v for y, v in series['focus_selic']['values_by_reference_year'].items()}
+    path_before = survey_path_average(before['selic']['value'], medians_before, date.fromisoformat(baseline['as_of']), 2)
+    path_after = survey_path_average(selic, medians_after, date.fromisoformat(as_of), 2)
+    jump_from = common[common.index(oil_base) - 1]
     result = {
-        'schema_version': 1, 'id': '2026-10-16', 'as_of': '2026-10-16',
+        'schema_version': 1, 'id': as_of, 'as_of': as_of,
         'data_as_of': latest, 'status': 'no_position',
         'inputs_file': 'research/thesis_snapshot_2026-10-16.json',
         'previous_file': 'research/thesis_2026-10-06.json',
@@ -34,8 +77,24 @@ def build_update(snapshot: dict[str, Any], rules: dict[str, Any]) -> dict[str, A
         'curve': [{'date': d, 'nominal': curves[d]['fixed_rate']['504'],
                    'breakeven': curves[d]['implied_inflation']['504'],
                    'real': curves[d]['real_rate']['504']} for d in sorted(curves)],
+        'breakevens': {'from': '2026-10-05', 'to': latest, 'tenors': list(BREAKEVEN_TENORS),
+                       'min_change_bp': min(shifts), 'max_change_bp': max(shifts),
+                       'forward_2y5y_before': fwd_before, 'forward_2y5y_after': fwd_after,
+                       'forward_2y5y_change_bp': (fwd_after - fwd_before) * 100},
+        'survey': {'previous_date': before['focus_ipca']['date'],
+                   'ipca_2026': [before['focus_ipca']['2026'], series['focus_ipca']['values_by_reference_year']['2026']],
+                   'ipca_2027': [before['focus_ipca']['2027'], series['focus_ipca']['values_by_reference_year']['2027']],
+                   'selic_2026': [before['focus_selic']['2026'], medians_after[2026]],
+                   'path_2y': [path_before, path_after],
+                   'gap_2y': [curves['2026-10-05']['fixed_rate']['504'] - path_before,
+                              curves[latest]['fixed_rate']['504'] - path_after]},
         'policy': {'selic': selic, 'fed_midpoint': fed,
                    'monthly_carry_pct': monthly * 100,
+                   'annual_carry_pct': (relative_growth - 1) * 100,
+                   'prevote_vol_pct': prevote_vol,
+                   'carry_to_vol': (relative_growth - 1) * 100 / prevote_vol,
+                   'event_move_pct': event_move,
+                   'event_carry_months': abs(event_move) / (monthly * 100),
                    'one_month_fx_breakeven': spot * (1 + monthly),
                    'us2y': series['us_2_year_treasury']['value'],
                    'us2y_date': series['us_2_year_treasury']['latest_observation_date']},
@@ -47,7 +106,10 @@ def build_update(snapshot: dict[str, Any], rules: dict[str, Any]) -> dict[str, A
                 'fx_now': ptax[oil_date], 'fx_base': ptax[oil_base],
                 'usd_change_pct': (oil[oil_date] / oil[oil_base] - 1) * 100,
                 'fx_change_pct': (ptax[oil_date] / ptax[oil_base] - 1) * 100,
-                'brl_change_pct': (oil[oil_date] * ptax[oil_date] / (oil[oil_base] * ptax[oil_base]) - 1) * 100},
+                'brl_change_pct': (oil[oil_date] * ptax[oil_date] / (oil[oil_base] * ptax[oil_base]) - 1) * 100,
+                # One spot print moves the answer: show the day before, the pre-vote close and the first post-vote session.
+                'jump_date': oil_base, 'jump_pct': (oil[oil_base] / oil[jump_from] - 1) * 100,
+                'bases': [_brl_move(oil, ptax, base, oil_date) for base in (jump_from, oil_base, '2026-10-05')]},
         'producer': {'commodity_shocks': list(commodity_shocks), 'fx_shocks': list(fx_shocks),
                      'revenue_change_pct': [[((1 + c) * (1 + x) - 1) * 100 for x in fx_shocks] for c in commodity_shocks],
                      'offset_commodity_pct': (1 / (1 - 0.05) - 1) * 100},
@@ -80,8 +142,11 @@ def build_update(snapshot: dict[str, Any], rules: dict[str, Any]) -> dict[str, A
 def update_values(report: dict[str, Any], lang: str) -> dict[str, str]:
     p, policy, oil, rows = (report[k] for k in ('ptax', 'policy', 'oil', 'curve'))
     before, after = rows[1], rows[-1]
+    shift, survey = report['breakevens'], report['survey']
     n = lambda v, digits=2: f.num(v, digits, lang)
     pct = lambda v, digits=2: f.pct(v, digits, lang)
+    signed = lambda v: f.pct(v, 1, lang, signed=True)
+    brl = sorted(base['brl_change_pct'] for base in oil['bases'])
     return {
         'update_date': f.day(report['as_of'], lang, long=True),
         'cutoff': f.day(report['data_as_of'], lang, year=False, long=True),
@@ -104,4 +169,21 @@ def update_values(report: dict[str, Any], lang: str) -> dict[str, str]:
         'u_oil_fx': pct(abs(oil['fx_change_pct']), 1),
         'u_oil_brl': pct(abs(oil['brl_change_pct']), 1),
         'u_offset': pct(report['producer']['offset_commodity_pct']),
+        'u_be_range': f"{n(shift['min_change_bp'], 0)}–{n(shift['max_change_bp'], 0)}",
+        'u_fwd_bp': n(shift['forward_2y5y_change_bp'], 0),
+        'u_focus_prev_date': f.day(survey['previous_date'], lang, year=False),
+        'u_focus_ipca_prev': pct(survey['ipca_2026'][0]),
+        'u_focus_selic_prev': pct(survey['selic_2026'][0]),
+        'u_gap_2y_prev': f.pp(survey['gap_2y'][0], 2, lang),
+        'u_gap_2y': f.pp(survey['gap_2y'][1], 2, lang),
+        'u_carry_annual': pct(policy['annual_carry_pct'], 1),
+        'u_vol': pct(policy['prevote_vol_pct'], 1),
+        'u_event': pct(abs(policy['event_move_pct'])),
+        'u_event_months': n(policy['event_carry_months'], 0),
+        'u_jump': pct(oil['jump_pct'], 0),
+        'u_jump_date': f.day(oil['jump_date'], lang, year=False),
+        'u_oil_from_prev': signed(oil['bases'][0]['usd_change_pct']),
+        'u_oil_from_vote': signed(oil['bases'][1]['usd_change_pct']),
+        'u_oil_from_first': signed(oil['bases'][2]['usd_change_pct']),
+        'u_brl_low': signed(brl[0]), 'u_brl_high': signed(brl[-1]),
     }

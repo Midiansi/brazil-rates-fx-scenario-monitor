@@ -8,7 +8,7 @@ The question is no longer whether Brazil can rally on the vote. It is whether th
 
 ## Rates: the nominal yield hides the disagreement
 
-Since the first post-vote session, the two-year nominal zero rate has risen just 12 bp to 12.72%. Breakeven inflation rose 27 bp, while the real yield fell 16 bp to 6.80%. That combination weakens the case for treating the entire election rally as better inflation credibility. Breakevens also contain inflation-risk and liquidity premia; they do not identify expected inflation alone.
+Since the first post-vote session, the two-year nominal zero rate has risen just 12 bp to 12.72%. Underneath, breakeven inflation rose 27 bp and the real yield fell 16 bp to 6.80%. This is not a front-end effect: breakevens are 27–30 bp higher at every maturity from one to six years, and the two-to-five-year forward breakeven rose 32 bp. A single inflation print would mostly move the front end. Breakevens include inflation-risk and liquidity premia as well as expected inflation.
 
 | Two-year ANBIMA zero curve | 2 Oct | 5 Oct | 15 Oct |
 |---|---:|---:|---:|
@@ -16,15 +16,15 @@ Since the first post-vote session, the two-year nominal zero rate has risen just
 | Breakeven inflation | 5.91% | 5.27% | 5.54% |
 | Real yield | 7.37% | 6.97% | 6.80% |
 
-The Focus survey dated 9 Oct puts year-end Selic at 13.25% and annual inflation at 5.22%; inflation for the following year is 4.30%. Survey medians are neither tradable forwards nor a matched two-year inflation forecast. I would reconsider receiving fixed rates if breakevens retrace and medium-term inflation expectations improve. A lower nominal yield by itself would be insufficient.
+Economists revised only the current year. Between the 2 Oct and 9 Oct Focus surveys, the 2026 inflation median rose from 5.01% to 5.22% and the year-end Selic median fell from 13.50% to 13.25%, but 2027 inflation stayed at 4.30%. The two-year rate now sits 0.58 pp above the economists’ Selic path, up from 0.35 pp after the first round; that gap mixes expectations and premia. I would reconsider receiving fixed rates only if breakevens retrace and medium-term expectations improve. A lower nominal yield alone would not be enough.
 
-## FX: carry gives little room for a wrong entry
+## FX: carry pays, but not for an election jump
 
-At 5.0518, unchanged policy-rate proxies put one-month break-even USD/BRL at 5.0902: just 0.76% above spot. The calculation is S × [(1 + Selic) / (1 + Fed midpoint)]^(1/12). It compares a hypothetical BRL investment with USD cash, before costs; it is not an executable forward. The 1.33% rise in USD/BRL since the first post-vote session is already larger than that one-month cushion.
+At 5.0518, unchanged policy rates put one-month break-even USD/BRL at 5.0902, 0.76% above spot: S × [(1 + Selic) / (1 + Fed midpoint)]^(1/12), before costs and not an executable forward. Annualised, that carry is 9.5%, roughly equal to pre-vote volatility (9.1%): attractive in calm markets. An election is not calm. The first round moved USD/BRL 4.55% in a single session, about 6 months of carry, so I wait for the runoff rather than for a better level.
 
 ## Exporters: a stronger real can offset a better Brazil story
 
-From the pre-vote close to 14 Oct, Brent spot fell 6.6% in dollars and USD/BRL fell 3.4% on the same dates. Their product fell 9.8% in reais. This is a benchmark for gross receipts per barrel, not a forecast of a producer’s realised selling price or margin. Costs, debt, product mix, basis and hedges differ by company. A positive view on Brazilian assets does not automatically imply a positive view on an exporter’s cash flow.
+From the pre-vote close to 14 Oct, USD/BRL fell 3.4%, cutting reais receipts by the same amount at unchanged dollar prices. That part is robust. The oil part is not: EIA spot Brent jumped 18% on 2 Oct alone, so its change to 14 Oct is −6.6% from that close, +10.2% from the day before and +0.8% from the first post-vote session. In reais, the result ranges from −9.8% to +6.7% depending on the start date. With spot this erratic, I draw no oil conclusion from a single print; the currency effect is the part a producer can plan around.
 
 ### What happens to unhedged gross revenue?
 
@@ -34,11 +34,11 @@ From the pre-vote close to 14 Oct, Brent spot fell 6.6% in dollars and USD/BRL f
 | +0% | −5.0% | +0.0% | +5.0% |
 | +10% | +4.5% | +10.0% | +15.5% |
 
-Each cell is (1 + commodity shock) × (1 + FX shock) − 1, at fixed volume. A five-percent fall in USD/BRL requires a 5.26% rise in the dollar selling price just to preserve reais revenue. For a dollar receivable, a hedge selling dollars reduces this conversion risk; uncertain shipment volume creates over-hedging risk. Any actual forward requires a quoted tenor, notional, basis and settlement terms. The July IMF agricultural and iron-ore series remain historical context, not current October prices.
+Each cell is (1 + commodity shock) × (1 + FX shock) − 1, at fixed volume. A five-percent fall in USD/BRL requires a 5.26% rise in the dollar selling price just to preserve reais revenue. Selling dollars forward reduces this conversion risk on a dollar receivable, but uncertain shipment volume creates over-hedging risk. The July IMF agricultural and iron-ore series remain historical context, not current October prices.
 
 ## What I need to see after the runoff
 
-Stay flat before 25 October. Keep the recorded thresholds: two PTAX closes below 5.10 from 26 October, with U.S. two-year yields at or below 5.00%, prompt a fresh review. They do not establish attractive value. Any paper position requires a separately dated decision.
+Stay flat before 25 October. The recorded thresholds stay unchanged: from 26 October, two PTAX closes below 5.10 with the U.S. two-year at or below 5.00% trigger a fresh, dated review, not an automatic paper entry.
 
 Drop the idea on a pre-entry PTAX close above 5.30. Reassess if the Brazilian two-year yield exceeds 14% or the U.S. two-year exceeds 5.10%. A fall into 4.94–5.00 is the existing review zone; it is not a reason to chase.
 
