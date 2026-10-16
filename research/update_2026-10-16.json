@@ -66,10 +66,51 @@
       "real": 6.8032
     }
   ],
+  "breakevens": {
+    "from": "2026-10-05",
+    "to": "2026-10-15",
+    "tenors": [
+      252,
+      1512
+    ],
+    "min_change_bp": 26.82000000000002,
+    "max_change_bp": 30.180000000000007,
+    "forward_2y5y_before": 5.523957663795098,
+    "forward_2y5y_after": 5.847383258464256,
+    "forward_2y5y_change_bp": 32.34255946691577
+  },
+  "survey": {
+    "previous_date": "2026-10-02",
+    "ipca_2026": [
+      5.0129,
+      5.2245
+    ],
+    "ipca_2027": [
+      4.3007,
+      4.3
+    ],
+    "selic_2026": [
+      13.5,
+      13.25
+    ],
+    "path_2y": [
+      12.246651625032467,
+      12.133425317088697
+    ],
+    "gap_2y": [
+      0.3534483749675328,
+      0.5826746829113034
+    ]
+  },
   "policy": {
     "selic": 13.75,
     "fed_midpoint": 3.875,
     "monthly_carry_pct": 0.7596609322517267,
+    "annual_carry_pct": 9.506618531889277,
+    "prevote_vol_pct": 9.096941215393887,
+    "carry_to_vol": 1.0450346228248824,
+    "event_move_pct": -4.554417536134769,
+    "event_carry_months": 5.995329419712195,
     "one_month_fx_breakeven": 5.090176550975492,
     "us2y": 4.77,
     "us2y_date": "2026-10-15"
@@ -112,7 +153,29 @@
     "fx_base": 5.2235,
     "usd_change_pct": -6.612058150689981,
     "fx_change_pct": -3.440222073322474,
-    "brl_change_pct": -9.824810740011515
+    "brl_change_pct": -9.824810740011515,
+    "jump_date": "2026-10-02",
+    "jump_pct": 18.019508796376925,
+    "bases": [
+      {
+        "date": "2026-10-01",
+        "usd_change_pct": 10.215990245601825,
+        "fx_change_pct": -3.1454028727244787,
+        "brl_change_pct": 6.749253322214899
+      },
+      {
+        "date": "2026-10-02",
+        "usd_change_pct": -6.612058150689981,
+        "fx_change_pct": -3.440222073322474,
+        "brl_change_pct": -9.824810740011515
+      },
+      {
+        "date": "2026-10-05",
+        "usd_change_pct": 0.8286192335271947,
+        "fx_change_pct": 1.1673620025673959,
+        "brl_change_pct": 2.005654222172759
+      }
+    ]
   },
   "producer": {
     "commodity_shocks": [

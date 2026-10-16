@@ -760,7 +760,7 @@ class Page:
             f'<div class="sec-body about"><div><p>{e(t["about"])}</p><p>{e(t["about_build"])}</p><p>{e(LAB_TEXT[self.lang]["about_lab"])}</p></div>'
             f'<div class="links"><a href="{GITHUB}" target="_blank" rel="noopener">{e(t["links"]["code"])}</a>'
             f'<a href="{LINKEDIN}" target="_blank" rel="noopener">{e(t["links"]["linkedin"])}</a></div></div>'
-            f'<p class="footer">{self.s(t["footer"])}</p></section></div>'
+            f'<p class="footer">{self.s(t["footer"], **({"as_of": self.values["update_date"]} if self.current else {}))}</p></section></div>'
         )
 
 
