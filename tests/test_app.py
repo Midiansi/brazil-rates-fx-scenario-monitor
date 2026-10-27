@@ -9,9 +9,9 @@ import pytest
 from streamlit.testing.v1 import AppTest
 
 EXPECTED = {
-    "EN": ("Brazil macro, from policy to price.", "What I would do", "Thesis review: the previous view, checked"),
-    "PT": ("Brasil macro: da política monetária aos preços.", "O que eu faria", "Revisão da tese: a visão anterior, conferida"),
-    "FR": ("Le Brésil, de la politique monétaire aux marchés.", "Ce que je ferais", "Revue de la thèse"),
+    "EN": ("Brazil macro notes", "What I would do", "Review of the 5 October view"),
+    "PT": ("Notas de macro Brasil", "O que eu faria", "Revisão da visão de 5 de outubro"),
+    "FR": ("Notes de macro Brésil", "Ce que je ferais", "Revue de la vue du 5 octobre"),
 }
 
 
@@ -77,8 +77,8 @@ def test_every_language_renders_completely(label, no_network) -> None:
 def test_lens_can_be_shared_by_url() -> None:
     quant = page_text(run())
     commodities = page_text(run(lens="commodities"))
-    assert quant.index("Rates, FX and quant: what the first day tells us") < quant.index("Commodities: Brazil sells in dollars")
-    assert commodities.index("Commodities: Brazil sells in dollars") < commodities.index("Rates, FX and quant: what the first day tells us")
+    assert quant.index("Rates and FX after the first round") < quant.index("Commodities and the real")
+    assert commodities.index("Commodities and the real") < commodities.index("Rates and FX after the first round")
 
 
 def test_language_can_be_shared_by_url() -> None:
