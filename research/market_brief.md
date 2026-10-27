@@ -1,72 +1,87 @@
-# The real held. Inflation pricing is less reassuring.
+# The market bet on change. It got continuity.
 
-Published 16 October 2026 · market data through 15 October
+Published 27 October 2026 · market data through 26 October
 
-Brazil’s currency has kept most of its first-round rally, but inflation pricing has deteriorated. I remain flat into the runoff.
+**Lula’s comeback repriced Brazil in one session: the dollar jumped 9.2% against the real and interest rates went from pricing cuts to pricing hikes. I stayed flat through the vote and wait for the Copom on 4 November before taking a rates view.**
 
-The question is no longer whether Brazil can rally on the vote. It is whether the rally reflects durable inflation and fiscal confidence, and which exposures still pay for that risk.
+Markets had priced a change of government. On 25 October, Lula won a fourth term with 51.79% of valid votes after trailing Flávio Bolsonaro 47.1% to 45.0% in the first round: the first time since 1989 that the first-round runner-up has won the presidency. One session repriced every Brazilian asset.
 
-## Rates: the nominal yield hides the disagreement
+## What moved, and what did not
 
-Since the first post-vote session, the two-year nominal zero rate has risen just 12 bp to 12.72%. Underneath, breakeven inflation rose 27 bp and the real yield fell 16 bp to 6.80%. This is not a front-end effect: breakevens are 27–30 bp higher at every maturity from one to six years, and the two-to-five-year forward breakeven rose 32 bp. A single inflation print would mostly move the front end. Breakevens include inflation-risk and liquidity premia as well as expected inflation.
-
-| Two-year ANBIMA zero curve | 2 Oct | 5 Oct | 15 Oct |
+| Market | Fri 23 Oct | Mon 26 Oct | Change |
 |---|---:|---:|---:|
-| Nominal yield | 13.71% | 12.60% | 12.72% |
-| Breakeven inflation | 5.91% | 5.27% | 5.54% |
-| Real yield | 7.37% | 6.97% | 6.80% |
+| USD/BRL · PTAX | 5.0374 | 5.5003 | +9.2% |
+| January 2028 DI rate | 12.86% | 14.80% | +194 bp |
+| Ibovespa | 205,083 | 176,608 | −13.9% |
+| U.S. 2-year yield | 4.69% | 4.68% | −1 bp |
 
-Economists revised only the current year. Between the 2 Oct and 9 Oct Focus surveys, the 2026 inflation median rose from 5.01% to 5.22% and the year-end Selic median fell from 13.50% to 13.25%, but 2027 inflation stayed at 4.30%. The two-year rate now sits 0.58 pp above the economists’ Selic path, up from 0.35 pp after the first round; that gap mixes expectations and premia. I would reconsider receiving fixed rates only if breakevens retrace and medium-term expectations improve. A lower nominal yield alone would not be enough.
+PTAX and Treasury yields are official. DI and Ibovespa are press-reported B3 figures; Monday’s DI is a late-afternoon quote. The Ibovespa triggered a circuit breaker.
 
-## FX: carry pays, but not for an election jump
+**What I would do.** Stay flat in FX: the 6 October long-real idea closed on the first eligible day, when PTAX printed 5.5003, above its 5.30 drop level. In rates, my call is that the cutting cycle is over, and I take no position before the Copom on 4 November. If it pauses rather than hikes and the 2027 fiscal target holds, the January 2028 DI at 14.80% prices too many hikes: receiving it is the trade I am preparing.
 
-At 5.0518, unchanged policy rates put one-month break-even USD/BRL at 5.0902, 0.76% above spot: S × [(1 + Selic) / (1 + Fed midpoint)]^(1/12), before costs and not an executable forward. Annualised, that carry is 9.5%, roughly equal to pre-vote volatility (9.1%): attractive in calm markets. An election is not calm. The first round moved USD/BRL 4.55% in a single session, about 6 months of carry, so I wait for the runoff rather than for a better level.
+**What would change my mind.** A Copom hike, or a looser 2027 fiscal target, would show that the hikes or the premium are real: no receiver. A Copom cut would put the central bank’s credibility at risk. I would revisit the real only with fresh, dated levels, not because it is cheaper.
 
-## Exporters: a stronger real can offset a better Brazil story
+## FX: a year of carry in one session
 
-From the pre-vote close to 14 Oct, USD/BRL fell 3.4%, cutting reais receipts by the same amount at unchanged dollar prices. That part is robust. The oil part is not: EIA spot Brent jumped 18% on 2 Oct alone, so its change to 14 Oct is −6.6% from that close, +10.2% from the day before and +0.8% from the first post-vote session. In reais, the result ranges from −9.8% to +6.7% depending on the start date. With spot this erratic, I draw no oil conclusion from a single print; the currency effect is the part a producer can plan around.
+PTAX rose from 5.0374 to 5.5003 (+9.2%). Since 2002, only 8 October 2008, in the global financial crisis, saw a larger one-day rise. The move erased the whole first-round rally and left USD/BRL 5.3% above its pre-first-round level (5.2235). Good news had been worth 4.6%; bad news cost about twice as much. Measure the day with care: PTAX averages four morning windows, when the dollar briefly topped R$5.60. The spot dollar closed at 5.4029 (+8.2%), and PTAX eased to about 5.33 on 27 October (press-reported). The authorities treated it as a liquidity shock: the Treasury cancelled the week’s fixed-rate and inflation-linked auctions and bought bonds back; the central bank said it would intervene in FX only if the market became dysfunctional.
 
-### What happens to unhedged gross revenue?
+## Rates: from pricing cuts to pricing hikes
 
-| Commodity price in USD | USD/BRL −5% | USD/BRL unchanged | USD/BRL +5% |
-|---|---:|---:|---:|
-| −10% | −14.5% | −10.0% | −5.5% |
-| +0% | −5.0% | +0.0% | +5.0% |
-| +10% | +4.5% | +10.0% | +15.5% |
+On Friday, the January 2028 DI contract (12.86%) sat only 0.3 pp above the economists’ Selic path (Focus survey, 23 Oct): 50 bp of cuts to 13.25% by December, then 11.75% by end-2027, an average of about 12.5%. On Monday it traded near 14.80%, 2.3 pp above that path and above today’s 13.75% Selic; the January 2029 and 2031 contracts settled at 15.22% and 15.28%. The short end says the same: the January 2027 contract settled at 13.70%, slightly above the 13.65% overnight rate, so no further cut is priced this year (the economists’ path implies 13.4%). The gap is either hikes that economists do not yet expect or a risk premium. The Copom is the first test of which.
 
-Each cell is (1 + commodity shock) × (1 + FX shock) − 1, at fixed volume. A five-percent fall in USD/BRL requires a 5.26% rise in the dollar selling price just to preserve reais revenue. Selling dollars forward reduces this conversion risk on a dollar receivable, but uncertain shipment volume creates over-hedging risk. The July IMF agricultural and iron-ore series remain historical context, not current October prices.
+## Why: a fiscal premium, not an inflation print
 
-## What I need to see after the runoff
+No economic data changed over the weekend; the expected policy mix did. The market had bet that a new government would tighten fiscal policy. The government’s 2027 budget bill projects a primary surplus of R$18.6 bn; the Senate’s Independent Fiscal Institution projects a deficit of R$86.1 bn. A fourth Lula term makes that gap the central question. Inflation leaves the central bank little room to look through a weaker real: economists already expect 5.2% for 2026, above the 4.5% ceiling, and 4.3% for 2027, against a 3% target. That is why I think the cutting cycle is over. The premium can compress only on evidence, such as a credible 2027 target, the budget vote and the economic team’s signals, not on carry.
 
-Stay flat before 25 October. The recorded thresholds stay unchanged: from 26 October, two PTAX closes below 5.10 with the U.S. two-year at or below 5.00% trigger a fresh, dated review, not an automatic paper entry.
+## Exporters: a windfall for the unhedged
 
-Drop the idea on a pre-entry PTAX close above 5.30. Reassess if the Brazilian two-year yield exceeds 14% or the U.S. two-year exceeds 5.10%. A fall into 4.94–5.00 is the existing review zone; it is not a reason to chase.
+At unchanged dollar prices, a 9.2% rise in USD/BRL raises reais receipts by the same 9.2%: the mirror image of the first round, when the stronger real cut them. A producer who hedged dollar receipts after the first round, near 4.99, gave up this windfall; that is the hedge working as insurance, not a loss. Brent spot data stop on 20 October, so there is no post-vote oil read yet.
 
-- **Real holds; breakevens fall; inflation survey improves.** Stronger evidence of domestic credibility. Review long BRL and receiving fixed rates separately, using fresh prices and funding.
-- **Real holds; breakevens stay elevated.** Carry or positioning may be supporting FX without broad inflation confidence. Keep the rates thesis unconfirmed; an FX threshold alone is insufficient.
-- **Real weakens; U.S. yields rise.** An external-rate shock competes with the domestic story. Enforce the FX invalidation rules; do not attribute every move to the election.
+## What I do next
 
-Next decisions: runoff 25 October; Federal Reserve 28 October; Copom 4 November. The first post-runoff session comes before both central-bank decisions.
+| If, after the Copom on 4 November… | It means | What I would do |
+|---|---|---|
+| It pauses with hawkish guidance and the 2027 fiscal target is reaffirmed | The curve priced too many hikes: part of Monday was premium | Prepare to receive the January 2028 DI, with dated entry and stop levels |
+| It hikes, or the fiscal target is loosened | The hikes or the premium are real | Stay out of receivers; the real stays under pressure |
+| It cuts | The central bank’s credibility becomes the risk | Stay out; expect a weaker real and a steeper curve |
 
-Risk check: the frozen VaR study found too many breaches under the Normal models. Historical simulation was not rejected for unconditional coverage, which does not validate its tails or make it reliable for an election jump. I use scenarios here, without assigning probabilities or claiming a tradable edge.
+Dates: Fed 28 October; Copom 4 November; Fed and Copom 9 December. The weekly Focus survey will show how far economists move toward the curve.
 
-## Review of the 6 October view
+## Risk check: why VaR was not the answer
 
-Waiting avoided election exposure, but it did not demonstrate an edge: no position was opened. The real has retained 72% of the first-day move, so the warning about a reversal has not yet become a large realised reversal. The rates evidence has become less supportive of inflation credibility. I keep the old thresholds for an honest audit and require a new decision before any paper entry. The archived event study and risk diagnostic retain their original cutoffs.
+On Friday, my three one-day 99% VaR models (the risk study below) said a long-real position would lose more than 1.6%–2.6% on only one day in a hundred. Monday’s loss was 8.4%: 3 to 5 times larger. VaR describes ordinary days; an election result is a jump. That is why the decision before the vote was about exposure, holding none, rather than about stop levels, which a price gap opens straight through.
+
+## Scorecard: my earlier calls
+
+| What I said | What happened | Verdict |
+|---|---|---|
+| 6 Oct: no entry before the runoff, because one session can jump past every level. | USD/BRL jumped 9.2% on the first eligible day, straight through the 5.30 drop level. The idea closed without an entry. | Confirmed |
+| 16 Oct: carry cannot absorb an election jump; the first round had cost 6 months of carry. | The runoff cost 12 months of carry in one session. | Confirmed |
+| 16 Oct: inflation pricing is more sceptical than FX (breakevens 5.27% → 5.54% while the real kept 72% of its rally). | The bond market was the better warning. I flagged the divergence but did not size the asymmetry behind it. | Partly |
+| 16 Oct: three post-runoff scenarios, including an external U.S.-rate shock. | No scenario was a domestic shock with falling U.S. yields, which is what happened. | Missed |
+
+**Lesson.** Price and polls disagreed: the real was priced for one winner while the polls showed a coin flip. That asymmetry, not a forecast of the result, was the reason to stay flat. From now on, every scenario table includes the outcome the market is not pricing.
 
 ## Dated inputs
 
-Frozen at publication. PTAX is a reference rate, ANBIMA is a fitted zero curve and EIA is a spot benchmark. All changes above use matched dates; none is an executed return.
+Frozen at publication. PTAX, Treasury yields, Focus and the Selic come from official feeds, and the vote count from the TSE. DI futures, the Ibovespa, the spot close, the 27 October PTAX and policy announcements are press-reported. No position was opened; nothing here is an executed return.
 
-- [BCB · PTAX](https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/) — 2026-10-15
-- [ANBIMA · Zero curves](https://www.anbima.com.br/informacoes/est-termo/CZ.asp) — 2026-10-15
-- [BCB · Focus](https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/) — 2026-10-09
-- [U.S. Treasury · Yields](https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve) — 2026-10-15
-- [EIA / FRED · Brent spot](https://fred.stlouisfed.org/series/DCOILBRENTEU) — 2026-10-14
-- [BCB · Selic target](https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=17/09/2026&dataFinal=16/10/2026) — 2026-09-17
-- [New York Fed · Target range](https://www.newyorkfed.org/markets/reference-rates/effr) — 2026-10-14
-- [TSE · Election calendar](https://www.tse.jus.br/eleicoes/eleicoes-2026/calendario-eleitoral) — 2026-10-16
-- [Federal Reserve · Calendar](https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm) — 2026-10-16
-- [BCB · Copom calendar](https://www.bcb.gov.br/detalhenoticia/20739/nota) — 2026-10-16
+- [TSE · Presidente do TSE anuncia reeleição de Lula e faz balanço do 2º turno](https://www.tse.jus.br/comunicacao/noticias/2026/Outubro/presidente-do-tse-anuncia-reeleicao-de-lula-e-faz-balanco-do-2o-turno-das-eleicoes-2026) — 2026-10-25
+- [BCB · PTAX](https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/) — 2026-10-26
+- [U.S. Treasury · Par yields](https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve) — 2026-10-26
+- [BCB · Focus](https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/) — 2026-10-23
+- [BCB · Selic target](https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=17/09/2026&dataFinal=27/10/2026) — 2026-09-17
+- [Senate IFI · 2027 budget](https://www12.senado.leg.br/ifi/noticias/ifi-analisa-ploa-2027-e-apresenta-projecoes-diferentes-das-encaminhadas-pelo-governo-ao-congresso) — 2026-09-17
+- [CNN Brasil · Juros futuros fecham em alta após reeleição de Lula](https://www.cnnbrasil.com.br/economia/money/mercado/juros-futuros-fecham-em-alta-apos-reeleicao-de-lula/) — 2026-10-26
+- [ISTOÉ Dinheiro · Juros futuros caem com recuo do dólar e nova intervenção do Tesouro](https://istoedinheiro.com.br/juros-futuros-hoje-27-10-2026-intervencao-tesouro) — 2026-10-27
+- [Times Brasil · Ibovespa sobe 0,47% no último pregão antes do segundo turno](https://timesbrasil.com.br/investimentos/bolsa/ibovespa-sobe-047-e-dolar-cai-abaixo-de-r-5-no-ultimo-pregao-antes-do-segundo-turno/) — 2026-10-23
+- [InfoMoney · Ibovespa desaba 13% após eleição, em dia de circuit breaker](https://www.infomoney.com.br/mercados/ibovespa-hoje-bolsa-de-valores-ao-vivo-26102026/) — 2026-10-26
+- [Seu Dinheiro · Ibovespa cai 14%, dólar sobe a R$ 5,40](https://www.seudinheiro.com/2026/bolsa-dolar/ibovespa-cai-17-dolar-vai-a-r-550-mas-nem-todo-mundo-perde-entenda-o-caos-nos-mercados-hoje-ccgg/) — 2026-10-26
+- [InfoMoney · Ibovespa hoje, 27 Oct](https://www.infomoney.com.br/mercados/ibovespa-hoje-bolsa-de-valores-ao-vivo-27102026/) — 2026-10-27
+- [InfoMoney · Após vitória de Lula, Tesouro cancela leilões de prefixados e IPCA+ da semana](https://www.infomoney.com.br/onde-investir/apos-vitoria-de-lula-tesouro-cancela-leiloes-de-prefixados-e-ipca-da-semana/) — 2026-10-26
+- [Jornal de Brasília · Durigan autoriza nova recompra de títulos pelo Tesouro](https://jornaldebrasilia.com.br/noticias/economia/durigan-autoriza-nova-recompra-de-titulos-pelo-tesouro-apos-turbulencia-no-mercado/) — 2026-10-27
+- [Jornal de Brasília · BC só vai atuar no câmbio em caso de disfuncionalidade, diz Galípolo](https://jornaldebrasilia.com.br/noticias/economia/bc-so-vai-atuar-no-cambio-em-caso-de-disfuncionalidade-do-mercado-diz-galipolo-apos-alta-do-dolar/) — 2026-10-27
+- [Forbes Brasil · Ibovespa fecha em alta e dólar cai à espera de desfecho da eleição](https://forbes.com.br/geral/2026/10/ibovespa-fecha-em-alta-e-dolar-cai-a-espera-de-desfecho-da-eleicao/) — 2026-10-23
+- [BCB · Copom calendar](https://www.bcb.gov.br/detalhenoticia/20739/nota) — 2026-10-27
 
 Independent student research · No position · Educational research, not investment advice.

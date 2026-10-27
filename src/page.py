@@ -17,8 +17,8 @@ from src.content import TEXT
 from src.lab_content import TEXT as LAB_TEXT
 from src.freshness import run_age_days, status as fresh_status
 from src.thesis import fill, placeholders, rule_status
-from src.update import update_values
-from src.update_content import TEXT as UPDATE_TEXT
+from src.runoff import runoff_values
+from src.runoff_content import TEXT as UPDATE_TEXT
 
 GITHUB = "https://github.com/Midiansi/brazil-rates-fx-scenario-monitor"
 LINKEDIN = "https://www.linkedin.com/in/romeomugnier"
@@ -31,7 +31,7 @@ EVIDENCE_SOURCES = {
     "survey": (("bcb_focus",), ("fomc_sep",), ("jpmorgan_infomoney",)),
     "interpretation": (("tse_results",), ("bcb_ptax",), ()),
 }
-VERDICT_ICONS = {"confirmed": "✓", "partly": "~", "unresolved": "?", "not_triggered": "○", "underweighted": "!"}
+VERDICT_ICONS = {"confirmed": "✓", "partly": "~", "unresolved": "?", "not_triggered": "○", "underweighted": "!", "missed": "✗"}
 CURVE_VERTICES = ("126", "252", "504", "756", "1260", "2520")
 COMMODITY_ORDER = ("brent", "soybeans", "iron_ore", "coffee", "sugar", "maize")
 
@@ -60,7 +60,7 @@ class Page:
         self.current = (thesis or {}).get("current_update") or {}
         self.u = UPDATE_TEXT[self.lang]
         if self.current:
-            self.values.update(update_values(self.current, self.lang))
+            self.values.update(runoff_values(self.current, self.lang))
             for key in ("why", "act", "change", "reaction_label", "reaction", "monitor_label", "monitor_note"):
                 self.t[key] = self.u[key]
             self.t["view_headline"] = self.u["headline"]
@@ -270,7 +270,7 @@ class Page:
             f'<article class="view" aria-labelledby="view-title"><div class="view-meta">'
             f'<h2 class="eyebrow" id="view-title">{e(t["view_label"])}</h2>'
             f'<span class="status">{e(t["status_no_position"])}</span>'
-            f'<time datetime="{e(self.current.get("as_of", self.thesis["as_of"]))}">{e(self.values["update_date"] if self.current else self.values["as_of"])}</time></div>'
+            f'<time datetime="{e(self.current.get("as_of", self.thesis["as_of"]))}">{e(self.values["r_date"] if self.current else self.values["as_of"])}</time></div>'
             f'<p class="dated-label">{self.s(self.u["dated"]) if self.current else e(lt["dated"])}</p>'
             f'<p class="view-headline">{self.s(t["view_headline"])}</p>'
             f'{self.reaction() if self.study else ""}'
@@ -283,33 +283,33 @@ class Page:
         ), f'<div class="bm"><nav class="toc" aria-label="{e(t["nav_label"])}">{nav}</nav></div>'
 
     def update_note(self) -> str:
-        """Current decision first; the original numerical study stays dated below."""
+        """Current decision first; the earlier research stays dated below."""
         if not self.current:
             return ""
         u, report = self.u, self.current
-        columns = ("nominal", "breakeven", "real")
-        curve = [[e(label), *(e(f.pct(row[key], 2, self.lang)) for row in report["curve"])]
-                 for label, key in zip(u["curve_rows"], columns)]
-        producer = [[e(f.pct(c * 100, 0, self.lang, signed=True)),
-                     *(e(f.pct(value, 1, self.lang, signed=True)) for value in row)]
-                    for c, row in zip(report["producer"]["commodity_shocks"], report["producer"]["revenue_change_pct"])]
-        decisions = [[self.s(cell) for cell in row] for row in u["decisions"]]
+        rows = lambda table: [[self.s(cell) for cell in row] for row in table]
+        scorecard = "".join(
+            f'<tr><td>{self.s(said)}</td><td>{self.s(happened)}</td>'
+            f'<td><span class="verdict {e(verdict)}"><span class="i" aria-hidden="true">{VERDICT_ICONS[verdict]}</span>{e(u["verdicts"][verdict])}</span></td></tr>'
+            for said, happened, verdict in u["review_rows"])
+        head = "".join(f'<th scope="col">{e(h)}</th>' for h in u["review_head"])
         sources = "".join(
-            f'<li><a href="{e(source["url"])}" target="_blank" rel="noopener">{e(label)}</a> '
+            f'<li><a href="{e(source["url"])}" target="_blank" rel="noopener">{e(source["label"])}</a> '
             f'<span class="d">{e(f.day(source["date"], self.lang))}</span></li>'
-            for label, source in zip(u["source_names"], report["sources"]))
+            for source in report["sources"])
         inner = self.section_head("update", self.s(u["title"]), self.s(u["intro"]))
         inner += '<div class="sec-body current-update">'
-        inner += self.sub(self.s(u["rates_title"]), self.s(u["rates"]))
-        inner += self.table(u["curve_head"], curve)
-        inner += f'<p>{self.s(u["survey"])}</p>'
-        inner += self.sub(self.s(u["fx_title"]), self.s(u["fx"]))
-        inner += self.sub(self.s(u["commodities_title"]), self.s(u["commodities"]))
-        inner += f'<h4>{e(u["producer_title"])}</h4>' + self.table(u["producer_head"], producer)
-        inner += f'<p>{self.s(u["producer"])}</p>'
-        inner += self.sub(self.s(u["decision_title"])) + self.table(u["decision_head"], decisions, numeric_from=2)
-        inner += f'<p>{self.s(u["calendar"])}</p><p>{self.s(u["risk"])}</p>'
-        inner += self.sub(self.s(u["review_title"]), self.s(u["review"]))
+        inner += self.sub(self.s(u["moves_title"])) + self.table([self.raw(h) for h in u["moves_head"]], rows(u["moves_rows"]), "moves", self.raw(u["moves_title"]))
+        inner += f'<p class="muted small note">{self.s(u["moves_note"])}</p>'
+        for key in ("fx", "rates", "fiscal", "exporters"):
+            inner += self.sub(self.s(u[f"{key}_title"]), self.s(u[key]))
+        inner += self.sub(self.s(u["decision_title"])) + self.table([self.raw(h) for h in u["decision_head"]], rows(u["decisions"]), "decisions", numeric_from=99)
+        inner += f'<p class="muted small note">{self.s(u["calendar"])}</p>'
+        inner += self.sub(self.s(u["risk_title"]), self.s(u["risk"]))
+        inner += self.sub(self.s(u["review_title"]))
+        inner += (f'<div class="table-wrap" tabindex="0" role="region" aria-label="{self.s(u["review_title"])}">'
+                  f'<table class="review"><thead><tr>{head}</tr></thead><tbody>{scorecard}</tbody></table></div>')
+        inner += f'<div class="lesson"><span class="label">{e(u["lesson_label"])}</span><p>{self.s(u["lesson"])}</p></div>'
         inner += (f'<details><summary>{e(u["sources_title"])}</summary><div class="inner">'
                   f'<p>{self.s(u["sources_note"])}</p><ul class="sources">{sources}</ul></div></details></div>')
         return self.wrap("update", inner)
@@ -760,7 +760,7 @@ class Page:
             f'<div class="sec-body about"><div><p>{e(t["about"])}</p><p>{e(t["about_build"])}</p><p>{e(LAB_TEXT[self.lang]["about_lab"])}</p></div>'
             f'<div class="links"><a href="{GITHUB}" target="_blank" rel="noopener">{e(t["links"]["code"])}</a>'
             f'<a href="{LINKEDIN}" target="_blank" rel="noopener">{e(t["links"]["linkedin"])}</a></div></div>'
-            f'<p class="footer">{self.s(t["footer"], **({"as_of": self.values["update_date"]} if self.current else {}))}</p></section></div>'
+            f'<p class="footer">{self.s(t["footer"], **({"as_of": self.values["r_date"]} if self.current else {}))}</p></section></div>'
         )
 
 
@@ -794,7 +794,8 @@ def render(lang: str, thesis: dict[str, Any], snapshot: dict[str, Any], today: d
     items: list[tuple[str, str]] = []
     if page.study:
         if page.current:
-            items.append(("html", f'<div class="bm"><p class="banner archive-note">{e(page.u["archive"])}</p></div>'))
+            items.append(("html", f'<div class="bm"><p class="banner archive-note">{e(page.u["archive"])} '
+                                  f'<a href="{GITHUB}/tree/main/outputs/archive" target="_blank" rel="noopener">GitHub ↗</a></p></div>'))
         for key in lens_order(page.lens):
             items += page.quant_blocks() if key == "quant" else page.commodities_blocks()
     items += [("html", page.trade_top()), ("svg", page.chart()), ("html", page.paths() + page.review() + page.evidence() + page.method() + page.about())]

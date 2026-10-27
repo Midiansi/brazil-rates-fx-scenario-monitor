@@ -190,7 +190,7 @@
 .verdict.confirmed { color: var(--teal); }
 .verdict.partly { color: var(--sand); }
 .verdict.unresolved, .verdict.not_triggered { color: var(--muted); }
-.verdict.underweighted { color: var(--copper); }
+.verdict.underweighted, .verdict.missed { color: var(--copper); }
 .lesson {
   margin-top: 1.5rem; padding: 1.25rem 1.4rem; border-left: 2px solid var(--teal); background: var(--surface);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
@@ -473,6 +473,8 @@
   .review tr { display: block; padding: 0.8rem 1rem; border-bottom: 1px solid var(--line); }
   .review td { display: block; padding: 0.15rem 0; border: 0; width: auto !important; }
   .review td:last-child { margin-top: 0.35rem; }
+  .fig-table.moves th, .fig-table.moves td { padding: 0.6rem 0.45rem; font-size: 0.85rem; }
+  .fig-table.moves th:first-child, .fig-table.moves td:first-child { padding-left: 0.7rem; }
 }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
 @media print {

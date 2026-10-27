@@ -18,14 +18,14 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.platypus import KeepTogether, PageBreak, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
+from reportlab.platypus import KeepTogether, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 from src import formatting as f
 from src.content import TEXT
 from src.page import GITHUB
 from src.thesis import fill, placeholders
-from src.update import update_values
-from src.update_content import TEXT as UPDATE_TEXT
+from src.runoff import runoff_values
+from src.runoff_content import TEXT as UPDATE_TEXT
 
 INK = colors.HexColor("#102431")
 INK_2 = colors.HexColor("#3A5260")
@@ -350,9 +350,9 @@ def markdown_brief(thesis: dict[str, Any]) -> str:
 def render_current_pdf(thesis: dict[str, Any], output: Path | str, lang: str = "en") -> Path:
     """Two-page current note; previous briefs are preserved in outputs/archive/."""
     report, u = thesis['current_update'], UPDATE_TEXT[lang]
-    values = {**placeholders(thesis, lang), **update_values(report, lang)}
+    values = {**placeholders(thesis, lang), **runoff_values(report, lang)}
     styles = _styles()
-    styles['body'].fontSize, styles['body'].leading = 8.2, 11.4
+    styles['body'].fontSize, styles['body'].leading = 8.2, 11.3
 
     def s(text):
         return _pdf_text(fill(text, values, lang))
@@ -363,6 +363,9 @@ def render_current_pdf(thesis: dict[str, Any], output: Path | str, lang: str = "
     def heading(key):
         return p(u[key], 'h2')
 
+    def section(key):  # a heading never ends a page without its paragraph
+        return KeepTogether([heading(f'{key}_title'), p(u[key])])
+
     def table(headers, rows, widths):
         data = [[p(h, 'label') for h in headers]] + [[p(cell, 'cell') for cell in row] for row in rows]
         result = Table(data, colWidths=widths, repeatRows=1, hAlign='LEFT')
@@ -370,34 +373,37 @@ def render_current_pdf(thesis: dict[str, Any], output: Path | str, lang: str = "
             ('VALIGN', (0, 0), (-1, -1), 'TOP'),
             ('BACKGROUND', (0, 0), (-1, 0), PANEL),
             ('LEFTPADDING', (0, 0), (-1, -1), 5), ('RIGHTPADDING', (0, 0), (-1, -1), 7),
-            ('TOPPADDING', (0, 0), (-1, -1), 5), ('BOTTOMPADDING', (0, 0), (-1, -1), 5),
+            ('TOPPADDING', (0, 0), (-1, -1), 4), ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
             ('LINEBELOW', (0, 0), (-1, -1), 0.4, LINE),
         ]))
         return result
 
+    decide = Table([[Paragraph(f"<b>{_pdf_text(TEXT[lang][key])}</b>", styles['body']) for key in ('act_label', 'change_label')],
+                    [p(u['act']), p(u['change'])]], colWidths=[WIDTH / 2 - 4, WIDTH / 2 - 4])
+    decide.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (0, -1), TEAL_TINT), ('BACKGROUND', (1, 0), (1, -1), COPPER_TINT),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'), ('LEFTPADDING', (0, 0), (-1, -1), 10), ('RIGHTPADDING', (0, 0), (-1, -1), 10),
+        ('TOPPADDING', (0, 0), (-1, 0), 8), ('TOPPADDING', (0, 1), (-1, 1), 0), ('BOTTOMPADDING', (0, -1), (-1, -1), 6),
+    ]))
     story = [p('BRAZIL MACRO · ROMEO MUGNIER DE ALMEIDA · EPFL', 'eyebrow'),
              p(u['title'], 'title'), p(u['dated'], 'subtitle'),
              p(u['headline'], 'lead'), p(u['intro']),
-             heading('rates_title'), p(u['rates'])]
-    rows = [[label, *(f.pct(row[key], 2, lang) for row in report['curve'])]
-            for label, key in zip(u['curve_rows'], ('nominal', 'breakeven', 'real'))]
-    story += [table(u['curve_head'], rows, [WIDTH * .43, *([WIDTH * .19] * 3)]),
-              p(u['survey']), heading('fx_title'), p(u['fx']),
-              p(TEXT[lang]['act_label'], 'h2'), p(u['act']),
-              p(TEXT[lang]['change_label'], 'h2'), p(u['change']),
-              PageBreak(), p(u['dated'], 'eyebrow'), heading('commodities_title'), p(u['commodities'])]
-    rows = [[f.pct(c * 100, 0, lang, signed=True), *(f.pct(v, 1, lang, signed=True) for v in row)]
-            for c, row in zip(report['producer']['commodity_shocks'], report['producer']['revenue_change_pct'])]
-    story += [p(u['producer_title'], 'label'),
-              table(u['producer_head'], rows, [WIDTH * .34, *([WIDTH * .22] * 3)]),
-              p(u['producer']), heading('decision_title')]
-    # Short paragraphs keep the decision criteria readable at print size.
-    for observed, decision in u['decisions']:
-        story.append(Paragraph(f'<b>{s(observed)}.</b> {s(decision)}', styles['body']))
-    story += [p(u['calendar'], 'small'), heading('review_title'), p(u['review']), p(u['risk'], 'small')]
-    source_links = []
-    for label, source in zip(u['source_names'], report['sources']):
-        source_links.append(f'<a href="{escape(source["url"], quote=True)}" color="#0B7F70">{_pdf_text(label)}</a> ({_pdf_text(f.day(source["date"], lang, year=False))})')
+             heading('moves_title'),
+             table(u['moves_head'], u['moves_rows'], [WIDTH * .37, *([WIDTH * .21] * 3)]),
+             p(u['moves_note'], 'small'),
+             decide,
+             section('fx'), section('rates'), section('fiscal'), section('exporters'),
+             heading('decision_title'),
+             table(u['decision_head'], u['decisions'], [WIDTH * .36, WIDTH * .3, WIDTH * .34]),
+             p(u['calendar'], 'small'),
+             section('risk'),
+             heading('review_title')]
+    rows = [[said, happened, u['verdicts'][verdict]] for said, happened, verdict in u['review_rows']]
+    story += [table(u['review_head'], rows, [WIDTH * .45, WIDTH * .41, WIDTH * .14]),
+              Spacer(1, 4), Paragraph(f"<b>{_pdf_text(u['lesson_label'])}.</b> {s(u['lesson'])}", styles['body'])]
+    # Outlet names only: the full headlines are listed on the website and in the saved report.
+    source_links = [f'<a href="{escape(source["url"], quote=True)}" color="#0B7F70">{_pdf_text(source["label"].split(" · ")[0])}</a> '
+                    f'({_pdf_text(f.day(source["date"], lang, year=False))})' for source in report['sources']]
     story += [p(u['sources_title'], 'label'), Paragraph(' · '.join(source_links), styles['tiny']),
               p(u['sources_note'], 'tiny')]
 
@@ -408,7 +414,7 @@ def render_current_pdf(thesis: dict[str, Any], output: Path | str, lang: str = "
         canvas.line(MARGIN, A4[1] - 30, A4[0] - MARGIN, A4[1] - 30)
         canvas.setFont('Sans', 6.6)
         canvas.setFillColor(MUTED)
-        canvas.drawString(MARGIN, 24, fill(u['footer'], values, lang).replace(' ', ' '))
+        canvas.drawString(MARGIN, 24, fill(u['footer'], values, lang).replace(' ', ' '))
         canvas.drawRightString(A4[0] - MARGIN, 12, str(doc.page))
         canvas.restoreState()
 
@@ -424,22 +430,22 @@ def render_current_pdf(thesis: dict[str, Any], output: Path | str, lang: str = "
 
 def current_markdown(thesis: dict[str, Any]) -> str:
     report, u = thesis['current_update'], UPDATE_TEXT['en']
-    values = {**placeholders(thesis, 'en'), **update_values(report, 'en')}
+    values = {**placeholders(thesis, 'en'), **runoff_values(report, 'en')}
     s = lambda text: fill(text, values, 'en')
-    lines = [f'# {u["title"]}', '', s(u['dated']), '', s(u['headline']), '', s(u['intro']), '']
-    for title, body in [('rates_title', 'rates'), ('fx_title', 'fx'), ('commodities_title', 'commodities')]:
-        lines += [f'## {u[title]}', '', s(u[body]), '']
-        if title == 'rates_title':
-            lines += ['| ' + ' | '.join(u['curve_head']) + ' |', '|---|---:|---:|---:|']
-            for label, key in zip(u['curve_rows'], ('nominal', 'breakeven', 'real')):
-                lines.append('| ' + ' | '.join([label, *(f.pct(row[key], 2, 'en') for row in report['curve'])]) + ' |')
-            lines += ['', s(u['survey']), '']
-    lines += [f'### {u["producer_title"]}', '', '| ' + ' | '.join(u['producer_head']) + ' |', '|---|---:|---:|---:|']
-    for c, row in zip(report['producer']['commodity_shocks'], report['producer']['revenue_change_pct']):
-        lines.append('| ' + ' | '.join([f.pct(c * 100, 0, 'en', signed=True), *(f.pct(v, 1, 'en', signed=True) for v in row)]) + ' |')
-    lines += ['', s(u['producer']), '', f'## {u["decision_title"]}', '', s(u['act']), '', s(u['change']), '']
-    lines += [f'- **{s(a)}.** {s(b)}' for a, b in u['decisions']]
-    lines += ['', s(u['calendar']), '', s(u['risk']), '', f'## {u["review_title"]}', '', s(u['review']), '', f'## {u["sources_title"]}', '', u['sources_note'], '']
-    lines += [f'- [{name}]({source["url"]}) — {source["date"]}' for name, source in zip(u['source_names'], report['sources'])]
+    row = lambda cells: '| ' + ' | '.join(s(cell) for cell in cells) + ' |'
+    lines = [f'# {u["title"]}', '', s(u['dated']), '', f'**{s(u["headline"])}**', '', s(u['intro']), '',
+             f'## {u["moves_title"]}', '', row(u['moves_head']), '|---|---:|---:|---:|']
+    lines += [row(cells) for cells in u['moves_rows']]
+    lines += ['', s(u['moves_note']), '', f'**{TEXT["en"]["act_label"]}.** {s(u["act"])}', '',
+              f'**{TEXT["en"]["change_label"]}.** {s(u["change"])}', '']
+    for key in ('fx', 'rates', 'fiscal', 'exporters'):
+        lines += [f'## {u[key + "_title"]}', '', s(u[key]), '']
+    lines += [f'## {u["decision_title"]}', '', row(u['decision_head']), '|---|---|---|']
+    lines += [row(cells) for cells in u['decisions']]
+    lines += ['', s(u['calendar']), '', f'## {u["risk_title"]}', '', s(u['risk']), '', f'## {u["review_title"]}', '',
+              row(u['review_head']), '|---|---|---|']
+    lines += [row([said, happened, u['verdicts'][verdict]]) for said, happened, verdict in u['review_rows']]
+    lines += ['', f'**{u["lesson_label"]}.** {s(u["lesson"])}', '', f'## {u["sources_title"]}', '', s(u['sources_note']), '']
+    lines += [f'- [{source["label"]}]({source["url"]}) — {source["date"]}' for source in report['sources']]
     lines += ['', u['footer'], '']
     return '\n'.join(lines)
