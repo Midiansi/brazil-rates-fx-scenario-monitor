@@ -16,7 +16,7 @@ from pathlib import Path
 
 import streamlit as st
 
-from src import chart, content, formatting, freshness, lab_content, risk, update, update_content, page, thesis, lab
+from src import chart, content, formatting, freshness, lab_content, risk, runoff, runoff_content, page, thesis, lab
 
 ROOT = Path(__file__).resolve().parent
 THESIS_PATH = ROOT / "research" / "thesis.json"
@@ -24,11 +24,11 @@ SNAPSHOT_PATH = ROOT / "research" / "live_snapshot.json"
 STUDY_PATH = ROOT / "research" / "study_2026-10-06.json"
 RISK_PATH = ROOT / "research" / "risk_2026-10-07.json"
 RISK_CSV_PATH = ROOT / "research" / "risk_forecasts.csv"
-UPDATE_PATH = ROOT / "research" / "update_2026-10-16.json"
+UPDATE_PATH = ROOT / "research" / "runoff_2026-10-27.json"
 CSS_PATH = ROOT / "src" / "style.css"
 LANGUAGES = {"EN": "en", "PT": "pt", "FR": "fr"}
 PDF_NAMES = {"en": "Brazil_Rates_FX_Trade_Brief.pdf", "pt": "Brazil_Rates_FX_Trade_Brief_PT.pdf", "fr": "Brazil_Rates_FX_Trade_Brief_FR.pdf"}
-MODULES = (formatting, content, lab_content, update_content, freshness, chart, thesis, risk, update, page, lab)  # dependency order
+MODULES = (formatting, content, lab_content, runoff_content, freshness, chart, thesis, risk, runoff, page, lab)  # dependency order
 
 
 def _mtime(path: Path | str) -> float:

@@ -1,4 +1,8 @@
-"""The 16 October publication, computed only from its frozen inputs."""
+"""The 16 October publication, computed only from its frozen inputs.
+
+Archived: the current note is ``src.runoff``. This builder still reproduces
+``research/update_2026-10-16.json``, which the 27 October scorecard reads.
+"""
 from __future__ import annotations
 
 import math
@@ -6,7 +10,6 @@ import statistics
 from datetime import date
 from typing import Any
 
-from src import formatting as f
 from src.thesis import survey_path_average
 
 TRADING_DAYS = 252
@@ -138,52 +141,3 @@ def build_update(snapshot: dict[str, Any], baseline: dict[str, Any]) -> dict[str
     }
     return result
 
-
-def update_values(report: dict[str, Any], lang: str) -> dict[str, str]:
-    p, policy, oil, rows = (report[k] for k in ('ptax', 'policy', 'oil', 'curve'))
-    before, after = rows[1], rows[-1]
-    shift, survey = report['breakevens'], report['survey']
-    n = lambda v, digits=2: f.num(v, digits, lang)
-    pct = lambda v, digits=2: f.pct(v, digits, lang)
-    signed = lambda v: f.pct(v, 1, lang, signed=True)
-    brl = sorted(base['brl_change_pct'] for base in oil['bases'])
-    return {
-        'update_date': f.day(report['as_of'], lang, long=True),
-        'cutoff': f.day(report['data_as_of'], lang, year=False, long=True),
-        'u_ptax': n(p['value'], 4), 'u_giveback': pct(p['giveback_pct'], 0),
-        'u_kept': pct(100 - p['giveback_pct'], 0), 'u_fx_rise': pct(p['since_first_day_pct']),
-        'u_nominal': pct(after['nominal']), 'u_be': pct(after['breakeven']),
-        'u_real': pct(after['real']), 'u_be_old': pct(before['breakeven']),
-        'u_nominal_bp': n((after['nominal'] - before['nominal']) * 100, 0),
-        'u_be_bp': n((after['breakeven'] - before['breakeven']) * 100, 0),
-        'u_real_bp': n(abs(after['real'] - before['real']) * 100, 0),
-        'u_carry': pct(policy['monthly_carry_pct']),
-        'u_fx_breakeven': n(policy['one_month_fx_breakeven'], 4),
-        'u_us2y': pct(policy['us2y']),
-        'u_focus_ipca': pct(report['focus']['focus_ipca']['values']['2026']),
-        'u_focus_ipca27': pct(report['focus']['focus_ipca']['values']['2027']),
-        'u_focus_selic': pct(report['focus']['focus_selic']['values']['2026']),
-        'u_focus_date': f.day(report['focus']['focus_selic']['date'], lang, year=False),
-        'u_oil_date': f.day(oil['date'], lang, year=False),
-        'u_oil_usd': pct(abs(oil['usd_change_pct']), 1),
-        'u_oil_fx': pct(abs(oil['fx_change_pct']), 1),
-        'u_oil_brl': pct(abs(oil['brl_change_pct']), 1),
-        'u_offset': pct(report['producer']['offset_commodity_pct']),
-        'u_be_range': f"{n(shift['min_change_bp'], 0)}–{n(shift['max_change_bp'], 0)}",
-        'u_fwd_bp': n(shift['forward_2y5y_change_bp'], 0),
-        'u_focus_prev_date': f.day(survey['previous_date'], lang, year=False),
-        'u_focus_ipca_prev': pct(survey['ipca_2026'][0]),
-        'u_focus_selic_prev': pct(survey['selic_2026'][0]),
-        'u_gap_2y_prev': f.pp(survey['gap_2y'][0], 2, lang),
-        'u_gap_2y': f.pp(survey['gap_2y'][1], 2, lang),
-        'u_carry_annual': pct(policy['annual_carry_pct'], 1),
-        'u_vol': pct(policy['prevote_vol_pct'], 1),
-        'u_event': pct(abs(policy['event_move_pct'])),
-        'u_event_months': n(policy['event_carry_months'], 0),
-        'u_jump': pct(oil['jump_pct'], 0),
-        'u_jump_date': f.day(oil['jump_date'], lang, year=False),
-        'u_oil_from_prev': signed(oil['bases'][0]['usd_change_pct']),
-        'u_oil_from_vote': signed(oil['bases'][1]['usd_change_pct']),
-        'u_oil_from_first': signed(oil['bases'][2]['usd_change_pct']),
-        'u_brl_low': signed(brl[0]), 'u_brl_high': signed(brl[-1]),
-    }

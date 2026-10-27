@@ -7,7 +7,7 @@
   "previous_id": "2026-10-05",
   "previous_file": "research/thesis_2026-10-05.json",
   "inputs_file": "research/thesis_snapshot_2026-10-06.json",
-  "note": "Historical 6 October thesis and study, retained for reproducibility. The active publication is current_update_file; it has separately frozen inputs, a dated review and current decision. The daily updater changes neither publication.",
+  "note": "Historical 6 October thesis and study, retained for reproducibility. The active publication is current_update_file (27 October, after the runoff); it has separately frozen inputs, a dated review and the current decision. The 16 October note remains in research/update_2026-10-16.json and outputs/archive/2026-10-16/. The daily updater changes no publication.",
   "election": {
     "first_round": "2026-10-04",
     "runoff": "2026-10-25"
@@ -525,5 +525,5 @@
   },
   "study_file": "research/study_2026-10-06.json",
   "study_inputs_file": "research/study_inputs_2026-10-06.json",
-  "current_update_file": "research/update_2026-10-16.json"
+  "current_update_file": "research/runoff_2026-10-27.json"
 }

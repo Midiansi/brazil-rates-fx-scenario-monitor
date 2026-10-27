@@ -1,0 +1,270 @@
+{
+  "schema_version": 1,
+  "id": "2026-10-27",
+  "as_of": "2026-10-27",
+  "data_as_of": "2026-10-26",
+  "status": "no_position",
+  "inputs_file": "research/thesis_snapshot_2026-10-27.json",
+  "history_file": "research/study_inputs_2026-10-06.json",
+  "previous_file": "research/update_2026-10-16.json",
+  "baseline_file": "research/thesis_2026-10-06.json",
+  "election": {
+    "date": "2026-10-25",
+    "votes": {
+      "lula": 64256232,
+      "flavio": 59826041
+    },
+    "lula_pct": 51.7851828842626,
+    "flavio_pct": 48.2148171157374,
+    "margin_pts": 3.5703657685252104,
+    "margin_votes": 4430191,
+    "first_round": {
+      "flavio_pct": 47.14,
+      "lula_pct": 45.03,
+      "reporting_pct": 99.46
+    },
+    "final_poll": {
+      "pollster": "Datafolha",
+      "published": "2026-10-22",
+      "valid_votes": {
+        "lula": 50,
+        "flavio": 50
+      },
+      "source": {
+        "label": "Forbes Brasil · Ibovespa fecha em alta e dólar cai à espera de desfecho da eleição",
+        "date": "2026-10-23",
+        "url": "https://forbes.com.br/geral/2026/10/ibovespa-fecha-em-alta-e-dolar-cai-a-espera-de-desfecho-da-eleicao/"
+      }
+    }
+  },
+  "fx": {
+    "friday": 5.0374,
+    "monday": 5.50025,
+    "friday_date": "2026-10-23",
+    "date": "2026-10-26",
+    "move_pct": 9.188271727478469,
+    "log_move_pct": 8.790346979171328,
+    "rank_since": "2002",
+    "rank": 2,
+    "larger": [
+      "2008-10-08"
+    ],
+    "pre_first_round": 5.2235,
+    "first_day": 4.9856,
+    "first_round_move_pct": -4.554417536134769,
+    "friday_vs_pre_first_pct": -3.562745285727953,
+    "monday_vs_pre_first_pct": 5.298171723939893,
+    "asymmetry": 2.017441671647072,
+    "spot_close": 5.4029,
+    "spot_change_pct": 8.21,
+    "spot_intraday_above": 5.6,
+    "next_day_ptax": 5.3343
+  },
+  "carry": {
+    "selic": 13.75,
+    "fed_midpoint": 3.875,
+    "monthly_pct": 0.7596609322517267,
+    "months_lost": 12.09522740657904,
+    "first_round_months": 5.995329419712195
+  },
+  "risk": {
+    "loss_pct": 8.415072042179904,
+    "var_date": "2026-10-23",
+    "var_pct": {
+      "rolling_normal": 2.6024466344828174,
+      "ewma_normal": 2.079358888016319,
+      "historical": 1.6437475173548786
+    },
+    "min_ratio": 3.2335233816820326,
+    "max_ratio": 5.119443195096929
+  },
+  "us2y": {
+    "friday": 4.69,
+    "monday": 4.68,
+    "change_bp": -1.0000000000000675
+  },
+  "rates": {
+    "jan28_friday": 12.859,
+    "jan28_monday": 14.8,
+    "jan28_change_bp": 194.10000000000008,
+    "jan27_monday": 13.696,
+    "jan29_monday": 15.223,
+    "jan31_monday": 15.279,
+    "cdi": 13.65,
+    "path_jan28_friday": 12.55367466823818,
+    "path_jan28_monday": 12.547847158931734,
+    "path_jan27_monday": 13.388830807593477,
+    "gap_jan28_friday": 0.30532533176181964,
+    "gap_jan28_monday": 2.2521528410682663,
+    "cuts_expected_2026_bp": 50.0
+  },
+  "equity": {
+    "friday": 205082.56,
+    "monday": 176608.23,
+    "change_pct": -13.884325415091359,
+    "circuit_breaker": true
+  },
+  "focus": {
+    "date": "2026-10-23",
+    "selic": {
+      "2026": 13.25,
+      "2027": 11.75,
+      "2028": 10.0,
+      "2029": 10.0
+    },
+    "ipca": {
+      "2026": 5.1891,
+      "2027": 4.3368,
+      "2028": 3.75,
+      "2029": 3.5
+    },
+    "fx": {
+      "2026": 5.0495,
+      "2027": 5.15,
+      "2028": 5.2,
+      "2029": 5.28
+    },
+    "ipca_ceiling": 4.5,
+    "ipca_target": 3.0
+  },
+  "fiscal": {
+    "government_2027": 18.6,
+    "ifi_2027": -86.1,
+    "date": "2026-09-17"
+  },
+  "exporters": {
+    "brl_per_usd_change_pct": 9.188271727478469,
+    "brent_date": "2026-10-20",
+    "brent": 115.22
+  },
+  "previous_view": {
+    "kept_pct": 72.17318200924745,
+    "breakeven_before": 5.268,
+    "breakeven_after": 5.5362
+  },
+  "rule": {
+    "date": "2026-10-26",
+    "value": 5.50025,
+    "abandon_above": 5.3,
+    "earliest_entry": "2026-10-26",
+    "state": "abandoned"
+  },
+  "calendar": [
+    {
+      "date": "2026-10-28",
+      "event": "fomc"
+    },
+    {
+      "date": "2026-11-04",
+      "event": "copom"
+    },
+    {
+      "date": "2026-12-09",
+      "event": "both"
+    }
+  ],
+  "sources": [
+    {
+      "key": "tse",
+      "label": "TSE · Presidente do TSE anuncia reeleição de Lula e faz balanço do 2º turno",
+      "date": "2026-10-25",
+      "url": "https://www.tse.jus.br/comunicacao/noticias/2026/Outubro/presidente-do-tse-anuncia-reeleicao-de-lula-e-faz-balanco-do-2o-turno-das-eleicoes-2026"
+    },
+    {
+      "key": "ptax",
+      "label": "BCB · PTAX",
+      "date": "2026-10-26",
+      "url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/"
+    },
+    {
+      "key": "treasury",
+      "label": "U.S. Treasury · Par yields",
+      "date": "2026-10-26",
+      "url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve"
+    },
+    {
+      "key": "focus",
+      "label": "BCB · Focus",
+      "date": "2026-10-23",
+      "url": "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/"
+    },
+    {
+      "key": "selic",
+      "label": "BCB · Selic target",
+      "date": "2026-09-17",
+      "url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=17/09/2026&dataFinal=27/10/2026"
+    },
+    {
+      "key": "ifi",
+      "label": "Senate IFI · 2027 budget",
+      "date": "2026-09-17",
+      "url": "https://www12.senado.leg.br/ifi/noticias/ifi-analisa-ploa-2027-e-apresenta-projecoes-diferentes-das-encaminhadas-pelo-governo-ao-congresso"
+    },
+    {
+      "key": "di_futures",
+      "label": "CNN Brasil · Juros futuros fecham em alta após reeleição de Lula",
+      "date": "2026-10-26",
+      "url": "https://www.cnnbrasil.com.br/economia/money/mercado/juros-futuros-fecham-em-alta-apos-reeleicao-de-lula/"
+    },
+    {
+      "key": "di_futures",
+      "label": "ISTOÉ Dinheiro · Juros futuros caem com recuo do dólar e nova intervenção do Tesouro",
+      "date": "2026-10-27",
+      "url": "https://istoedinheiro.com.br/juros-futuros-hoje-27-10-2026-intervencao-tesouro"
+    },
+    {
+      "key": "ibovespa",
+      "label": "Times Brasil · Ibovespa sobe 0,47% no último pregão antes do segundo turno",
+      "date": "2026-10-23",
+      "url": "https://timesbrasil.com.br/investimentos/bolsa/ibovespa-sobe-047-e-dolar-cai-abaixo-de-r-5-no-ultimo-pregao-antes-do-segundo-turno/"
+    },
+    {
+      "key": "ibovespa",
+      "label": "InfoMoney · Ibovespa desaba 13% após eleição, em dia de circuit breaker",
+      "date": "2026-10-26",
+      "url": "https://www.infomoney.com.br/mercados/ibovespa-hoje-bolsa-de-valores-ao-vivo-26102026/"
+    },
+    {
+      "key": "spot_usd_brl",
+      "label": "Seu Dinheiro · Ibovespa cai 14%, dólar sobe a R$ 5,40",
+      "date": "2026-10-26",
+      "url": "https://www.seudinheiro.com/2026/bolsa-dolar/ibovespa-cai-17-dolar-vai-a-r-550-mas-nem-todo-mundo-perde-entenda-o-caos-nos-mercados-hoje-ccgg/"
+    },
+    {
+      "key": "spot_usd_brl",
+      "label": "InfoMoney · Ibovespa hoje, 27 Oct",
+      "date": "2026-10-27",
+      "url": "https://www.infomoney.com.br/mercados/ibovespa-hoje-bolsa-de-valores-ao-vivo-27102026/"
+    },
+    {
+      "key": "treasury_auctions",
+      "label": "InfoMoney · Após vitória de Lula, Tesouro cancela leilões de prefixados e IPCA+ da semana",
+      "date": "2026-10-26",
+      "url": "https://www.infomoney.com.br/onde-investir/apos-vitoria-de-lula-tesouro-cancela-leiloes-de-prefixados-e-ipca-da-semana/"
+    },
+    {
+      "key": "treasury_auctions",
+      "label": "Jornal de Brasília · Durigan autoriza nova recompra de títulos pelo Tesouro",
+      "date": "2026-10-27",
+      "url": "https://jornaldebrasilia.com.br/noticias/economia/durigan-autoriza-nova-recompra-de-titulos-pelo-tesouro-apos-turbulencia-no-mercado/"
+    },
+    {
+      "key": "central_bank",
+      "label": "Jornal de Brasília · BC só vai atuar no câmbio em caso de disfuncionalidade, diz Galípolo",
+      "date": "2026-10-27",
+      "url": "https://jornaldebrasilia.com.br/noticias/economia/bc-so-vai-atuar-no-cambio-em-caso-de-disfuncionalidade-do-mercado-diz-galipolo-apos-alta-do-dolar/"
+    },
+    {
+      "key": "poll",
+      "label": "Forbes Brasil · Ibovespa fecha em alta e dólar cai à espera de desfecho da eleição",
+      "date": "2026-10-23",
+      "url": "https://forbes.com.br/geral/2026/10/ibovespa-fecha-em-alta-e-dolar-cai-a-espera-de-desfecho-da-eleicao/"
+    },
+    {
+      "key": "calendar",
+      "label": "BCB · Copom calendar",
+      "date": "2026-10-27",
+      "url": "https://www.bcb.gov.br/detalhenoticia/20739/nota"
+    }
+  ]
+}

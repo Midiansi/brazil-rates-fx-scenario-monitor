@@ -1,0 +1,1099 @@
+{
+  "commodities": {
+    "brent": {
+      "benchmark": "Brent crude, spot (EIA)",
+      "frequency": "Daily",
+      "label": "Oil",
+      "latest": 115.22,
+      "latest_date": "2026-10-20",
+      "previous": 118.82,
+      "previous_date": "2026-10-19",
+      "series_id": "DCOILBRENTEU",
+      "source": "U.S. Energy Information Administration via FRED",
+      "source_url": "https://fred.stlouisfed.org/series/DCOILBRENTEU",
+      "unit": "USD per barrel"
+    },
+    "iron_ore": {
+      "benchmark": "IMF global iron-ore price",
+      "frequency": "Monthly",
+      "label": "Iron ore",
+      "latest": 100.4409090909091,
+      "latest_date": "2026-09-01",
+      "previous": 99.61904761904762,
+      "previous_date": "2026-08-01",
+      "series_id": "PIORECRUSDM",
+      "source": "International Monetary Fund via FRED",
+      "source_url": "https://fred.stlouisfed.org/series/PIORECRUSDM",
+      "unit": "USD per metric ton"
+    },
+    "soybeans": {
+      "benchmark": "IMF global soybean price",
+      "frequency": "Monthly",
+      "label": "Soybeans",
+      "latest": 481.7223363582059,
+      "latest_date": "2026-09-01",
+      "previous": 449.043925962608,
+      "previous_date": "2026-08-01",
+      "series_id": "PSOYBUSDM",
+      "source": "International Monetary Fund via FRED",
+      "source_url": "https://fred.stlouisfed.org/series/PSOYBUSDM",
+      "unit": "USD per metric ton"
+    },
+    "sugar": {
+      "benchmark": "IMF Sugar No. 11 world price",
+      "frequency": "Monthly",
+      "label": "Sugar",
+      "latest": 17.93714285714286,
+      "latest_date": "2026-09-01",
+      "previous": 16.82619047619048,
+      "previous_date": "2026-08-01",
+      "series_id": "PSUGAISAUSDM",
+      "source": "International Monetary Fund via FRED",
+      "source_url": "https://fred.stlouisfed.org/series/PSUGAISAUSDM",
+      "unit": "US cents per pound"
+    }
+  },
+  "history": {
+    "brent": [
+      [
+        "2026-08-25",
+        88.24
+      ],
+      [
+        "2026-08-26",
+        87.77
+      ],
+      [
+        "2026-08-27",
+        90.18
+      ],
+      [
+        "2026-08-28",
+        89.75
+      ],
+      [
+        "2026-09-01",
+        96.02
+      ],
+      [
+        "2026-09-02",
+        97.59
+      ],
+      [
+        "2026-09-03",
+        100.52
+      ],
+      [
+        "2026-09-04",
+        102.24
+      ],
+      [
+        "2026-09-07",
+        104.47
+      ],
+      [
+        "2026-09-08",
+        106.12
+      ],
+      [
+        "2026-09-09",
+        109.51
+      ],
+      [
+        "2026-09-10",
+        120.98
+      ],
+      [
+        "2026-09-11",
+        118.06
+      ],
+      [
+        "2026-09-14",
+        121.25
+      ],
+      [
+        "2026-09-15",
+        130.8
+      ],
+      [
+        "2026-09-16",
+        127.84
+      ],
+      [
+        "2026-09-17",
+        121.18
+      ],
+      [
+        "2026-09-18",
+        119.66
+      ],
+      [
+        "2026-09-21",
+        116.15
+      ],
+      [
+        "2026-09-22",
+        114.89
+      ],
+      [
+        "2026-09-23",
+        117.45
+      ],
+      [
+        "2026-09-24",
+        120.92
+      ],
+      [
+        "2026-09-25",
+        116.01
+      ],
+      [
+        "2026-09-28",
+        119.97
+      ],
+      [
+        "2026-09-29",
+        113.96
+      ],
+      [
+        "2026-09-30",
+        115.91
+      ],
+      [
+        "2026-10-01",
+        114.82
+      ],
+      [
+        "2026-10-02",
+        135.51
+      ],
+      [
+        "2026-10-05",
+        125.51
+      ],
+      [
+        "2026-10-06",
+        125.44
+      ],
+      [
+        "2026-10-07",
+        126.0
+      ],
+      [
+        "2026-10-08",
+        130.18
+      ],
+      [
+        "2026-10-09",
+        130.03
+      ],
+      [
+        "2026-10-12",
+        129.95
+      ],
+      [
+        "2026-10-13",
+        125.78
+      ],
+      [
+        "2026-10-14",
+        126.55
+      ],
+      [
+        "2026-10-15",
+        126.35
+      ],
+      [
+        "2026-10-16",
+        119.33
+      ],
+      [
+        "2026-10-19",
+        118.82
+      ],
+      [
+        "2026-10-20",
+        115.22
+      ]
+    ],
+    "ptax": [
+      [
+        "2026-06-19",
+        5.1439
+      ],
+      [
+        "2026-06-22",
+        5.1392
+      ],
+      [
+        "2026-06-23",
+        5.174
+      ],
+      [
+        "2026-06-24",
+        5.2095
+      ],
+      [
+        "2026-06-25",
+        5.1889
+      ],
+      [
+        "2026-06-26",
+        5.1692
+      ],
+      [
+        "2026-06-29",
+        5.1714
+      ],
+      [
+        "2026-06-30",
+        5.1763
+      ],
+      [
+        "2026-07-01",
+        5.1947
+      ],
+      [
+        "2026-07-02",
+        5.1942
+      ],
+      [
+        "2026-07-03",
+        5.1714
+      ],
+      [
+        "2026-07-06",
+        5.1667
+      ],
+      [
+        "2026-07-07",
+        5.1455
+      ],
+      [
+        "2026-07-08",
+        5.1549
+      ],
+      [
+        "2026-07-09",
+        5.1326
+      ],
+      [
+        "2026-07-10",
+        5.1085
+      ],
+      [
+        "2026-07-13",
+        5.118
+      ],
+      [
+        "2026-07-14",
+        5.0739
+      ],
+      [
+        "2026-07-15",
+        5.0724
+      ],
+      [
+        "2026-07-16",
+        5.0972
+      ],
+      [
+        "2026-07-17",
+        5.1173
+      ],
+      [
+        "2026-07-20",
+        5.0891
+      ],
+      [
+        "2026-07-21",
+        5.0777
+      ],
+      [
+        "2026-07-22",
+        5.0635
+      ],
+      [
+        "2026-07-23",
+        5.0804
+      ],
+      [
+        "2026-07-24",
+        5.0663
+      ],
+      [
+        "2026-07-27",
+        5.10015
+      ],
+      [
+        "2026-07-28",
+        5.1174
+      ],
+      [
+        "2026-07-29",
+        5.1214
+      ],
+      [
+        "2026-07-30",
+        5.0736
+      ],
+      [
+        "2026-07-31",
+        5.077
+      ],
+      [
+        "2026-08-03",
+        5.072
+      ],
+      [
+        "2026-08-04",
+        5.105
+      ],
+      [
+        "2026-08-05",
+        5.1151
+      ],
+      [
+        "2026-08-06",
+        5.1014
+      ],
+      [
+        "2026-08-07",
+        5.0905
+      ],
+      [
+        "2026-08-10",
+        5.096
+      ],
+      [
+        "2026-08-11",
+        5.1282
+      ],
+      [
+        "2026-08-12",
+        5.16355
+      ],
+      [
+        "2026-08-13",
+        5.1856
+      ],
+      [
+        "2026-08-14",
+        5.2233
+      ],
+      [
+        "2026-08-17",
+        5.2011
+      ],
+      [
+        "2026-08-18",
+        5.204
+      ],
+      [
+        "2026-08-19",
+        5.1711
+      ],
+      [
+        "2026-08-20",
+        5.1859
+      ],
+      [
+        "2026-08-21",
+        5.1622
+      ],
+      [
+        "2026-08-24",
+        5.1509
+      ],
+      [
+        "2026-08-25",
+        5.1487
+      ],
+      [
+        "2026-08-26",
+        5.1601
+      ],
+      [
+        "2026-08-27",
+        5.16395
+      ],
+      [
+        "2026-08-28",
+        5.2002
+      ],
+      [
+        "2026-08-31",
+        5.1813
+      ],
+      [
+        "2026-09-01",
+        5.1567
+      ],
+      [
+        "2026-09-02",
+        5.127
+      ],
+      [
+        "2026-09-03",
+        5.0959
+      ],
+      [
+        "2026-09-04",
+        5.125
+      ],
+      [
+        "2026-09-08",
+        5.0853
+      ],
+      [
+        "2026-09-09",
+        5.0976
+      ],
+      [
+        "2026-09-10",
+        5.1146
+      ],
+      [
+        "2026-09-11",
+        5.0915
+      ],
+      [
+        "2026-09-14",
+        5.1693
+      ],
+      [
+        "2026-09-15",
+        5.1487
+      ],
+      [
+        "2026-09-16",
+        5.15235
+      ],
+      [
+        "2026-09-17",
+        5.1518
+      ],
+      [
+        "2026-09-18",
+        5.1572
+      ],
+      [
+        "2026-09-21",
+        5.1114
+      ],
+      [
+        "2026-09-22",
+        5.1158
+      ],
+      [
+        "2026-09-23",
+        5.1411
+      ],
+      [
+        "2026-09-24",
+        5.1792
+      ],
+      [
+        "2026-09-25",
+        5.1988
+      ],
+      [
+        "2026-09-28",
+        5.2129
+      ],
+      [
+        "2026-09-29",
+        5.2201
+      ],
+      [
+        "2026-09-30",
+        5.1806
+      ],
+      [
+        "2026-10-01",
+        5.2076
+      ],
+      [
+        "2026-10-02",
+        5.2235
+      ],
+      [
+        "2026-10-05",
+        4.9856
+      ],
+      [
+        "2026-10-06",
+        4.9695
+      ],
+      [
+        "2026-10-07",
+        4.9932
+      ],
+      [
+        "2026-10-08",
+        5.0116
+      ],
+      [
+        "2026-10-09",
+        4.9889
+      ],
+      [
+        "2026-10-13",
+        5.0093
+      ],
+      [
+        "2026-10-14",
+        5.0438
+      ],
+      [
+        "2026-10-15",
+        5.0518
+      ],
+      [
+        "2026-10-16",
+        5.0823
+      ],
+      [
+        "2026-10-19",
+        5.0561
+      ],
+      [
+        "2026-10-20",
+        5.0137
+      ],
+      [
+        "2026-10-21",
+        5.02735
+      ],
+      [
+        "2026-10-22",
+        5.038
+      ],
+      [
+        "2026-10-23",
+        5.0374
+      ],
+      [
+        "2026-10-26",
+        5.50025
+      ]
+    ],
+    "us_2y": [
+      [
+        "2026-08-28",
+        4.34
+      ],
+      [
+        "2026-08-31",
+        4.34
+      ],
+      [
+        "2026-09-01",
+        4.39
+      ],
+      [
+        "2026-09-02",
+        4.39
+      ],
+      [
+        "2026-09-03",
+        4.34
+      ],
+      [
+        "2026-09-04",
+        4.37
+      ],
+      [
+        "2026-09-08",
+        4.39
+      ],
+      [
+        "2026-09-09",
+        4.43
+      ],
+      [
+        "2026-09-10",
+        4.56
+      ],
+      [
+        "2026-09-11",
+        4.63
+      ],
+      [
+        "2026-09-14",
+        4.65
+      ],
+      [
+        "2026-09-15",
+        4.67
+      ],
+      [
+        "2026-09-16",
+        4.74
+      ],
+      [
+        "2026-09-17",
+        4.67
+      ],
+      [
+        "2026-09-18",
+        4.76
+      ],
+      [
+        "2026-09-21",
+        4.76
+      ],
+      [
+        "2026-09-22",
+        4.71
+      ],
+      [
+        "2026-09-23",
+        4.85
+      ],
+      [
+        "2026-09-24",
+        4.87
+      ],
+      [
+        "2026-09-25",
+        4.81
+      ],
+      [
+        "2026-09-28",
+        4.92
+      ],
+      [
+        "2026-09-29",
+        4.89
+      ],
+      [
+        "2026-09-30",
+        4.88
+      ],
+      [
+        "2026-10-01",
+        4.78
+      ],
+      [
+        "2026-10-02",
+        4.83
+      ],
+      [
+        "2026-10-05",
+        4.84
+      ],
+      [
+        "2026-10-06",
+        4.79
+      ],
+      [
+        "2026-10-07",
+        4.77
+      ],
+      [
+        "2026-10-08",
+        4.75
+      ],
+      [
+        "2026-10-09",
+        4.8
+      ],
+      [
+        "2026-10-13",
+        4.79
+      ],
+      [
+        "2026-10-14",
+        4.82
+      ],
+      [
+        "2026-10-15",
+        4.77
+      ],
+      [
+        "2026-10-16",
+        4.74
+      ],
+      [
+        "2026-10-19",
+        4.77
+      ],
+      [
+        "2026-10-20",
+        4.79
+      ],
+      [
+        "2026-10-21",
+        4.81
+      ],
+      [
+        "2026-10-22",
+        4.65
+      ],
+      [
+        "2026-10-23",
+        4.69
+      ],
+      [
+        "2026-10-26",
+        4.68
+      ]
+    ]
+  },
+  "note": "Frozen publication inputs. Official feeds (PTAX, Treasury, Focus, Selic, Fed range, Brent) are the snapshot committed at 3dc4714: PTAX and Treasury through 26 October, Brent through 20 October, Focus dated 23 October. The runoff count is the TSE announcement. Market figures under 'press' were not available from an official feed at publication and are copied from the cited reports; they are labelled press-reported wherever used. No ANBIMA curve is saved for 26 October.",
+  "refresh": {
+    "attempted_at": "2026-10-27T01:30:09Z",
+    "sources": {
+      "brent": {
+        "error": "",
+        "last_success": "2026-10-27T01:30:09Z",
+        "source": "FRED DCOILBRENTEU",
+        "status": "ok"
+      },
+      "fed_range": {
+        "error": "",
+        "last_success": "2026-10-27T01:30:09Z",
+        "source": "New York Fed (EFFR feed)",
+        "status": "ok"
+      },
+      "focus_fx": {
+        "error": "",
+        "last_success": "2026-10-27T01:30:09Z",
+        "source": "BCB Focus",
+        "status": "ok"
+      },
+      "focus_ipca": {
+        "error": "",
+        "last_success": "2026-10-27T01:30:09Z",
+        "source": "BCB Focus",
+        "status": "ok"
+      },
+      "focus_selic": {
+        "error": "",
+        "last_success": "2026-10-27T01:30:09Z",
+        "source": "BCB Focus",
+        "status": "ok"
+      },
+      "iron_ore": {
+        "error": "",
+        "last_success": "2026-10-27T01:30:09Z",
+        "source": "FRED PIORECRUSDM",
+        "status": "ok"
+      },
+      "ptax": {
+        "error": "",
+        "last_success": "2026-10-27T01:30:09Z",
+        "source": "BCB PTAX",
+        "status": "ok"
+      },
+      "selic_target": {
+        "error": "",
+        "last_success": "2026-10-27T01:30:09Z",
+        "source": "BCB SGS 432",
+        "status": "ok"
+      },
+      "soybeans": {
+        "error": "",
+        "last_success": "2026-10-27T01:30:09Z",
+        "source": "FRED PSOYBUSDM",
+        "status": "ok"
+      },
+      "sugar": {
+        "error": "",
+        "last_success": "2026-10-27T01:30:09Z",
+        "source": "FRED PSUGAISAUSDM",
+        "status": "ok"
+      },
+      "us_yields": {
+        "error": "",
+        "last_success": "2026-10-27T01:30:09Z",
+        "source": "U.S. Treasury par yield curve",
+        "status": "ok"
+      }
+    },
+    "sources_ok": 11,
+    "sources_total": 11
+  },
+  "schema_version": 2,
+  "series": {
+    "brazil_us_policy_differential": {
+      "additional_source_url": "https://www.newyorkfed.org/markets/reference-rates/effr",
+      "frequency": "daily",
+      "label": "Selic target minus federal-funds target-range midpoint",
+      "latest_observation_date": "2026-10-23",
+      "source": "Derived: BCB SGS 432 and New York Fed (EFFR feed)",
+      "source_url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=17/09/2026&dataFinal=27/10/2026",
+      "unit": "percentage points",
+      "value": 9.875
+    },
+    "fed_target_range": {
+      "effective_since": "2026-09-17",
+      "frequency": "daily",
+      "label": "Federal-funds target range",
+      "latest_observation_date": "2026-10-23",
+      "lower": 3.75,
+      "midpoint": 3.875,
+      "source": "New York Fed (EFFR feed)",
+      "source_url": "https://www.newyorkfed.org/markets/reference-rates/effr",
+      "unit": "% p.a.",
+      "upper": 4.0
+    },
+    "focus_fx": {
+      "frequency": "weekly",
+      "label": "Focus year-end USD/BRL median",
+      "latest_observation_date": "2026-10-23",
+      "selected_1_month_change_pp": -0.15050000000000008,
+      "selected_reference_year": 2026,
+      "selected_value": 5.0495,
+      "source": "BCB Focus survey",
+      "source_url": "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/",
+      "unit": "BRL per USD",
+      "values_by_reference_year": {
+        "2026": 5.0495,
+        "2027": 5.15,
+        "2028": 5.2,
+        "2029": 5.28
+      }
+    },
+    "focus_ipca": {
+      "frequency": "weekly",
+      "label": "Focus annual IPCA median",
+      "latest_observation_date": "2026-10-23",
+      "selected_1_month_change_pp": 0.24909999999999943,
+      "selected_reference_year": 2026,
+      "selected_value": 5.1891,
+      "source": "BCB Focus survey",
+      "source_url": "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/",
+      "unit": "% annual change",
+      "values_by_reference_year": {
+        "2026": 5.1891,
+        "2027": 4.3368,
+        "2028": 3.75,
+        "2029": 3.5
+      }
+    },
+    "focus_selic": {
+      "frequency": "weekly",
+      "label": "Focus year-end Selic median",
+      "latest_observation_date": "2026-10-23",
+      "selected_1_month_change_pp": -0.25,
+      "selected_reference_year": 2026,
+      "selected_value": 13.25,
+      "source": "BCB Focus survey",
+      "source_url": "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/",
+      "unit": "% p.a.",
+      "values_by_reference_year": {
+        "2026": 13.25,
+        "2027": 11.75,
+        "2028": 10.0,
+        "2029": 10.0
+      }
+    },
+    "ptax_usd_brl_midpoint": {
+      "buying_rate": 5.4998,
+      "five_business_day_change_percent": 8.784438598920108,
+      "frequency": "daily",
+      "label": "USD/BRL PTAX midpoint",
+      "latest_observation_date": "2026-10-26",
+      "latest_observation_timestamp": "2026-10-26T13:09:51.106105",
+      "one_month_change_percent": 5.7984534892667305,
+      "selling_rate": 5.5007,
+      "source": "BCB PTAX",
+      "source_url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/",
+      "twenty_observation_range": {
+        "end_date": "2026-10-26",
+        "high": 5.500249999999999,
+        "low": 4.9695,
+        "midpoint": 5.234875,
+        "start_date": "2026-09-28",
+        "width": 0.5307499999999994
+      },
+      "unit": "BRL per USD",
+      "value": 5.500249999999999
+    },
+    "selic_target": {
+      "effective_since": "2026-09-17",
+      "frequency": "daily",
+      "label": "BCB Selic target",
+      "latest_observation_date": "2026-10-27",
+      "source": "BCB SGS 432",
+      "source_url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=17/09/2026&dataFinal=27/10/2026",
+      "unit": "% p.a.",
+      "value": 13.75
+    },
+    "us_10_year_treasury": {
+      "five_business_day_change_pp": -0.15000000000000036,
+      "frequency": "daily",
+      "label": "U.S. 10-year Treasury yield",
+      "latest_observation_date": "2026-10-26",
+      "one_month_change_pp": -0.16999999999999993,
+      "source": "U.S. Treasury par yield curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve",
+      "unit": "% p.a.",
+      "value": 5.0
+    },
+    "us_2_year_treasury": {
+      "five_business_day_change_pp": -0.08999999999999986,
+      "frequency": "daily",
+      "label": "U.S. 2-year Treasury yield",
+      "latest_observation_date": "2026-10-26",
+      "one_month_change_pp": -0.1299999999999999,
+      "source": "U.S. Treasury par yield curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve",
+      "unit": "% p.a.",
+      "value": 4.68
+    },
+    "us_2s10s": {
+      "frequency": "daily",
+      "label": "U.S. 2s10s slope (10-year minus 2-year)",
+      "latest_observation_date": "2026-10-26",
+      "source": "U.S. Treasury par yield curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve",
+      "unit": "percentage points",
+      "value": 0.3200000000000003
+    }
+  },
+  "updated_at": "2026-10-27T01:30:09Z",
+  "frozen_at": "2026-10-27T19:18:25+00:00",
+  "frozen_from_commit": "3dc4714",
+  "publication_date": "2026-10-27",
+  "market_cutoff": "2026-10-26",
+  "election": {
+    "runoff": {
+      "date": "2026-10-25",
+      "votes": {
+        "lula": 64256232,
+        "flavio": 59826041
+      },
+      "blank_null_pct": 3.24,
+      "source": {
+        "label": "TSE · Presidente do TSE anuncia reeleição de Lula e faz balanço do 2º turno",
+        "date": "2026-10-25",
+        "url": "https://www.tse.jus.br/comunicacao/noticias/2026/Outubro/presidente-do-tse-anuncia-reeleicao-de-lula-e-faz-balanco-do-2o-turno-das-eleicoes-2026"
+      }
+    },
+    "final_poll": {
+      "pollster": "Datafolha",
+      "published": "2026-10-22",
+      "valid_votes": {
+        "lula": 50,
+        "flavio": 50
+      },
+      "source": {
+        "label": "Forbes Brasil · Ibovespa fecha em alta e dólar cai à espera de desfecho da eleição",
+        "date": "2026-10-23",
+        "url": "https://forbes.com.br/geral/2026/10/ibovespa-fecha-em-alta-e-dolar-cai-a-espera-de-desfecho-da-eleicao/"
+      }
+    }
+  },
+  "press": {
+    "ibovespa": {
+      "2026-10-23": 205082.56,
+      "2026-10-26": 176608.23,
+      "circuit_breaker": true,
+      "sources": [
+        {
+          "label": "Times Brasil · Ibovespa sobe 0,47% no último pregão antes do segundo turno",
+          "date": "2026-10-23",
+          "url": "https://timesbrasil.com.br/investimentos/bolsa/ibovespa-sobe-047-e-dolar-cai-abaixo-de-r-5-no-ultimo-pregao-antes-do-segundo-turno/"
+        },
+        {
+          "label": "InfoMoney · Ibovespa desaba 13% após eleição, em dia de circuit breaker",
+          "date": "2026-10-26",
+          "url": "https://www.infomoney.com.br/mercados/ibovespa-hoje-bolsa-de-valores-ao-vivo-26102026/"
+        }
+      ]
+    },
+    "spot_usd_brl": {
+      "2026-10-26": {
+        "close": 5.4029,
+        "change_pct": 8.21,
+        "intraday_high_above": 5.6
+      },
+      "2026-10-27": {
+        "ptax_buy": 5.334,
+        "ptax_sell": 5.3346,
+        "status": "closing PTAX as reported intraday; not yet in the official feed"
+      },
+      "sources": [
+        {
+          "label": "Seu Dinheiro · Ibovespa cai 14%, dólar sobe a R$ 5,40",
+          "date": "2026-10-26",
+          "url": "https://www.seudinheiro.com/2026/bolsa-dolar/ibovespa-cai-17-dolar-vai-a-r-550-mas-nem-todo-mundo-perde-entenda-o-caos-nos-mercados-hoje-ccgg/"
+        },
+        {
+          "label": "InfoMoney · Ibovespa hoje, 27 Oct",
+          "date": "2026-10-27",
+          "url": "https://www.infomoney.com.br/mercados/ibovespa-hoje-bolsa-de-valores-ao-vivo-27102026/"
+        }
+      ]
+    },
+    "di_futures": {
+      "unit": "% a.a., 252 business days",
+      "jan28": {
+        "2026-10-23": 12.859,
+        "2026-10-26": 14.8,
+        "maturity": "2028-01-03",
+        "note": "23 Oct is the B3 settlement; 26 Oct is the late-afternoon quote (+194 bp)"
+      },
+      "jan27": {
+        "2026-10-26": 13.696,
+        "maturity": "2027-01-04",
+        "note": "B3 settlement"
+      },
+      "jan29": {
+        "2026-10-26": 15.223,
+        "maturity": "2029-01-02",
+        "note": "B3 settlement"
+      },
+      "jan31": {
+        "2026-10-26": 15.279,
+        "maturity": "2031-01-02",
+        "note": "B3 settlement"
+      },
+      "sources": [
+        {
+          "label": "CNN Brasil · Juros futuros fecham em alta após reeleição de Lula",
+          "date": "2026-10-26",
+          "url": "https://www.cnnbrasil.com.br/economia/money/mercado/juros-futuros-fecham-em-alta-apos-reeleicao-de-lula/"
+        },
+        {
+          "label": "ISTOÉ Dinheiro · Juros futuros caem com recuo do dólar e nova intervenção do Tesouro",
+          "date": "2026-10-27",
+          "url": "https://istoedinheiro.com.br/juros-futuros-hoje-27-10-2026-intervencao-tesouro"
+        }
+      ]
+    },
+    "treasury": {
+      "cancelled_auctions": [
+        "NTN-B (inflation-linked), 27 Oct",
+        "LTN and NTN-F (fixed rate), 29 Oct"
+      ],
+      "buybacks": true,
+      "sources": [
+        {
+          "label": "InfoMoney · Após vitória de Lula, Tesouro cancela leilões de prefixados e IPCA+ da semana",
+          "date": "2026-10-26",
+          "url": "https://www.infomoney.com.br/onde-investir/apos-vitoria-de-lula-tesouro-cancela-leiloes-de-prefixados-e-ipca-da-semana/"
+        },
+        {
+          "label": "Jornal de Brasília · Durigan autoriza nova recompra de títulos pelo Tesouro",
+          "date": "2026-10-27",
+          "url": "https://jornaldebrasilia.com.br/noticias/economia/durigan-autoriza-nova-recompra-de-titulos-pelo-tesouro-apos-turbulencia-no-mercado/"
+        }
+      ]
+    },
+    "central_bank": {
+      "fx_intervention_stance": "only in case of market dysfunction",
+      "swap_rollover_usd_bn": 4.0,
+      "sources": [
+        {
+          "label": "Jornal de Brasília · BC só vai atuar no câmbio em caso de disfuncionalidade, diz Galípolo",
+          "date": "2026-10-27",
+          "url": "https://jornaldebrasilia.com.br/noticias/economia/bc-so-vai-atuar-no-cambio-em-caso-de-disfuncionalidade-do-mercado-diz-galipolo-apos-alta-do-dolar/"
+        }
+      ]
+    }
+  }
+}
