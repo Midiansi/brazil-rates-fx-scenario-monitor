@@ -18,7 +18,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.platypus import KeepTogether, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
+from reportlab.platypus import CondPageBreak, KeepTogether, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 from src import formatting as f
 from src.content import TEXT
@@ -352,7 +352,11 @@ def render_current_pdf(thesis: dict[str, Any], output: Path | str, lang: str = "
     report, u = thesis['current_update'], UPDATE_TEXT[lang]
     values = {**placeholders(thesis, lang), **runoff_values(report, lang)}
     styles = _styles()
-    styles['body'].fontSize, styles['body'].leading = 8.2, 11.3
+    styles['body'].fontSize, styles['body'].leading = 7.9, 10.6
+    styles['cell'].fontSize, styles['cell'].leading = 7.5, 9.8
+    styles['h2'].spaceBefore, styles['h2'].spaceAfter, styles['h2'].fontSize, styles['h2'].leading = 7, 3, 10.5, 13
+    styles['lead'].fontSize, styles['lead'].leading = 10, 13.5
+    styles['title'].fontSize, styles['title'].leading = 17, 20.5
 
     def s(text):
         return _pdf_text(fill(text, values, lang))
@@ -363,8 +367,8 @@ def render_current_pdf(thesis: dict[str, Any], output: Path | str, lang: str = "
     def heading(key):
         return p(u[key], 'h2')
 
-    def section(key):  # a heading never ends a page without its paragraph
-        return KeepTogether([heading(f'{key}_title'), p(u[key])])
+    def section(key):  # a heading starts a new page only when fewer than ~4 lines are left
+        return [CondPageBreak(60), heading(f'{key}_title'), p(u[key])]
 
     def table(headers, rows, widths):
         data = [[p(h, 'label') for h in headers]] + [[p(cell, 'cell') for cell in row] for row in rows]
@@ -392,11 +396,11 @@ def render_current_pdf(thesis: dict[str, Any], output: Path | str, lang: str = "
              table(u['moves_head'], u['moves_rows'], [WIDTH * .37, *([WIDTH * .21] * 3)]),
              p(u['moves_note'], 'small'),
              decide,
-             section('fx'), section('rates'), section('fiscal'), section('exporters'),
+             *section('fx'), *section('rates'), *section('fiscal'), *section('exporters'),
              heading('decision_title'),
              table(u['decision_head'], u['decisions'], [WIDTH * .36, WIDTH * .3, WIDTH * .34]),
              p(u['calendar'], 'small'),
-             section('risk'),
+             *section('risk'),
              heading('review_title')]
     rows = [[said, happened, u['verdicts'][verdict]] for said, happened, verdict in u['review_rows']]
     story += [table(u['review_head'], rows, [WIDTH * .45, WIDTH * .41, WIDTH * .14]),
@@ -447,5 +451,7 @@ def current_markdown(thesis: dict[str, Any]) -> str:
     lines += [row([said, happened, u['verdicts'][verdict]]) for said, happened, verdict in u['review_rows']]
     lines += ['', f'**{u["lesson_label"]}.** {s(u["lesson"])}', '', f'## {u["sources_title"]}', '', s(u['sources_note']), '']
     lines += [f'- [{source["label"]}]({source["url"]}) — {source["date"]}' for source in report['sources']]
+    lines += ['', f'## {u["glossary_title"]}', '']
+    lines += [f'- **{s(term)}:** {s(text)}' for term, text in u['glossary']]
     lines += ['', u['footer'], '']
     return '\n'.join(lines)

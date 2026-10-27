@@ -2,69 +2,69 @@
 
 Published 27 October 2026 · market data through 26 October
 
-**Lula’s comeback repriced Brazil in one session: the dollar jumped 9.2% against the real and interest rates went from pricing cuts to pricing hikes. I stayed flat through the vote and wait for the Copom on 4 November before taking a rates view.**
+**Lula’s comeback win shook Brazilian markets in a single day: the dollar jumped 9.2% against the real, and markets now expect interest rates to rise rather than fall. I held no position through the vote, and I will wait for the central bank’s meeting on 4 November before betting on interest rates.**
 
-Markets had priced a change of government. On 25 October, Lula won a fourth term with 51.79% of valid votes after trailing Flávio Bolsonaro 47.1% to 45.0% in the first round: the first time since 1989 that the first-round runner-up has won the presidency. One session repriced every Brazilian asset.
+Investors had bet on a change of government. On 25 October, Lula won a fourth term with 51.79% of valid votes, after trailing Flávio Bolsonaro 47.1% to 45.0% in the first round. It was the first time since 1989 that the second-placed candidate in the first round went on to win. One trading day was enough to reprice every Brazilian asset.
 
 ## What moved, and what did not
 
 | Market | Fri 23 Oct | Mon 26 Oct | Change |
 |---|---:|---:|---:|
-| USD/BRL · PTAX | 5.0374 | 5.5003 | +9.2% |
-| January 2028 DI rate | 12.86% | 14.80% | +194 bp |
-| Ibovespa | 205,083 | 176,608 | −13.9% |
-| U.S. 2-year yield | 4.69% | 4.68% | −1 bp |
+| Dollar in reais (PTAX) | 5.0374 | 5.5003 | +9.2% |
+| Interest rate to Jan 2028 (DI) | 12.86% | 14.80% | +194 bp |
+| Ibovespa (stock index) | 205,083 | 176,608 | −13.9% |
+| U.S. 2-year interest rate | 4.69% | 4.68% | −1 bp |
 
-PTAX and Treasury yields are official. DI and Ibovespa are press-reported B3 figures; Monday’s DI is a late-afternoon quote. The Ibovespa triggered a circuit breaker.
+PTAX and U.S. rates come from official sources. The DI rate and the Ibovespa are B3 exchange figures reported by the press; Monday’s DI is a late-afternoon quote. As the Ibovespa fell, stock trading was briefly halted (a circuit breaker).
 
-**What I would do.** Stay flat in FX: the 6 October long-real idea closed on the first eligible day, when PTAX printed 5.5003, above its 5.30 drop level. In rates, my call is that the cutting cycle is over, and I take no position before the Copom on 4 November. If it pauses rather than hikes and the 2027 fiscal target holds, the January 2028 DI at 14.80% prices too many hikes: receiving it is the trade I am preparing.
+**What I would do.** Currency: no position. My 6 October plan to buy the real was cancelled automatically on the first day it could have started, because the dollar closed at 5.5003, above my 5.30 cancel level. Interest rates: I think the central bank’s rate cuts are over, and I take no position before its 4 November meeting (the Copom). If it holds rates instead of raising them, and the government confirms its 2027 budget target, the market’s 14.80% rate looks too high. A bet that it falls (“receiving” the rate) is the trade I am preparing.
 
-**What would change my mind.** A Copom hike, or a looser 2027 fiscal target, would show that the hikes or the premium are real: no receiver. A Copom cut would put the central bank’s credibility at risk. I would revisit the real only with fresh, dated levels, not because it is cheaper.
+**What would change my mind.** If the central bank raises rates, or the government loosens its 2027 budget target, the market is right to expect higher rates, and I stay out. If the central bank cuts, its credibility becomes the risk. I would look at the real again only with new, dated levels, not just because it is cheaper.
 
-## FX: a year of carry in one session
+## The currency: a year of extra interest lost in one day
 
-PTAX rose from 5.0374 to 5.5003 (+9.2%). Since 2002, only 8 October 2008, in the global financial crisis, saw a larger one-day rise. The move erased the whole first-round rally and left USD/BRL 5.3% above its pre-first-round level (5.2235). Good news had been worth 4.6%; bad news cost about twice as much. Measure the day with care: PTAX averages four morning windows, when the dollar briefly topped R$5.60. The spot dollar closed at 5.4029 (+8.2%), and PTAX eased to about 5.33 on 27 October (press-reported). The authorities treated it as a liquidity shock: the Treasury cancelled the week’s fixed-rate and inflation-linked auctions and bought bonds back; the central bank said it would intervene in FX only if the market became dysfunctional.
+The official dollar rate rose from 5.0374 to 5.5003 reais (+9.2%). Since 2002, only one day saw a bigger rise: 8 October 2008, during the global financial crisis. The move wiped out the whole rally after the first round and left the dollar 5.3% above where it was before the first round (5.2235). The good news had been worth 4.6%; the bad news cost about twice as much. One caution: PTAX averages four readings taken in the morning, when the dollar briefly topped R$5.60. The dollar ended the day at 5.4029 (+8.2%), and the official rate eased to about 5.33 on 27 October (press-reported). The authorities treated Monday as market stress: the Treasury cancelled the week’s fixed-rate and inflation-linked bond sales and bought bonds back, and the central bank said it would step into the currency market only if trading stopped working properly.
 
-## Rates: from pricing cuts to pricing hikes
+## Interest rates: from expected cuts to expected hikes
 
-On Friday, the January 2028 DI contract (12.86%) sat only 0.3 pp above the economists’ Selic path (Focus survey, 23 Oct): 50 bp of cuts to 13.25% by December, then 11.75% by end-2027, an average of about 12.5%. On Monday it traded near 14.80%, 2.3 pp above that path and above today’s 13.75% Selic; the January 2029 and 2031 contracts settled at 15.22% and 15.28%. The short end says the same: the January 2027 contract settled at 13.70%, slightly above the 13.65% overnight rate, so no further cut is priced this year (the economists’ path implies 13.4%). The gap is either hikes that economists do not yet expect or a risk premium. The Copom is the first test of which.
+On Friday, the January 2028 DI rate (12.86%) was only 0.3 pp above what economists expected (Focus survey, 23 Oct): a policy rate cut by 50 bp to 13.25% by December and to 11.75% by end-2027, an average of about 12.5%. On Monday it traded near 14.80%: 2.3 pp above that path, and above today’s 13.75% policy rate. Longer contracts, to January 2029 and 2031, closed at 15.22% and 15.28%. Near-term contracts say the same: the January 2027 rate closed at 13.70%, slightly above today’s overnight rate (13.65%), so markets no longer expect any cut this year (economists’ path: 13.4%). The gap is either rate hikes economists do not yet expect, or extra compensation investors now demand for risk. The central bank’s next meeting is the first test of which.
 
-## Why: a fiscal premium, not an inflation print
+## Why: worries about public finances, not new data
 
-No economic data changed over the weekend; the expected policy mix did. The market had bet that a new government would tighten fiscal policy. The government’s 2027 budget bill projects a primary surplus of R$18.6 bn; the Senate’s Independent Fiscal Institution projects a deficit of R$86.1 bn. A fourth Lula term makes that gap the central question. Inflation leaves the central bank little room to look through a weaker real: economists already expect 5.2% for 2026, above the 4.5% ceiling, and 4.3% for 2027, against a 3% target. That is why I think the cutting cycle is over. The premium can compress only on evidence, such as a credible 2027 target, the budget vote and the economic team’s signals, not on carry.
+No economic data changed over the weekend; what changed was the expected economic policy. Investors had bet that a new government would cut spending. The government’s 2027 budget bill projects a primary surplus (the budget balance before interest) of R$18.6 bn; the Senate’s Independent Fiscal Institution expects a deficit of R$86.1 bn. A fourth Lula term makes that gap the central question. Inflation leaves the central bank little room to ignore a weaker real: economists already expect 5.2% inflation for 2026, above the 4.5% upper limit of the target range, and 4.3% for 2027, against a 3% target. That is why I think the rate cuts are over. The extra risk premium should shrink only with evidence (a credible 2027 budget target, the budget vote, signals from the economic team), not just because Brazilian rates are high.
 
-## Exporters: a windfall for the unhedged
+## Exporters: a windfall for those who did not hedge
 
-At unchanged dollar prices, a 9.2% rise in USD/BRL raises reais receipts by the same 9.2%: the mirror image of the first round, when the stronger real cut them. A producer who hedged dollar receipts after the first round, near 4.99, gave up this windfall; that is the hedge working as insurance, not a loss. Brent spot data stop on 20 October, so there is no post-vote oil read yet.
+At unchanged dollar prices, a 9.2% rise in the dollar raises exporters’ revenue in reais by the same 9.2%: the mirror image of the first round, when the stronger real cut it. A producer who locked in an exchange rate (hedged) after the first round, near 4.99, gave up this windfall; that is the hedge working as insurance, not a loss. Oil price data stop on 20 October, so there is no post-vote oil reading yet.
 
 ## What I do next
 
-| If, after the Copom on 4 November… | It means | What I would do |
+| If, after the central bank meets on 4 November… | It means | What I would do |
 |---|---|---|
-| It pauses with hawkish guidance and the 2027 fiscal target is reaffirmed | The curve priced too many hikes: part of Monday was premium | Prepare to receive the January 2028 DI, with dated entry and stop levels |
-| It hikes, or the fiscal target is loosened | The hikes or the premium are real | Stay out of receivers; the real stays under pressure |
-| It cuts | The central bank’s credibility becomes the risk | Stay out; expect a weaker real and a steeper curve |
+| It holds rates, sounds firm on inflation, and the 2027 budget target is confirmed | Markets priced too many hikes: part of Monday’s jump was fear | Prepare a bet that the January 2028 rate falls, with dated entry and exit levels |
+| It raises rates, or the budget target is loosened | The hikes or the risk premium are real | Stay out; the real stays under pressure |
+| It cuts rates | The central bank’s credibility becomes the risk | Stay out; expect a weaker real and higher long-term rates |
 
-Dates: Fed 28 October; Copom 4 November; Fed and Copom 9 December. The weekly Focus survey will show how far economists move toward the curve.
+Dates: U.S. Federal Reserve 28 October; Brazil’s central bank (Copom) 4 November; both again on 9 December. The weekly Focus survey will show how far economists move toward market prices.
 
-## Risk check: why VaR was not the answer
+## Risk check: why my risk models were not enough
 
-On Friday, my three one-day 99% VaR models (the risk study below) said a long-real position would lose more than 1.6%–2.6% on only one day in a hundred. Monday’s loss was 8.4%: 3 to 5 times larger. VaR describes ordinary days; an election result is a jump. That is why the decision before the vote was about exposure, holding none, rather than about stop levels, which a price gap opens straight through.
+On Friday, my three risk models (the VaR study below) said a position in reais would lose more than 1.6%–2.6% on only 1 day in 100. Monday’s loss was 8.4%: 3 to 5 times larger. These models describe ordinary days; an election result is a jump. That is why the decision before the vote was about exposure (holding none) rather than about stop-loss levels, which a price jump skips straight past.
 
 ## Scorecard: my earlier calls
 
 | What I said | What happened | Verdict |
 |---|---|---|
-| 6 Oct: no entry before the runoff, because one session can jump past every level. | USD/BRL jumped 9.2% on the first eligible day, straight through the 5.30 drop level. The idea closed without an entry. | Confirmed |
-| 16 Oct: carry cannot absorb an election jump; the first round had cost 6 months of carry. | The runoff cost 12 months of carry in one session. | Confirmed |
-| 16 Oct: inflation pricing is more sceptical than FX (breakevens 5.27% → 5.54% while the real kept 72% of its rally). | The bond market was the better warning. I flagged the divergence but did not size the asymmetry behind it. | Partly |
-| 16 Oct: three post-runoff scenarios, including an external U.S.-rate shock. | No scenario was a domestic shock with falling U.S. yields, which is what happened. | Missed |
+| 6 Oct: do not buy before the runoff, because one day can jump past every price level. | The dollar jumped 9.2% on the first day a trade was allowed, straight past my 5.30 cancel level. The idea closed without a trade. | Confirmed |
+| 16 Oct: the extra interest from holding reais cannot make up for an election jump; the first round had cost 6 months of it. | The runoff cost 12 months of that interest in a single day. | Confirmed |
+| 16 Oct: bond markets were more worried about inflation than the currency market was (expected inflation rose from 5.27% to 5.54% while the real kept 72% of its rally). | Bonds gave the better warning. I pointed out the gap but did not measure the lopsided risk behind it. | Partly |
+| 16 Oct: three scenarios for after the runoff, including a shock from U.S. interest rates. | No scenario covered a Brazil-only shock with falling U.S. rates, which is what happened. | Missed |
 
-**Lesson.** Price and polls disagreed: the real was priced for one winner while the polls showed a coin flip. That asymmetry, not a forecast of the result, was the reason to stay flat. From now on, every scenario table includes the outcome the market is not pricing.
+**Lesson.** Prices and polls disagreed: markets were priced for one winner while the polls showed a coin flip. That imbalance, not a forecast of the result, was the reason to stay out. From now on, every scenario table includes the outcome markets are not pricing.
 
 ## Dated inputs
 
-Frozen at publication. PTAX, Treasury yields, Focus and the Selic come from official feeds, and the vote count from the TSE. DI futures, the Ibovespa, the spot close, the 27 October PTAX and policy announcements are press-reported. No position was opened; nothing here is an executed return.
+Frozen at publication. The official dollar rate (PTAX), U.S. rates, the Focus survey and the Selic come from official data feeds, and the vote count from the electoral court (TSE). DI rates, the Ibovespa, the dollar’s closing price, the 27 October PTAX and policy announcements are press-reported. No position was opened; nothing here is a real return.
 
 - [TSE · Presidente do TSE anuncia reeleição de Lula e faz balanço do 2º turno](https://www.tse.jus.br/comunicacao/noticias/2026/Outubro/presidente-do-tse-anuncia-reeleicao-de-lula-e-faz-balanco-do-2o-turno-das-eleicoes-2026) — 2026-10-25
 - [BCB · PTAX](https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/) — 2026-10-26
@@ -83,5 +83,16 @@ Frozen at publication. PTAX, Treasury yields, Focus and the Selic come from offi
 - [Jornal de Brasília · BC só vai atuar no câmbio em caso de disfuncionalidade, diz Galípolo](https://jornaldebrasilia.com.br/noticias/economia/bc-so-vai-atuar-no-cambio-em-caso-de-disfuncionalidade-do-mercado-diz-galipolo-apos-alta-do-dolar/) — 2026-10-27
 - [Forbes Brasil · Ibovespa fecha em alta e dólar cai à espera de desfecho da eleição](https://forbes.com.br/geral/2026/10/ibovespa-fecha-em-alta-e-dolar-cai-a-espera-de-desfecho-da-eleicao/) — 2026-10-23
 - [BCB · Copom calendar](https://www.bcb.gov.br/detalhenoticia/20739/nota) — 2026-10-27
+
+## Key terms in plain English
+
+- **PTAX:** The central bank’s official dollar exchange rate, in reais per dollar. Higher means a weaker real.
+- **Selic and Copom:** The Selic is Brazil’s policy interest rate (13.75%). The Copom is the central-bank committee that sets it; it next meets on 4 November.
+- **DI futures:** Exchange-traded contracts that show the average interest rate markets expect until a given date. The January 2028 contract covers roughly the next 14 months.
+- **Carry:** The extra interest earned by holding reais instead of dollars: about 0.76% a month at today’s policy rates.
+- **VaR (value at risk):** A model’s estimate of a loss that should be exceeded on only 1 day in 100.
+- **bp and pp:** A basis point (bp) is 0.01 percentage point (pp): going from 12.86% to 14.80% is +194 bp, or +1.94 pp.
+- **Receiving a rate:** A bet, made with futures, that an interest rate will fall. It gains value when the rate goes down.
+- **Budget target:** The government’s goal for its budget balance before interest payments (the primary balance).
 
 Independent student research · No position · Educational research, not investment advice.

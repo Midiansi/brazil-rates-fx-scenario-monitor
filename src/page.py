@@ -298,7 +298,9 @@ class Page:
             f'<span class="d">{e(f.day(source["date"], self.lang))}</span></li>'
             for source in report["sources"])
         inner = self.section_head("update", self.s(u["title"]), self.s(u["intro"]))
+        terms = "".join(f"<div><dt>{self.s(term)}</dt><dd>{self.s(text)}</dd></div>" for term, text in u["glossary"])
         inner += '<div class="sec-body current-update">'
+        inner += f'<details class="glossary"><summary>{e(u["glossary_title"])}</summary><div class="inner"><dl class="defs">{terms}</dl></div></details>'
         inner += self.sub(self.s(u["moves_title"])) + self.table([self.raw(h) for h in u["moves_head"]], rows(u["moves_rows"]), "moves", self.raw(u["moves_title"]))
         inner += f'<p class="muted small note">{self.s(u["moves_note"])}</p>'
         for key in ("fx", "rates", "fiscal", "exporters"):
