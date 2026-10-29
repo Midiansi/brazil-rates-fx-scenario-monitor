@@ -160,7 +160,7 @@ class Page:
         t = self.t
         return (
             f'<div class="bm"><a class="skip" href="#view">{e(t["skip"])}</a>'
-            '<div class="bm-top"><span class="brand-mark" aria-hidden="true">B/M</span><strong translate="no">Romeo Mugnier de Almeida</strong>'
+            '<div class="bm-top"><strong translate="no">Romeo Mugnier de Almeida</strong>'
             f'<span class="byline">{e(t["byline"])}</span><span class="links">'
             f'<a href="{GITHUB}" target="_blank" rel="noopener">GitHub</a>'
             f'<a href="{LINKEDIN}" target="_blank" rel="noopener">LinkedIn</a></span></div></div>'
@@ -242,7 +242,7 @@ class Page:
         for key in lens_order(self.lens):
             title, text = t["lens"][key]
             first = key == self.lens
-            badge = f'<span class="badge">{e(t["lens_first"])}</span>' if first else ""
+            badge = f'<span class="badge">{e(t["lens_first"])}</span>' if first and t["lens_first"] else ""
             cards.append(f'<a class="lens-card{" first" if first else ""}" href="#{key}"><span class="lens-title">{e(title)}{badge}</span><span class="lens-text">{e(text)}</span></a>')
         intro = f'<span class="muted">{e(t["lens_intro"])}</span>' if t["lens_intro"] else ""
         return (
@@ -256,25 +256,19 @@ class Page:
         keys = ["view", *(["update"] if self.current else []), "lab", "risk", *(lens_order(self.lens) if self.study else ()), "trade", "review", "method"]
         labels = {**t["nav"], "lab": lt["lab_nav"], "risk": lt["risk_nav"], "update": self.u["nav"]}
         nav = "".join(f'<a href="#{key}">{e(labels[key])}</a>' for key in keys)
-        scope = ""
-        if self.study:
-            values = [self.study["volatility"]["observations"] + 1, self.study["basket"]["n"], sum(not w.get("pending") for w in self.study["elections"])]
-            scope = '<dl class="research-scope">' + "".join(
-                f'<div><dt>{e(label)}</dt><dd>{e(f.num(value, 0, self.lang))}</dd></div>'
-                for label, value in zip(lt["scope_labels"], values)) + f'</dl><p class="scope-note">{e(lt["scope_note"])}</p>'
         return (
             f'<div class="bm" lang="{t["html_lang"]}"><section class="hero" id="view" aria-labelledby="view-title">'
-            f'<div class="hero-grid"><div class="hero-head"><p class="eyebrow">{e(lt["kicker"])}</p><p class="profile-line">{e(lt["scope"])}</p><h1>{e(t["title"])}</h1><p class="lede">{e(lt["intro"])}</p>'
-            f'<div class="hero-actions"><a class="primary-link" href="#lab">{e(lt["lab_cta"])} <span aria-hidden="true">↗</span></a>'
-            f'<a href="{GITHUB}/tree/main/research" target="_blank" rel="noopener">{e(lt["code_cta"])}</a></div>{scope}</div>'
+            f'<header class="masthead"><p class="kicker">{e(lt["kicker"])}</p><h1>{e(t["title"])}</h1><p class="lede">{e(lt["intro"])}</p>'
+            f'<p class="hero-links"><a href="#lab">{e(lt["lab_cta"])}</a>'
+            f'<a href="{GITHUB}/tree/main/research" target="_blank" rel="noopener">{e(lt["code_cta"])}</a></p></header>'
             f'<article class="view" aria-labelledby="view-title"><div class="view-meta">'
-            f'<h2 class="eyebrow" id="view-title">{e(t["view_label"])}</h2>'
+            f'<h2 class="view-label" id="view-title">{e(t["view_label"])}</h2>'
             f'<span class="status">{e(t["status_no_position"])}</span>'
             f'<time datetime="{e(self.current.get("as_of", self.thesis["as_of"]))}">{e(self.values["r_date"] if self.current else self.values["as_of"])}</time></div>'
             f'<p class="dated-label">{self.s(self.u["dated"]) if self.current else e(lt["dated"])}</p>'
             f'<p class="view-headline">{self.s(t["view_headline"])}</p>'
             f'{self.reaction() if self.study else ""}'
-            '</article></div>'
+            '</article>'
             f'<details class="thesis-detail"><summary>{e(lt["reasoning"])}</summary><div class="inner">'
             f'<div class="why" aria-label="{e(t["why_label"])}">{why}</div>'
             f'<div class="decide"><div class="act"><h3>{e(t["act_label"])}</h3><p>{self.s(t["act"])}</p></div>'

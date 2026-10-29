@@ -66,7 +66,7 @@ def test_one_failed_feed_does_not_blank_the_page(thesis, snapshot) -> None:
 @pytest.mark.parametrize("snapshot_value", [{}, None, {"series": None, "commodities": "x", "history": None}])
 def test_missing_or_malformed_snapshot_still_renders(thesis, snapshot_value) -> None:
     page = html(thesis, snapshot_value)
-    assert "Brazil macro, from policy to price." in page
+    assert "Brazil macro notes" in page
     assert "Rule check unavailable" in page
 
 

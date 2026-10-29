@@ -14,7 +14,7 @@ from conftest import ROOT
 from src.page import render
 from src.runoff import build_runoff, path_average, runoff_values
 from src.runoff_content import TEXT
-from src.thesis import survey_path_average
+from src.thesis import fill, survey_path_average
 
 
 def read(name):
@@ -161,7 +161,7 @@ def test_current_note_resolves_and_precedes_archived_studies(thesis, inputs, lan
     assert ('5.5003' if lang == 'en' else '5,5003') in blocks['hero']
     assert TEXT[lang]['archive'] in unescape(page)
     assert TEXT[lang]['monitor_note'] in unescape(blocks['hero'])
-    assert unescape(TEXT[lang]['title']) in unescape(blocks['update'])
+    assert fill(TEXT[lang]['title'], {}, lang) in unescape(blocks['update'])
 
 
 def test_languages_have_matching_fields_and_placeholders(report):
