@@ -153,6 +153,7 @@ Risk tests independently verify the exact BRL loss convention, Normal tail integ
 - `scripts/build_risk.py` — offline risk builder; `research/risk_2026-10-07.json` — frozen diagnostic summary; `research/risk_forecasts.csv` — complete per-model/date audit; `research/risk_method.md` — methodology and limitations.
 - `research/thesis_2026-10-05.json`, `research/thesis_snapshot_2026-10-05.json`, `research/thesis_2026-09-24.json`, `research/thesis_snapshot_2026-09-24.json` — the previous theses and their inputs, preserved unchanged.
 - `research/data_snapshot.json`, `research/commodity_snapshot.json`, `research/scenario_trade.md` — archived 13 September case.
+- `static/fonts/` — Geist and Geist Mono (SIL Open Font License), served through Streamlit's static file serving and declared in `.streamlit/config.toml`.
 - `outputs/` — the three current PDFs; `outputs/archive/` keeps earlier briefs. `tests/` — automated checks.
 
 ## Limits
