@@ -31,9 +31,9 @@ INK = colors.HexColor("#102431")
 INK_2 = colors.HexColor("#3A5260")
 MUTED = colors.HexColor("#607782")
 LINE = colors.HexColor("#D3DEDC")
-TEAL = colors.HexColor("#0B7F70")
-TEAL_TINT = colors.HexColor("#E8F4F1")
-COPPER = colors.HexColor("#B45E33")
+TEAL = colors.HexColor("#1F4E79")
+TEAL_TINT = colors.HexColor("#EEF2F6")
+COPPER = colors.HexColor("#9A3B24")
 COPPER_TINT = colors.HexColor("#FBEFE8")
 SAND = colors.HexColor("#8A7440")
 PANEL = colors.HexColor("#F3F7F6")
@@ -99,7 +99,7 @@ def render_pdf(thesis: dict[str, Any], snapshot: dict[str, Any], output: Path | 
 
     ev = thesis["evidence"]
     story: list[Any] = [
-        p("BRAZIL MACRO · ROMEO MUGNIER DE ALMEIDA · EPFL", "eyebrow"),
+        p("Brazil macro notes · Romeo Mugnier de Almeida · EPFL", "eyebrow"),
         p(_pdf_text(t["pdf_title"]), "title"),
         p(s(t["pdf_subtitle"]) + " · " + _pdf_text(t["kicker"]), "subtitle"),
     ]
@@ -265,7 +265,7 @@ def render_pdf(thesis: dict[str, Any], snapshot: dict[str, Any], output: Path | 
     story.append(p(_pdf_text(t["sources_label"]), "h2"))
     labels = t["source_labels"]
     links = [
-        p(f"<a href='{escape(src['url'], quote=True)}' color='#0B7F70'>{_pdf_text(labels.get(key, src['label']))}</a> "
+        p(f"<a href='{escape(src['url'], quote=True)}' color='#1F4E79'>{_pdf_text(labels.get(key, src['label']))}</a> "
           f"<font color='#607782'>· {_pdf_text(f.day(src['date'], lang))}</font>", "tiny")
         for key, src in sorted(thesis["sources"].items(), key=lambda item: labels.get(item[0], item[1]["label"]))
     ]
@@ -275,8 +275,8 @@ def render_pdf(thesis: dict[str, Any], snapshot: dict[str, Any], output: Path | 
                       [("LINEBELOW", (0, 0), (-1, -1), 0, colors.white), ("TOPPADDING", (0, 0), (-1, -1), 1), ("BOTTOMPADDING", (0, 0), (-1, -1), 2)]))
     story.append(Spacer(1, 8))
     site = f"https://brasilmacro.streamlit.app/?lang={lang}"
-    story.append(p(f"{_pdf_text(t['pdf_more'])} <a href='{site}' color='#0B7F70'>{site.replace('https://', '')}</a> · "
-                   f"<a href='{GITHUB}' color='#0B7F70'>{GITHUB.replace('https://', '')}</a>", "small"))
+    story.append(p(f"{_pdf_text(t['pdf_more'])} <a href='{site}' color='#1F4E79'>{site.replace('https://', '')}</a> · "
+                   f"<a href='{GITHUB}' color='#1F4E79'>{GITHUB.replace('https://', '')}</a>", "small"))
     story.append(p(s(t["footer"]), "small"))
 
     def decorate(canvas, doc) -> None:
@@ -389,7 +389,7 @@ def render_current_pdf(thesis: dict[str, Any], output: Path | str, lang: str = "
         ('VALIGN', (0, 0), (-1, -1), 'TOP'), ('LEFTPADDING', (0, 0), (-1, -1), 10), ('RIGHTPADDING', (0, 0), (-1, -1), 10),
         ('TOPPADDING', (0, 0), (-1, 0), 8), ('TOPPADDING', (0, 1), (-1, 1), 0), ('BOTTOMPADDING', (0, -1), (-1, -1), 6),
     ]))
-    story = [p('BRAZIL MACRO · ROMEO MUGNIER DE ALMEIDA · EPFL', 'eyebrow'),
+    story = [p('Brazil macro notes · Romeo Mugnier de Almeida · EPFL', 'eyebrow'),
              p(u['title'], 'title'), p(u['dated'], 'subtitle'),
              p(u['headline'], 'lead'), p(u['intro']),
              heading('moves_title'),
@@ -406,7 +406,7 @@ def render_current_pdf(thesis: dict[str, Any], output: Path | str, lang: str = "
     story += [table(u['review_head'], rows, [WIDTH * .45, WIDTH * .41, WIDTH * .14]),
               Spacer(1, 4), Paragraph(f"<b>{_pdf_text(u['lesson_label'])}.</b> {s(u['lesson'])}", styles['body'])]
     # Outlet names only: the full headlines are listed on the website and in the saved report.
-    source_links = [f'<a href="{escape(source["url"], quote=True)}" color="#0B7F70">{_pdf_text(source["label"].split(" · ")[0])}</a> '
+    source_links = [f'<a href="{escape(source["url"], quote=True)}" color="#1F4E79">{_pdf_text(source["label"].split(" · ")[0])}</a> '
                     f'({_pdf_text(f.day(source["date"], lang, year=False))})' for source in report['sources']]
     story += [p(u['sources_title'], 'label'), Paragraph(' · '.join(source_links), styles['tiny']),
               p(u['sources_note'], 'tiny')]
