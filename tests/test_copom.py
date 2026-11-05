@@ -182,13 +182,15 @@ def test_the_first_screen_states_the_call_and_the_trade(thesis, inputs, risk_rep
     assert 'datetime="2026-11-05"' in hero
     assert ('14.39' if lang == 'en' else '14,39') in hero and ('14.00' if lang == 'en' else '14,00') in hero
     assert TEXT[lang]['status'] in hero and TEXT[lang]['ticket_label'] in hero
+    assert list(blocks).index('chart_pricing') < list(blocks).index('update')
     assert page.index('id="view"') < page.index('id="update"') < page.index('id="scorecard"') < page.index('id="lab"') < page.index('id="quant"') < page.index('id="archive"')
 
 
 def test_track_record_counts_every_scored_call(thesis, inputs, risk_report):
     proof = unescape(re.sub(r'<[^>]+>', ' ', render('en', thesis, inputs, date(2026, 11, 5), 'quant', risk_report)['proof']))
-    assert '11 dated calls checked so far: 5 confirmed, 5 partly right, 1 missed.' in proof
-    assert 'none yet' in proof
+    assert '11 dated calls checked so far.' in proof
+    numbers = re.findall(r'<dt>([^<]+)</dt><dd>(\d+)</dd>', render('en', thesis, inputs, date(2026, 11, 5), 'quant', risk_report)['proof'])
+    assert numbers == [('Confirmed', '5'), ('Partly right', '5'), ('Missed', '1'), ('Paper trades entered', '0')]
 
 
 def test_every_cv_claim_stays_on_the_page(thesis, inputs, risk_report):
@@ -198,13 +200,13 @@ def test_every_cv_claim_stays_on_the_page(thesis, inputs, risk_report):
     text = unescape(re.sub(r'<[^>]+>', ' ', page))
     for claim in ('2,700', '2.3%', '1.3%', 'Kupiec', '−4.55%', '8.1σ', '61%', '28%', '11 official data feeds', 'six commodities', 'Seven first-round elections'):
         assert claim in text, claim
-    for section in ('update', 'scorecard', 'lab', 'risk', 'quant', 'commodities', 'archive', 'method'):
+    for section in ('update', 'scorecard', 'lab', 'risk', 'quant', 'commodities', 'archive', 'methods'):
         assert f'id="{section}"' in page, section
 
 
 def test_the_market_chart_is_labelled_and_has_two_variants(thesis, inputs):
     blocks = render('en', thesis, inputs, date(2026, 11, 5))
-    chart = blocks['chart_1']
+    chart = blocks['chart_pricing']
     assert chart.count('<svg') == 2 and 'Economists (Focus)' in chart and 'Selic today' in chart
     assert '<title' in chart and '<figcaption' in chart and '\n\n' not in chart
 

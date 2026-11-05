@@ -25,7 +25,7 @@ from src.runoff_content import TEXT as UPDATE_TEXT
 
 GITHUB = "https://github.com/Midiansi/brazil-rates-fx-scenario-monitor"
 LINKEDIN = "https://www.linkedin.com/in/romeomugnier"
-SECTIONS = ("view", "lab", "risk", "review", "quant", "commodities", "trade", "evidence", "method")
+SECTIONS = ("view", "lab", "risk", "review", "quant", "commodities", "trade", "evidence", "methods")  # not "method": the HTML sanitizer strips ids that clash with form properties
 LENSES = ("quant", "commodities")
 TAPE = ("selic_target", "fed_target_range", "brazil_us_policy_differential", "ptax_usd_brl_midpoint", "us_2_year_treasury", "brent")
 EVIDENCE_SOURCES = {
@@ -101,7 +101,7 @@ class Page:
 
         lead = f'<p class="take">{take}</p>' if take else ""
         body = f'<p class="sub-intro">{text}</p>' if text else ""
-        return f'<h3 class="sub-head">{title}</h3>{lead}{body}'
+        return f'<hr class="sub-rule"><h3 class="sub-head">{title}</h3>{lead}{body}'
 
     def numbers(self, inner: str) -> str:
         """Dense tables stay one click away, so the first read is the takeaway and the figure."""
@@ -270,18 +270,19 @@ class Page:
             return self._first_screen_without_note()
         n = self.n
         ticket = "".join(f"<div><dt>{self.s(term)}</dt><dd>{self.s(value)}</dd></div>" for term, value in n["ticket"])
+        stats = "".join(f"<div><dt>{self.s(label)}</dt><dd>{self.s(value)}</dd></div>" for value, label in n["stats"])
         keys = ["update", "scorecard", "lab", "risk", *lens_order(self.lens), "archive", "method"]
-        nav = "".join(f'<a href="#{key}">{e(n["nav"][key])}</a>' for key in keys)
+        nav = "".join(f'<a href="#{"methods" if key == "method" else key}">{e(n["nav"][key])}</a>' for key in keys)
         return (
             f'<div class="bm" lang="{self.t["html_lang"]}"><section class="hero" id="view" aria-labelledby="view-title">'
             f'<h1>{self.s(n["hero_title"])}</h1><p class="lede">{self.s(n["hero_lede"])}</p>'
-            f'<article class="call"><div class="call-meta"><h2 class="call-label" id="view-title">{e(n["call_label"])}</h2>'
-            f'<span class="call-status">{e(n["status"])}</span>'
+            f'<div class="call"><article class="call-text"><div class="call-meta"><h2 class="call-label" id="view-title">{e(n["call_label"])}</h2>'
             f'<time datetime="{e(self.current["as_of"])}">{self.s(n["dated"])}</time></div>'
-            f'<div class="call-grid"><div class="call-text"><p class="view-headline">{self.s(n["headline"])}</p>'
-            f'<p class="call-summary">{self.s(n["summary"])}</p><p class="call-more"><a href="#update">{e(n["read_more"])}</a></p></div>'
-            f'<aside class="ticket" aria-label="{e(n["ticket_label"])}"><h3>{e(n["ticket_label"])}</h3><dl>{ticket}</dl></aside></div>'
-            f"</article></section></div>"
+            f'<p class="view-headline">{self.s(n["headline"])}</p>'
+            f'<p class="call-summary">{self.s(n["summary"])}</p><p class="call-more"><a href="#update">{e(n["read_more"])}</a></p></article>'
+            f'<aside class="ticket" aria-label="{e(n["ticket_label"])}"><h3>{e(n["ticket_label"])}</h3>'
+            f'<span class="call-status">{e(n["status"])}</span><dl>{ticket}</dl></aside></div>'
+            f'<dl class="stats">{stats}</dl></section></div>'
         ), f'<div class="bm"><nav class="toc" aria-label="{e(self.t["nav_label"])}">{nav}</nav></div>'
 
     def proof(self) -> str:
@@ -314,10 +315,13 @@ class Page:
             rows.append(f'<div><dt>{e(area)}</dt><dd>{self.s(claim, **extra)}</dd><dd class="go"><a href="{href}"{attrs}>{e(label)}</a></dd></div>')
         if self.lens == "commodities":
             rows.insert(0, rows.pop(next(i for i, row in enumerate(rows) if '#commodities"' in row)))
+        labels = n["score_labels"]
+        numbers = "".join(f'<div class="{key}"><dt>{e(labels[key])}</dt><dd>{score[key] if key != "trades" else 0}</dd></div>' for key in ("confirmed", "partly", "missed", "trades"))
         return (
             f'<div class="bm" lang="{self.t["html_lang"]}"><section class="proof" aria-label="{e(n["proof_title"])}">'
-            f'<div class="score"><h2>{e(n["score_title"])}</h2><p>{self.s(n["score_line"], **extra)} {e(n["score_trades"])} <a href="#scorecard">{e(n["score_link"])}</a></p></div>'
-            f'<div class="shows"><h2>{e(n["proof_title"])}</h2><dl>{"".join(rows)}</dl></div></section></div>'
+            f'<div class="rail-row"><h2>{e(n["score_title"])}</h2><div><dl class="score-nums">{numbers}</dl>'
+            f'<p class="score-note">{self.s(n["score_line"], **extra)} {e(n["score_trades"])} <a href="#scorecard">{e(n["score_link"])}</a></p></div></div>'
+            f'<div class="rail-row"><h2>{e(n["proof_title"])}</h2><dl class="shows">{"".join(rows)}</dl></div></section></div>'
         )
 
     # -- The current note: the order of an interview answer -----------------
@@ -335,36 +339,34 @@ class Page:
         title, desc = self.raw(n["chart_title"]), self.raw(n["chart_desc"])
         args = (line(priced["forwards"]), line(priced["forwards_first_round"]), focus, selic, ticks, (years("2027-12-31"), labels["gap"]), labels, fmt, title, desc)
         legend = self.legend([("market", labels["market"]), ("before", labels["first"]), ("economists", labels["focus"]), ("prev", labels["selic"])])
-        return self.fig(pricing_svg(*args), pricing_svg(*args, compact=True), title, desc, legend)
+        figure = self.fig(pricing_svg(*args), pricing_svg(*args, compact=True), title, desc, legend)
+        return figure.replace('class="bm sec-body"', 'class="bm hero-figure"', 1)
 
-    def note_blocks(self) -> list[tuple[str, str]]:
+    def note_blocks(self) -> str:
         """Current decision first; the earlier research stays dated below."""
 
         if not self.current:
-            return []
+            return ""
         n = self.n
         rows = lambda table: [[self.s(cell) for cell in row] for row in table]
         terms = "".join(f"<div><dt>{self.s(term)}</dt><dd>{self.s(text)}</dd></div>" for term, text in n["glossary"])
-        wrap = lambda inner: f'<div class="bm" lang="{self.t["html_lang"]}">{inner}</div>'
-        first = (
-            f'<section class="sec" id="update" aria-labelledby="update-title">{self.section_head("update", self.s(n["title"]), self.s(n["intro"]))}'
-            '<div class="sec-body current-update">'
-            f'<details class="glossary"><summary>{e(n["glossary_title"])}</summary><div class="inner"><dl class="defs">{terms}</dl></div></details>'
-            + self.sub(self.s(n["q1_title"]), self.s(n["q1"]))
-            + self.table([self.raw(h) for h in n["moves_head"]], rows(n["moves_rows"]), "moves", self.raw(n["q1_title"]))
-            + f'<p class="muted small note">{self.s(n["moves_note"])}</p>'
-            + self.sub(self.s(n["q2_title"]), self.s(n["q2"])) + "</div></section>"
-        )
         points = "".join(f"<div><h4>{self.s(title)}</h4><p>{self.s(body)}</p></div>" for title, body in n["q3_points"])
         marks = {"met": ("confirmed", "✓"), "not_yet": ("missed", "✗")}
         conditions = [[self.s(condition), f'<span class="verdict {marks[status][0]}"><span class="i" aria-hidden="true">{marks[status][1]}</span>{e(n["rule_status"][status])}</span>', self.s(evidence)]
                       for condition, status, evidence in n["rule_rows"]]
         plan = "".join(f"<div><dt>{self.s(term)}</dt><dd>{self.s(value)}</dd></div>" for term, value in n["plan_rows"])
         wrong = "".join(f"<li>{self.s(item)}</li>" for item in n["q6_items"])
-        dates = "".join(f'<li><strong>{self.s(day)}</strong> {self.s(what)}</li>' for day, what in n["dates"])
-        second = (
+        dates = "".join(f'<li><strong>{self.s(day)}</strong>{self.s(what)}</li>' for day, what in n["dates"])
+        sign = lambda text: f'<span class="{"neg" if text.startswith("−") else "pos"}">{text}</span>'
+        payoff = [[*row[:-1], sign(row[-1])] for row in rows(n["payoff_rows"])]
+        body = (
+            f'<section class="sec" id="update" aria-labelledby="update-title">{self.section_head("update", self.s(n["title"]), self.s(n["intro"]))}'
             '<div class="sec-body current-update">'
-            f'<p>{self.s(n["q2b"])}</p>'
+            f'<details class="glossary"><summary>{e(n["glossary_title"])}</summary><div class="inner"><dl class="defs">{terms}</dl></div></details>'
+            + self.sub(self.s(n["q1_title"]), self.s(n["q1"]))
+            + self.table([self.raw(h) for h in n["moves_head"]], rows(n["moves_rows"]), "moves", self.raw(n["q1_title"]))
+            + f'<p class="muted small note">{self.s(n["moves_note"])}</p>'
+            + self.sub(self.s(n["q2_title"]), self.s(n["q2"])) + f'<p>{self.s(n["q2b"])}</p>'
             + self.sub(self.s(n["q3_title"])) + f'<div class="points">{points}</div>'
             + self.sub(self.s(n["q4_title"]), self.s(n["q4"]))
             + self.table([self.raw(h) for h in n["rule_head"]], conditions, "conditions", self.raw(n["q4_title"]), numeric_from=99)
@@ -372,14 +374,14 @@ class Page:
             + self.sub(self.s(n["q5_title"])) + f'<dl class="plan">{plan}</dl>'
             + f'<p class="after-table">{self.s(n["q5_size"])}</p><p>{self.s(n["q5_why"])}</p>'
             + f'<h4 class="table-title">{self.s(n["payoff_title"])}</h4>'
-            + self.table([self.raw(h) for h in n["payoff_head"]], rows(n["payoff_rows"]), "payoff", self.raw(n["payoff_title"]))
+            + self.table([self.raw(h) for h in n["payoff_head"]], payoff, "payoff", self.raw(n["payoff_title"]))
             + f'<p class="muted small note">{self.s(n["payoff_note"])}</p>'
             + self.sub(self.s(n["q6_title"])) + f'<ul class="plain">{wrong}</ul>'
             + f'<div class="next-dates"><span class="label">{e(n["dates_label"])}</span><ul>{dates}</ul></div>'
             + self.sub(self.s(n["q7_title"])) + f'<p>{self.s(n["q7_fx"])}</p><p>{self.s(n["q7_oil"])}</p>'
-            + "</div>"
+            + "</div></section>"
         )
-        return [("html", wrap(first)), ("svg", self.pricing_chart()), ("html", wrap(second) + self.scorecard())]
+        return f'<div class="bm" lang="{self.t["html_lang"]}">{body}</div>' + self.scorecard()
 
     def scorecard(self) -> str:
         n, u = self.n, self.u
@@ -441,7 +443,7 @@ class Page:
         why = "".join(f"<div><h3>{self.s(title)}</h3><p>{self.s(body)}</p></div>" for title, body in t["why"])
         keys = ["view", *(["update"] if self.current else []), "lab", "risk", *(lens_order(self.lens) if self.study else ()), "trade", "review", "method"]
         labels = {**t["nav"], "lab": lt["lab_nav"], "risk": lt["risk_nav"], "update": self.u["nav"]}
-        nav = "".join(f'<a href="#{key}">{e(labels[key])}</a>' for key in keys)
+        nav = "".join(f'<a href="#{"methods" if key == "method" else key}">{e(labels[key])}</a>' for key in keys)
         return (
             f'<div class="bm" lang="{t["html_lang"]}"><section class="hero" id="view" aria-labelledby="view-title">'
             f'<header class="masthead"><p class="kicker">{e(lt["kicker"])}</p><h1>{e(t["title"])}</h1><p class="lede">{e(lt["intro"])}</p>'
@@ -922,7 +924,7 @@ class Page:
             for key, src in sorted(self.thesis["sources"].items(), key=lambda item: labels.get(item[0], item[1]["label"]))
         )
         inner = (
-            self.section_head("method", e(t["method_title"]))
+            self.section_head("methods", e(t["method_title"]))
             + '<div class="sec-body">'
             f'<details><summary>{e(t["method_calc_label"])}</summary><div class="inner"><dl class="defs">{calc}</dl></div></details>'
             f'<details><summary>{e(t["data_label"])}</summary><div class="inner">{self.data_table()}</div></details>'
@@ -932,7 +934,7 @@ class Page:
             f'<h4>{e(t["archive_label"])}</h4><p>{e(t["archive"])} <a href="{GITHUB}/tree/main/research" target="_blank" rel="noopener">GitHub</a></p></div></details>'
             "</div>"
         )
-        return self.wrap("method", inner)
+        return self.wrap("methods", inner)
 
     def about(self) -> str:
         t = self.t
@@ -946,11 +948,11 @@ class Page:
         )
 
 
-def _pack(items: list[tuple[str, str]], counts: dict[str, int] | None = None) -> dict[str, str]:
+def _pack(items: list[tuple[str, str]]) -> dict[str, str]:
     """Merge neighbouring HTML blocks and number the blocks: body_1, chart_1, body_2, ..."""
 
     out: dict[str, str] = {}
-    counts = {"body": 0, "chart": 0} if counts is None else counts
+    counts = {"body": 0, "chart": 0}
     last = None
     for kind, markup in items:
         if not markup:
@@ -984,8 +986,6 @@ def render(lang: str, thesis: dict[str, Any], snapshot: dict[str, Any], today: d
         items += [("svg", page.archive()), ("html", page.method() + page.about())]
     else:
         items += [("html", page.trade_top()), ("svg", page.chart()), ("html", page.paths() + page.review() + page.evidence() + page.method() + page.about())]
-    counts = {"body": 0, "chart": 0}
-    note = _pack(page.note_blocks()[1:], counts)
-    first = page.note_blocks()[0][1] if page.current else ""
-    return {"top": page.top_bar(), "hero": hero, "proof": page.proof(), "toc": toc, "update": first, **note,
-            "lab": page.lab(), "risk": page.risk(), **_pack(items, counts)}
+    figure = {"chart_pricing": page.pricing_chart()} if page.current else {}
+    return {"top": page.top_bar(), "hero": hero, **figure, "proof": page.proof(), "toc": toc, "update": page.note_blocks(),
+            "lab": page.lab(), "risk": page.risk(), **_pack(items)}

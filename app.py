@@ -130,6 +130,8 @@ if pdf_bytes:
         help=content.TEXT[lang]["download_help"], on_click="ignore", icon=":material/download:",
     )
 
+if "chart_pricing" in blocks:  # the first visual sits under the call
+    st.markdown(blocks["chart_pricing"], unsafe_allow_html=True)
 if blocks.get("proof"):
     st.html(blocks["proof"])
 if "toc" in blocks:  # its own element so CSS can pin it while the sections scroll
@@ -147,5 +149,5 @@ for name, markup in blocks.items():
             st.download_button(lab_content.TEXT[lang]["risk_download"], csv_bytes, "brazilmacro_risk_forecasts.csv", "text/csv", on_click="ignore")
     elif name.startswith("body_"):
         st.html(markup)
-    elif name.startswith("chart_"):  # inline SVG survives only through Markdown
+    elif name.startswith("chart_") and name != "chart_pricing":  # inline SVG survives only through Markdown
         st.markdown(markup, unsafe_allow_html=True)

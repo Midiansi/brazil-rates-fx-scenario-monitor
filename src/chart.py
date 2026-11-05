@@ -64,7 +64,7 @@ def ptax_svg(
     seen: set[str] = set()
     for i, (d, _) in enumerate(points):
         month = d[:7]
-        if month not in seen and (i > 3 or i == 0):
+        if month not in seen and (i > 8 or i == 0):
             seen.add(month)
             if compact and len(seen) % 2 == 0:
                 continue
@@ -166,7 +166,7 @@ def curve_svg(rows: list[dict[str, Any]], survey: list[tuple[float, float, str]]
     py = frame.y(policy)
     parts.append(f'<line x1="{frame.left}" x2="{width - frame.right}" y1="{py:.1f}" y2="{py:.1f}" class="c-prev"/>')
     if not compact:
-        parts.append(f'<text x="{width - frame.right + 8}" y="{py + 4:.1f}" class="c-label" font-size="{font}">{escape(labels["selic"])}</text>')
+        parts.append(f'<text x="{width - frame.right + 12}" y="{py + 4:.1f}" class="c-label" font-size="{font}">{escape(labels["selic"])}</text>')
     for key, css in (("before", "c-before"), ("after", "c-line")):
         path = " ".join(f"{'M' if i == 0 else 'L'}{frame.x(transform(r['years'])):.1f},{frame.y(r[key]):.1f}" for i, r in enumerate(rows))
         parts.append(f'<path d="{path}" class="{css}"/>')
@@ -298,10 +298,10 @@ def pricing_svg(market: list[tuple[float, float]], first: list[tuple[float, floa
                 title: str, desc: str, compact: bool = False) -> str:
     """Selic path implied by the market against the economists' path, in years from today."""
 
-    width, height = (380, 310) if compact else (760, 350)
+    width, height = (380, 320) if compact else (1060, 420)
     x_max = max(tick for tick, _ in ticks) + 0.03
-    frame = _Frame(width, height, (34, 14, 14, 34) if compact else (42, 146, 18, 36), (0.0, x_max), (10.5, 16.5))
-    font = 11 if compact else 12
+    frame = _Frame(width, height, (30, 12, 14, 34) if compact else (38, 168, 14, 36), (0.0, x_max), (10.5, 16.5))
+    font = 11 if compact else 13
     parts = _open(width, height, title, desc, compact, "pr" + str(int(compact)))
     _hgrid(parts, frame, [11.0, 12.0, 13.0, 14.0, 15.0, 16.0], lambda v: fmt(v), font - 1)
     for tick, name in ticks:
@@ -319,6 +319,10 @@ def pricing_svg(market: list[tuple[float, float]], first: list[tuple[float, floa
 
     py = frame.y(selic)
     parts.append(f'<line x1="{frame.left}" x2="{width - frame.right}" y1="{py:.1f}" y2="{py:.1f}" class="c-prev"/>')
+    # The gap between the two lines is the trade, so it is the one shaded area on the page.
+    upper, lower = clipped(market), clipped(focus)
+    area = [(frame.x(t), frame.y(r)) for t, r in upper] + [(frame.x(t), frame.y(r)) for t, r in reversed(lower)]
+    parts.append('<polygon points="' + " ".join(f"{px:.1f},{py_:.1f}" for px, py_ in area) + '" class="c-gap-area"/>')
     series = (("first", first, "c-before"), ("focus", focus, "c-focus"), ("market", market, "c-market"))
     ends = {}
     for key, points, css in series:
@@ -328,11 +332,14 @@ def pricing_svg(market: list[tuple[float, float]], first: list[tuple[float, floa
         parts.append(f'<path d="{path}" class="{css}"/>')
         for t, r in shown[:-1] if key != "focus" else shown:
             parts.append(f'<circle cx="{frame.x(t):.1f}" cy="{frame.y(r):.1f}" r="7" class="c-hit"><title>{escape(labels[key])} · {escape(fmt(r))}%</title></circle>')
+    for key in ("market", "focus"):
+        t, r = ends[key]
+        parts.append(f'<circle cx="{frame.x(t):.1f}" cy="{frame.y(r):.1f}" r="4" class="c-{key}-end"/>')
     if not compact:
         for key, css in (("market", "c-value"), ("first", "c-label"), ("focus", "c-value")):
             t, r = ends[key]
-            parts.append(f'<text x="{frame.x(t) + 8:.1f}" y="{frame.y(r) + 4:.1f}" class="{css}" font-size="{font}">{escape(labels[key])}</text>')
-        parts.append(f'<text x="{width - frame.right + 8}" y="{py + 4:.1f}" class="c-label" font-size="{font}">{escape(labels["selic"])}</text>')
+            parts.append(f'<text x="{frame.x(t) + 12:.1f}" y="{frame.y(r) + 4:.1f}" class="{css}" font-size="{font}">{escape(labels[key])}</text>')
+        parts.append(f'<text x="{width - frame.right + 12}" y="{py + 4:.1f}" class="c-label" font-size="{font}">{escape(labels["selic"])}</text>')
     # The gap the note talks about, marked at end-2027.
     at, target = gap_at
     market_at = next(r0 + (r1 - r0) * (at - t0) / (t1 - t0) for (t0, r0), (t1, r1) in zip(market, market[1:]) if t0 <= at <= t1)
