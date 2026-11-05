@@ -60,12 +60,12 @@ def test_every_scenario_renders_in_every_language_without_network(mode, lang, no
 
 def test_rate_shock_and_maturity_update_results():
     app = AppTest.from_file("app.py").run()
-    price = 1_000_000 / (1 + .126) ** 2
-    assert "788,721" in markup(app)
+    price = 1_000_000 / (1 + .14827) ** 2  # the current note's 2-year ANBIMA zero rate
+    assert f"{price:,.0f}" in markup(app)
     app.slider[0].set_value(-100)
     rerun(app)
     assert not app.exception
-    exact = 1_000_000 / (1 + .116) ** 2 - price
+    exact = 1_000_000 / (1 + .13827) ** 2 - price
     assert f'{exact:,.0f}' in markup(app)
     app.select_slider[0].set_value(5.0)
     rerun(app)
@@ -130,4 +130,4 @@ def test_partial_risk_report_cannot_break_market_research(thesis, snapshot, faul
         report = "invalid"
     result = render("en", thesis, snapshot, date(2026, 10, 7), risk_report=report)
     assert TEXT["en"]["risk_failure"] in result["risk"]
-    assert "The interest-rate curve" in result["body_1"]
+    assert "The interest-rate curve" in "".join(result.values())

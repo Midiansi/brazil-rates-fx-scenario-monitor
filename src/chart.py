@@ -291,3 +291,54 @@ def bars_svg(rows: list[dict[str, Any]], labels: dict[str, str], fmt: Callable[[
             parts.append(f'<text x="{tx:.1f}" y="{y0 + bar - 3}" text-anchor="{"start" if value >= 0 else "end"}" class="c-label" font-size="{font - 1}">{escape(fmt(value))}</text>')
     parts.append("</svg>")
     return "".join(parts)
+
+
+def pricing_svg(market: list[tuple[float, float]], first: list[tuple[float, float]], focus: list[tuple[float, float]], selic: float,
+                ticks: list[tuple[float, str]], gap_at: tuple[float, str], labels: dict[str, str], fmt: Callable[[float], str],
+                title: str, desc: str, compact: bool = False) -> str:
+    """Selic path implied by the market against the economists' path, in years from today."""
+
+    width, height = (380, 310) if compact else (760, 350)
+    x_max = max(tick for tick, _ in ticks) + 0.03
+    frame = _Frame(width, height, (34, 14, 14, 34) if compact else (42, 146, 18, 36), (0.0, x_max), (10.5, 16.5))
+    font = 11 if compact else 12
+    parts = _open(width, height, title, desc, compact, "pr" + str(int(compact)))
+    _hgrid(parts, frame, [11.0, 12.0, 13.0, 14.0, 15.0, 16.0], lambda v: fmt(v), font - 1)
+    for tick, name in ticks:
+        anchor = "start" if tick == 0 else "end" if tick == ticks[-1][0] else "middle"
+        parts.append(f'<text x="{frame.x(tick):.1f}" y="{height - 12}" text-anchor="{anchor}" class="c-tick" font-size="{font - 1}">{escape(name)}</text>')
+
+    def clipped(points: list[tuple[float, float]]) -> list[tuple[float, float]]:
+        out = []
+        for (t0, r0), (t1, r1) in zip(points, points[1:]):
+            out.append((t0, r0))
+            if t0 <= x_max < t1:
+                out.append((x_max, r0 + (r1 - r0) * (x_max - t0) / (t1 - t0)))
+                return out
+        return out + [points[-1]]
+
+    py = frame.y(selic)
+    parts.append(f'<line x1="{frame.left}" x2="{width - frame.right}" y1="{py:.1f}" y2="{py:.1f}" class="c-prev"/>')
+    series = (("first", first, "c-before"), ("focus", focus, "c-focus"), ("market", market, "c-market"))
+    ends = {}
+    for key, points, css in series:
+        shown = clipped(points)
+        ends[key] = shown[-1]
+        path = " ".join(f"{'M' if i == 0 else 'L'}{frame.x(t):.1f},{frame.y(r):.1f}" for i, (t, r) in enumerate(shown))
+        parts.append(f'<path d="{path}" class="{css}"/>')
+        for t, r in shown[:-1] if key != "focus" else shown:
+            parts.append(f'<circle cx="{frame.x(t):.1f}" cy="{frame.y(r):.1f}" r="7" class="c-hit"><title>{escape(labels[key])} · {escape(fmt(r))}%</title></circle>')
+    if not compact:
+        for key, css in (("market", "c-value"), ("first", "c-label"), ("focus", "c-value")):
+            t, r = ends[key]
+            parts.append(f'<text x="{frame.x(t) + 8:.1f}" y="{frame.y(r) + 4:.1f}" class="{css}" font-size="{font}">{escape(labels[key])}</text>')
+        parts.append(f'<text x="{width - frame.right + 8}" y="{py + 4:.1f}" class="c-label" font-size="{font}">{escape(labels["selic"])}</text>')
+    # The gap the note talks about, marked at end-2027.
+    at, target = gap_at
+    market_at = next(r0 + (r1 - r0) * (at - t0) / (t1 - t0) for (t0, r0), (t1, r1) in zip(market, market[1:]) if t0 <= at <= t1)
+    focus_at = next(r0 + (r1 - r0) * (at - t0) / (t1 - t0) for (t0, r0), (t1, r1) in zip(focus, focus[1:]) if t0 <= at <= t1)
+    cx = frame.x(at)
+    parts.append(f'<line x1="{cx:.1f}" x2="{cx:.1f}" y1="{frame.y(market_at):.1f}" y2="{frame.y(focus_at):.1f}" class="c-gap"/>')
+    parts.append(f'<text x="{cx + 8:.1f}" y="{(frame.y(market_at) + py) / 2 + 5:.1f}" text-anchor="start" class="c-value" font-size="{font}">{escape(target)}</text>')
+    parts.append("</svg>")
+    return "".join(parts)

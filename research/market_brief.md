@@ -1,98 +1,138 @@
-# The market bet on change. It got continuity.
+# The Copom held. The market still prices hikes.
 
-Published 27 October 2026 · market data through 26 October
+Published 5 November 2026. Market data through 4 November.
 
-**Lula’s comeback win shook Brazilian markets in a single day: the dollar jumped 9.2% against the real, and markets now expect interest rates to rise rather than fall. I held no position through the vote, and I will wait for the central bank’s meeting on 4 November before betting on interest rates.**
+**The central bank held rates. The market still prices hikes. I want to bet against those hikes, but only once the 2027 budget target is in law.**
 
-Investors had bet on a change of government. On 25 October, Lula won a fourth term with 51.79% of valid votes, after trailing Flávio Bolsonaro 47.1% to 45.0% in the first round. It was the first time since 1989 that the second-placed candidate in the first round went on to win. One trading day was enough to reprice every Brazilian asset.
+Brazil’s central bank (the Copom) held the Selic at 13.75% on 4 November and called policy “substantially contractionary”. The January 2028 DI rate, at 14.39%, still prices about 100 basis points of hikes by mid-2027, while economists expect cuts. I read most of that gap as fear about public finances, so the trade is to receive January 2028. My rule also needs the budget target in law, and that has not happened yet.
 
-## What moved, and what did not
+## The paper trade
 
-| Market | Fri 23 Oct | Mon 26 Oct | Change |
+- **Trade:** Receive DI January 2028
+- **Today:** 14.39%, 4 November close
+- **Size:** R$1,000 per basis point, about 116 contracts
+- **Enter if:** Budget bill filed by 9 December and rate at or above 14.00%
+- **Stop:** 50 basis points above entry, or any Copom hike
+- **Target:** 100 basis points below entry
+- **Carry and roll:** About 13 basis points a month
+
+## What happened?
+
+On 4 November the Copom held the Selic at 13.75%, by 7-0, after 5 straight cuts of 25 bp. It raised its inflation forecasts to 5.6% for 2026 (from 5.2%) and 4.7% for 2027 (from 3.9%), with 3.5% for mid-2028 against a 3% target, and said inflation risks lean upward. It also said activity is slowing more sharply, and it gave no guidance on the next move. Markets moved before the decision: that day the 2-year rate fell 29 bp, as oil dropped and reports said Lula would address the nation on public finances.
+
+| Market | 23 Oct, before the vote | 26 Oct, after the vote | 4 Nov, Copom day |
 |---|---:|---:|---:|
-| Dollar in reais (PTAX) | 5.0374 | 5.5003 | +9.2% |
-| Interest rate to Jan 2028 (DI) | 12.86% | 14.80% | +194 bp |
-| Ibovespa (stock index) | 205,083 | 176,608 | −13.9% |
-| U.S. 2-year interest rate | 4.69% | 4.68% | −1 bp |
+| Dollar in reais (PTAX) | 5.0374 | 5.5003 | 5.4775 |
+| DI January 2028 | 12.86% | 14.80% | 14.39% |
+| Brent spot, US$ (latest: 3 Nov) | 128.30 | 128.12 | 107.03 |
+| U.S. 2-year yield | 4.69% | 4.68% | 4.58% |
+| Ibovespa | 205,083 | 176,608 | 167,563 |
 
-PTAX and U.S. rates come from official sources. The DI rate and the Ibovespa are B3 exchange figures reported by the press; Monday’s DI is a late-afternoon quote. As the Ibovespa fell, stock trading was briefly halted (a circuit breaker).
+PTAX, U.S. yields and Brent spot are official. DI rates and the Ibovespa are B3 figures reported by the press; the official ANBIMA curve, interpolated to the same date, gives 14.43% for January 2028.
 
-**What I would do.** Currency: no position. My 6 October plan to buy the real was cancelled automatically on the first day it could have started, because the dollar closed at 5.5003, above my 5.30 cancel level. Interest rates: I think the central bank’s rate cuts are over, and I take no position before its 4 November meeting (the Copom). If it holds rates instead of raising them, and the government confirms its 2027 budget target, the market’s 14.80% rate looks too high. A bet that it falls (“receiving” the rate) is the trade I am preparing.
+## What is the market pricing?
 
-**What would change my mind.** If the central bank raises rates, or the government loosens its 2027 budget target, the market is right to expect higher rates, and I stay out. If the central bank cuts, its credibility becomes the risk. I would look at the real again only with new, dated levels, not just because it is cheaper.
+A DI rate is the average overnight rate until the contract expires. With the overnight rate at 13.65%, a January 2028 rate of 14.39% needs the Selic to rise by about 100 bp by mid-2027 and stay there. Economists expect the opposite: 13.50% at the end of this year and 12.50% at the end of 2027, an average of about 13.0%. The gap is 1.4 pp. It was 0.3 pp before the vote and 2.3 pp the day after.
 
-## The currency: a year of extra interest lost in one day
+Part of that gap is a risk premium rather than an expected hike. The 2-year rate has gone from 12.60% on 5 October to 14.83%, and 66% of the rise is higher implied inflation: 5.27% then, 6.65% now, while economists expect 4.8% for 2027. It is the first-round rally in reverse, through the same channel.
 
-The official dollar rate rose from 5.0374 to 5.5003 reais (+9.2%). Since 2002, only one day saw a bigger rise: 8 October 2008, during the global financial crisis. The move wiped out the whole rally after the first round and left the dollar 5.3% above where it was before the first round (5.2235). The good news had been worth 4.6%; the bad news cost about twice as much. One caution: PTAX averages four readings taken in the morning, when the dollar briefly topped R$5.60. The dollar ended the day at 5.4029 (+8.2%), and the official rate eased to about 5.33 on 27 October (press-reported). The authorities treated Monday as market stress: the Treasury cancelled the week’s fixed-rate and inflation-linked bond sales and bought bonds back, and the central bank said it would step into the currency market only if trading stopped working properly.
+## Why do I think the market is too high?
 
-## Interest rates: from expected cuts to expected hikes
+- **The Copom is not signalling hikes.** It calls policy “substantially contractionary”, sees a sharper slowdown, and its 3.5% forecast for mid-2028 already assumes the economists’ path with cuts. The 2-year real rate is near 7.7%.
+- **Pressure from abroad is easing.** Brent spot has fallen 16% since the vote, and oil is one of the risks the Copom names. The U.S. 2-year yield is down 10 bp over the same days, although 2 Fed members dissented in favour of a hike on 28 October.
+- **Waiting is paid.** The position earns about 13 bp a month in carry and roll if nothing changes. If the Selic simply stays at 13.75% until expiry, the trade makes +R$87,000.
 
-On Friday, the January 2028 DI rate (12.86%) was only 0.3 pp above what economists expected (Focus survey, 23 Oct): a policy rate cut by 50 bp to 13.25% by December and to 11.75% by end-2027, an average of about 12.5%. On Monday it traded near 14.80%: 2.3 pp above that path, and above today’s 13.75% policy rate. Longer contracts, to January 2029 and 2031, closed at 15.22% and 15.28%. Near-term contracts say the same: the January 2027 rate closed at 13.70%, slightly above today’s overnight rate (13.65%), so markets no longer expect any cut this year (economists’ path: 13.4%). The gap is either rate hikes economists do not yet expect, or extra compensation investors now demand for risk. The central bank’s next meeting is the first test of which.
+## Why am I not in the trade yet?
 
-## Why: worries about public finances, not new data
+On 27 October, before the meeting, I published three conditions. Two are met.
 
-No economic data changed over the weekend; what changed was the expected economic policy. Investors had bet that a new government would cut spending. The government’s 2027 budget bill projects a primary surplus (the budget balance before interest) of R$18.6 bn; the Senate’s Independent Fiscal Institution expects a deficit of R$86.1 bn. A fourth Lula term makes that gap the central question. Inflation leaves the central bank little room to ignore a weaker real: economists already expect 5.2% inflation for 2026, above the 4.5% upper limit of the target range, and 4.3% for 2027, against a 3% target. That is why I think the rate cuts are over. The extra risk premium should shrink only with evidence (a credible 2027 budget target, the budget vote, signals from the economic team), not just because Brazilian rates are high.
-
-## Exporters: a windfall for those who did not hedge
-
-At unchanged dollar prices, a 9.2% rise in the dollar raises exporters’ revenue in reais by the same 9.2%: the mirror image of the first round, when the stronger real cut it. A producer who locked in an exchange rate (hedged) after the first round, near 4.99, gave up this windfall; that is the hedge working as insurance, not a loss. Oil price data stop on 20 October, so there is no post-vote oil reading yet.
-
-## What I do next
-
-| If, after the central bank meets on 4 November… | It means | What I would do |
+| Condition | Status | Evidence |
 |---|---|---|
-| It holds rates, sounds firm on inflation, and the 2027 budget target is confirmed | Markets priced too many hikes: part of Monday’s jump was fear | Prepare a bet that the January 2028 rate falls, with dated entry and exit levels |
-| It raises rates, or the budget target is loosened | The hikes or the risk premium are real | Stay out; the real stays under pressure |
-| It cuts rates | The central bank’s credibility becomes the risk | Stay out; expect a weaker real and higher long-term rates |
+| The Copom holds | Met | Held at 13.75%, by 7-0. |
+| It sounds firm on inflation | Met | Forecasts raised, upward risks named, no hint of a cut. |
+| The 2027 budget target is confirmed | Not yet | The finance minister says he will pursue the centre of the target (R$73.2 bn, 0.5% of GDP) through a bill. No bill is filed, and campaign promises need at least R$39.8 bn of room in the budget. |
 
-Dates: U.S. Federal Reserve 28 October; Brazil’s central bank (Copom) 4 November; both again on 9 December. The weekly Focus survey will show how far economists move toward market prices.
+A speech does not count. Lula addresses the nation on 8 November, and he is not expected to announce measures. I enter on a filed bill. Waiting has a price: January 2028 has already fallen 41 bp from 14.80% without me, worth R$41,000 at this size.
 
-## Risk check: why my risk models were not enough
+## What exactly is the trade?
 
-On Friday, my three risk models (the VaR study below) said a position in reais would lose more than 1.6%–2.6% on only 1 day in 100. Monday’s loss was 8.4%: 3 to 5 times larger. These models describe ordinary days; an election result is a jump. That is why the decision before the vote was about exposure (holding none) rather than about stop-loss levels, which a price jump skips straight past.
+- **Instrument:** Receive DI January 2028 (DI1F28), 291 business days to expiry
+- **Size:** R$1,000 per bp: about 116 contracts at R$8.64 per bp each
+- **Trigger:** Bill filed by 9 December that makes the centre of the 2027 target binding, with new spending funded inside the target
+- **Entry:** First settlement after the trigger, only at or above 14.00%. Below that, too little of the gap is left
+- **Stop:** 50 bp above entry (R$50,000), or at once on any Copom hike or hike signal
+- **Target:** 100 bp below entry (R$100,000), or when the gap to economists falls under 0.5 pp
+- **Carry and roll:** About 6 bp of carry and 7 bp of roll a month: R$13,000 a month if nothing moves
+- **Expiry:** If nothing is filed by 9 December, the idea closes without a trade and I score it
 
-## Scorecard: my earlier calls
+The size comes from the worst day, not from the stop. On 26 October this rate jumped 194 bp in one session. A stop does nothing against a jump like that, and my own VaR models missed the same day in the real. At this size a repeat costs R$195,000, which is my paper limit.
+
+I chose January 2028 because it depends on the next Copom meetings, which is what the thesis is about. Longer contracts carry a fiscal premium I cannot time. The curve is also steepest here: 74 bp from the overnight rate to January 2028, 39 bp more to January 2029, and 21 bp more to January 2031.
+
+### What the position makes at expiry, entered at 14.39%
+
+| If the Selic... | Average overnight rate | Result |
+|---|---:|---:|
+| Follows economists: 12.50% by end-2027 | 13.0% | +R$165,000 |
+| Stays at 13.75% | 13.7% | +R$87,000 |
+| Rises 100 bp by mid-2027 (about what is priced) | 14.4% | +R$3,000 |
+| Rises 200 bp by mid-2027 | 15.1% | −R$82,000 |
+
+Held to expiry with 116 contracts, before costs. Hypothetical: no order has been placed.
+
+## What would prove me wrong?
+
+- The Copom hikes or signals a hike: I stay out, or close the trade.
+- The budget target is loosened, or new spending is carved out of it: I stay out.
+- The real stays weak: the Copom’s forecast starts from R$5.20 per dollar, and PTAX closed at 5.4775, 5.3% weaker. If that gap lasts, the 3.5% forecast is too low.
+- Economists come to the market: in one week the Focus end-2027 Selic rose from 11.75% to 12.50%. If they meet near today’s prices, there is no gap left to trade.
+
+**Next dates:** 8 November: Lula’s address. 10 November: Copom minutes. 9 December: Copom and Fed decisions; the plan expires.
+
+## What does this mean for FX and commodities?
+
+Currency: no position. PTAX at 5.4775 is 8.7% above its level before the vote, and the extra interest is about 0.76% a month. My long-real idea closed on 26 October, and I would reopen it only with new, dated levels. Rates are the cleaner trade: the real also carries oil and flows.
+
+Exporters: on 27 October I called the weaker real a windfall for those who had not hedged. It lasted a week. A barrel of Brent in reais went from R$646 before the vote to R$705 after it, then to R$588 on 3 November, 9% below where it started. This time the commodity hedge mattered more than the currency hedge. Front-month Brent fell further on 4 November, to US$ 94.62 (−8.7%, press-reported).
+
+## What have I got wrong so far?
 
 | What I said | What happened | Verdict |
 |---|---|---|
-| 6 Oct: do not buy before the runoff, because one day can jump past every price level. | The dollar jumped 9.2% on the first day a trade was allowed, straight past my 5.30 cancel level. The idea closed without a trade. | Confirmed |
-| 16 Oct: the extra interest from holding reais cannot make up for an election jump; the first round had cost 6 months of it. | The runoff cost 12 months of that interest in a single day. | Confirmed |
-| 16 Oct: bond markets were more worried about inflation than the currency market was (expected inflation rose from 5.27% to 5.54% while the real kept 72% of its rally). | Bonds gave the better warning. I pointed out the gap but did not measure the lopsided risk behind it. | Partly |
-| 16 Oct: three scenarios for after the runoff, including a shock from U.S. interest rates. | No scenario covered a Brazil-only shock with falling U.S. rates, which is what happened. | Missed |
+| 27 Oct: the rate cuts are over, and I wait for the 4 November meeting. | Unanimous hold after 5 cuts. 39 of 75 institutions expected another cut, but B3 options already priced about 70% for a hold, so this was no edge. Next test on 9 December: Focus still has 13.50% at year-end. | Confirmed |
+| 27 Oct: if the Copom holds, January 2028 at 14.80% prices too many hikes. | It fell to 14.39% before the decision. Right direction, but oil and the U.S. election did much of the work, and I had no position. | Partly |
+| 27 Oct: a weaker real is a windfall for unhedged exporters. | True for a week. Oil then took a barrel in reais 9% below its level before the vote. I noted that the oil data stopped on 20 October, not that oil could undo the windfall. | Partly |
 
-**Lesson.** Prices and polls disagreed: markets were priced for one winner while the polls showed a coin flip. That imbalance, not a forecast of the result, was the reason to stay out. From now on, every scenario table includes the outcome markets are not pricing.
+**Lesson.** Waiting for proof has a price, and I should state it. From now on every plan says what the wait has cost so far.
 
 ## Dated inputs
 
-Frozen at publication. The official dollar rate (PTAX), U.S. rates, the Focus survey and the Selic come from official data feeds, and the vote count from the electoral court (TSE). DI rates, the Ibovespa, the dollar’s closing price, the 27 October PTAX and policy announcements are press-reported. No position was opened; nothing here is a real return.
+Frozen at publication, before the first session after the decision. PTAX, ANBIMA, Focus, U.S. yields, Brent spot and the Copom statement are official. DI rates, the Ibovespa, front-month Brent, surveys and budget reporting come from the press. The English wording of the Copom’s phrases is my translation. No position was opened; nothing here is a real return.
 
-- [TSE · Presidente do TSE anuncia reeleição de Lula e faz balanço do 2º turno](https://www.tse.jus.br/comunicacao/noticias/2026/Outubro/presidente-do-tse-anuncia-reeleicao-de-lula-e-faz-balanco-do-2o-turno-das-eleicoes-2026) — 2026-10-25
-- [BCB · PTAX](https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/) — 2026-10-26
-- [U.S. Treasury · Par yields](https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve) — 2026-10-26
-- [BCB · Focus](https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/) — 2026-10-23
-- [BCB · Selic target](https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=17/09/2026&dataFinal=27/10/2026) — 2026-09-17
-- [Senate IFI · 2027 budget](https://www12.senado.leg.br/ifi/noticias/ifi-analisa-ploa-2027-e-apresenta-projecoes-diferentes-das-encaminhadas-pelo-governo-ao-congresso) — 2026-09-17
-- [CNN Brasil · Juros futuros fecham em alta após reeleição de Lula](https://www.cnnbrasil.com.br/economia/money/mercado/juros-futuros-fecham-em-alta-apos-reeleicao-de-lula/) — 2026-10-26
-- [ISTOÉ Dinheiro · Juros futuros caem com recuo do dólar e nova intervenção do Tesouro](https://istoedinheiro.com.br/juros-futuros-hoje-27-10-2026-intervencao-tesouro) — 2026-10-27
-- [Times Brasil · Ibovespa sobe 0,47% no último pregão antes do segundo turno](https://timesbrasil.com.br/investimentos/bolsa/ibovespa-sobe-047-e-dolar-cai-abaixo-de-r-5-no-ultimo-pregao-antes-do-segundo-turno/) — 2026-10-23
-- [InfoMoney · Ibovespa desaba 13% após eleição, em dia de circuit breaker](https://www.infomoney.com.br/mercados/ibovespa-hoje-bolsa-de-valores-ao-vivo-26102026/) — 2026-10-26
-- [Seu Dinheiro · Ibovespa cai 14%, dólar sobe a R$ 5,40](https://www.seudinheiro.com/2026/bolsa-dolar/ibovespa-cai-17-dolar-vai-a-r-550-mas-nem-todo-mundo-perde-entenda-o-caos-nos-mercados-hoje-ccgg/) — 2026-10-26
-- [InfoMoney · Ibovespa hoje, 27 Oct](https://www.infomoney.com.br/mercados/ibovespa-hoje-bolsa-de-valores-ao-vivo-27102026/) — 2026-10-27
-- [InfoMoney · Após vitória de Lula, Tesouro cancela leilões de prefixados e IPCA+ da semana](https://www.infomoney.com.br/onde-investir/apos-vitoria-de-lula-tesouro-cancela-leiloes-de-prefixados-e-ipca-da-semana/) — 2026-10-26
-- [Jornal de Brasília · Durigan autoriza nova recompra de títulos pelo Tesouro](https://jornaldebrasilia.com.br/noticias/economia/durigan-autoriza-nova-recompra-de-titulos-pelo-tesouro-apos-turbulencia-no-mercado/) — 2026-10-27
-- [Jornal de Brasília · BC só vai atuar no câmbio em caso de disfuncionalidade, diz Galípolo](https://jornaldebrasilia.com.br/noticias/economia/bc-so-vai-atuar-no-cambio-em-caso-de-disfuncionalidade-do-mercado-diz-galipolo-apos-alta-do-dolar/) — 2026-10-27
-- [Forbes Brasil · Ibovespa fecha em alta e dólar cai à espera de desfecho da eleição](https://forbes.com.br/geral/2026/10/ibovespa-fecha-em-alta-e-dolar-cai-a-espera-de-desfecho-da-eleicao/) — 2026-10-23
-- [BCB · Copom calendar](https://www.bcb.gov.br/detalhenoticia/20739/nota) — 2026-10-27
+- [BCB · Copom 282nd meeting statement](https://www.bcb.gov.br/controleinflacao/comunicadoscopom), 2026-11-04
+- [BCB · PTAX](https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/), 2026-11-04
+- [ANBIMA · Term structure, 3 and 4 November](https://www.anbima.com.br/informacoes/est-termo/CZ.asp), 2026-11-04
+- [BCB · Focus](https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/), 2026-10-30
+- [U.S. Treasury · Par yields](https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve), 2026-11-04
+- [Federal Reserve · FOMC statement](https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm), 2026-10-28
+- [EIA · Brent spot, via FRED](https://fred.stlouisfed.org/series/DCOILBRENTEU), 2026-11-03
+- [Bom Dia Mercado · Juros futuros queimam prêmios](https://www.bomdiamercado.com.br/mercado-financeiro/juros/juros-futuros-queimam-premios-com-alivio-externo-apos-eleicoes-nos-eua-e-expectativa-sobre-pronunciamento-de-lula/), 2026-11-04
+- [Times Brasil · Ibovespa sobe 1,23% no pré-Copom](https://timesbrasil.com.br/investimentos/bolsa/ibovespa-sobe-123-e-interrompe-seis-quedas-no-pre-copom-dolar-recua-a-r-545/), 2026-11-04
+- [CNN Brasil · Mercado financeiro, 4 November](https://www.cnnbrasil.com.br/economia/money/mercado/mercado-financeiro-ibovespa-dolar-4-novembro-2026/), 2026-11-04
+- [CNN Brasil · Broadcast survey, 39 of 75 expected a cut](https://www.cnnbrasil.com.br/economia/money/mercado/mercado-financeiro-ibovespa-dolar-4-novembro-2026/), 2026-11-04
+- [Seu Dinheiro · Copom segura Selic em 13,75%, about 70% priced](https://www.seudinheiro.com/2026/economia/copom-segura-selic-em-1375-e-interrompe-ciclo-de-cortes-nos-juros-mlim/), 2026-11-04
+- [Metrópoles · Governo quebra-cabeça para desarmar bombas no Orçamento 2027](https://www.metropoles.com/brasil/governo-desarmar-bombas-orcamento), 2026-11-02
+- [Estadão Conteúdo (republished) · Lula fará pronunciamento](https://portalgilbertosilva.com.br/04/11/2026/lula-fara-pronunciamento-para-anunciar-medidas-de-ajuste-e-tentar-acalmar-mercadoutm_sourcerss-ultima-horautm_mediumrssutm_campaignrssfeed/), 2026-11-04
 
 ## Key terms in plain English
 
-- **PTAX:** The central bank’s official dollar exchange rate, in reais per dollar. Higher means a weaker real.
-- **Selic and Copom:** The Selic is Brazil’s policy interest rate (13.75%). The Copom is the central-bank committee that sets it; it next meets on 4 November.
-- **DI futures:** Exchange-traded contracts that show the average interest rate markets expect until a given date. The January 2028 contract covers roughly the next 14 months.
-- **Carry:** The extra interest earned by holding reais instead of dollars: about 0.76% a month at today’s policy rates.
-- **VaR (value at risk):** A model’s estimate of a loss that should be exceeded on only 1 day in 100.
-- **bp and pp:** A basis point (bp) is 0.01 percentage point (pp): going from 12.86% to 14.80% is +194 bp, or +1.94 pp.
-- **Receiving a rate:** A bet, made with futures, that an interest rate will fall. It gains value when the rate goes down.
-- **Budget target:** The government’s goal for its budget balance before interest payments (the primary balance).
+- **Selic and Copom:** The Selic is Brazil’s policy interest rate (13.75%). The Copom is the central-bank committee that sets it.
+- **DI futures:** Exchange-traded contracts that show the average overnight rate the market expects until a given date.
+- **Receiving a rate:** A bet, made with DI futures, that a rate will fall. Brazilian desks call it “aplicar”.
+- **DV01:** How many reais a position gains or loses when the rate moves by one basis point.
+- **Carry and roll:** What a position earns if nothing changes: the rate received minus the overnight rate paid, plus the gain from sliding down a rising curve.
+- **Breakeven:** Implied inflation: the fixed-rate yield compared with the inflation-linked yield. It includes a risk premium.
+- **PTAX:** The central bank’s official dollar exchange rate. Higher means a weaker real.
+- **bp and pp:** A basis point (bp) is 0.01 percentage point (pp).
 
-Independent student research · No position · Educational research, not investment advice.
+Educational research, not investment advice. Paper only: no real positions and no claimed performance. Prices and rules dated 5 November 2026.

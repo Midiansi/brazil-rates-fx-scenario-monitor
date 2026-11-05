@@ -48,6 +48,9 @@ def render(lang: str, saved_thesis: dict[str, Any], lens: str = "quant") -> None
         if mode == "rates":
             curve = study.get("curve")
             raw_rows = curve.get("rows") if isinstance(curve, dict) else []
+            current = (saved_thesis.get("current_update") or {}).get("curve") or {}
+            if isinstance(current.get("fixed"), dict):  # the current note's own curve, so the bond matches the note
+                raw_rows = [{"years": int(du) / 252, "after": rate} for du, rate in current["fixed"].items()]
             curve_rows = [row for row in (raw_rows if isinstance(raw_rows, list) else [])
                           if isinstance(row, dict) and isinstance(row.get("years"), (int, float))
                           and isinstance(row.get("after"), (int, float)) and math.isfinite(row["after"])]

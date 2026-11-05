@@ -1,0 +1,427 @@
+{
+  "schema_version": 1,
+  "id": "2026-11-05",
+  "as_of": "2026-11-05",
+  "data_as_of": "2026-11-04",
+  "status": "waiting_for_trigger",
+  "inputs_file": "research/thesis_snapshot_2026-11-05.json",
+  "previous_file": "research/runoff_2026-10-27.json",
+  "study_file": "research/study_2026-10-06.json",
+  "decision": {
+    "meeting": 282,
+    "date": "2026-11-04",
+    "selic": 13.75,
+    "cdi": 13.65,
+    "vote_for": 7,
+    "vote_against": 0,
+    "cuts_before": 5,
+    "cut_size_bp": 25,
+    "cycle_start": 15.0,
+    "projections": {
+      "2026": 5.6,
+      "2027": 4.7,
+      "2028Q2": 3.5,
+      "previous_2026": 5.2,
+      "previous_2027": 3.9
+    },
+    "fx_assumption": 5.2,
+    "target": 3.0,
+    "ceiling": 4.5,
+    "next_meeting": "2026-12-09",
+    "minutes": "2026-11-10",
+    "broadcast_cut": 39,
+    "broadcast_total": 75,
+    "b3_hold_pct": 70
+  },
+  "fed": {
+    "date": "2026-10-28",
+    "lower": 3.75,
+    "upper": 4.0,
+    "dissents_for_hike": 2
+  },
+  "contract": {
+    "ticker": "DI1F28",
+    "maturity": "2028-01-03",
+    "business_days": 291,
+    "rate": 14.39,
+    "previous_settlement": 14.632,
+    "day_change_bp": -24.19999999999991,
+    "anbima_interpolated": 14.434404315586779,
+    "jan29": 14.785,
+    "jan31": 14.99,
+    "before_vote": 12.859,
+    "after_vote": 14.8,
+    "fall_since_vote_bp": 41.000000000000014,
+    "dv01_per_contract": 8.643309843580937
+  },
+  "priced": {
+    "hikes_bp_by_mid_2027": 103.01629597270659,
+    "survey_path_average": 12.98120419676614,
+    "gap_pp": 1.4087958032338612,
+    "market_end_2027": 15.15232622434579,
+    "gap_end_2027_pp": 2.6523262243457904,
+    "gap_before_vote_pp": 0.30532533176181964,
+    "gap_after_vote_pp": 2.2521528410682663,
+    "forwards": [
+      {
+        "from_du": 21,
+        "to_du": 42,
+        "forward_cdi": 13.669866383191632,
+        "selic_equivalent": 13.769866383191632
+      },
+      {
+        "from_du": 42,
+        "to_du": 63,
+        "forward_cdi": 13.834285082561104,
+        "selic_equivalent": 13.934285082561104
+      },
+      {
+        "from_du": 63,
+        "to_du": 126,
+        "forward_cdi": 14.133378025754206,
+        "selic_equivalent": 14.233378025754206
+      },
+      {
+        "from_du": 126,
+        "to_du": 252,
+        "forward_cdi": 14.683342927819009,
+        "selic_equivalent": 14.783342927819008
+      },
+      {
+        "from_du": 252,
+        "to_du": 504,
+        "forward_cdi": 15.366016540599459,
+        "selic_equivalent": 15.466016540599458
+      },
+      {
+        "from_du": 504,
+        "to_du": 756,
+        "forward_cdi": 15.736791228772029,
+        "selic_equivalent": 15.836791228772029
+      },
+      {
+        "from_du": 756,
+        "to_du": 1008,
+        "forward_cdi": 15.74563224899801,
+        "selic_equivalent": 15.84563224899801
+      },
+      {
+        "from_du": 1008,
+        "to_du": 1260,
+        "forward_cdi": 15.590126126040893,
+        "selic_equivalent": 15.690126126040893
+      },
+      {
+        "from_du": 1260,
+        "to_du": 2520,
+        "forward_cdi": 14.972700258616367,
+        "selic_equivalent": 15.072700258616367
+      }
+    ],
+    "forwards_first_round": [
+      {
+        "from_du": 21,
+        "to_du": 42,
+        "forward_cdi": 13.262095238363791,
+        "selic_equivalent": 13.362095238363791
+      },
+      {
+        "from_du": 42,
+        "to_du": 63,
+        "forward_cdi": 13.020947564193296,
+        "selic_equivalent": 13.120947564193296
+      },
+      {
+        "from_du": 63,
+        "to_du": 126,
+        "forward_cdi": 12.687478676332265,
+        "selic_equivalent": 12.787478676332265
+      },
+      {
+        "from_du": 126,
+        "to_du": 252,
+        "forward_cdi": 12.376717420654447,
+        "selic_equivalent": 12.476717420654447
+      },
+      {
+        "from_du": 252,
+        "to_du": 504,
+        "forward_cdi": 12.520456372925782,
+        "selic_equivalent": 12.620456372925782
+      },
+      {
+        "from_du": 504,
+        "to_du": 756,
+        "forward_cdi": 12.925613170168182,
+        "selic_equivalent": 13.025613170168182
+      },
+      {
+        "from_du": 756,
+        "to_du": 1008,
+        "forward_cdi": 13.14392940889848,
+        "selic_equivalent": 13.24392940889848
+      },
+      {
+        "from_du": 1008,
+        "to_du": 1260,
+        "forward_cdi": 13.201723169922497,
+        "selic_equivalent": 13.301723169922496
+      },
+      {
+        "from_du": 1260,
+        "to_du": 2520,
+        "forward_cdi": 13.1024961755275,
+        "selic_equivalent": 13.2024961755275
+      }
+    ],
+    "survey_path": [
+      [
+        "2026-11-04",
+        13.75
+      ],
+      [
+        "2026-12-31",
+        13.5
+      ],
+      [
+        "2027-12-31",
+        12.5
+      ],
+      [
+        "2028-12-31",
+        11.0
+      ],
+      [
+        "2029-12-31",
+        10.25
+      ]
+    ]
+  },
+  "curve": {
+    "date": "2026-11-04",
+    "previous_date": "2026-11-03",
+    "fixed": {
+      "21": 13.4962,
+      "42": 13.583,
+      "63": 13.6667,
+      "126": 13.8998,
+      "252": 14.2909,
+      "504": 14.8272,
+      "756": 15.1296,
+      "1008": 15.2833,
+      "1260": 15.3446,
+      "2520": 15.1585
+    },
+    "two_year": 14.8272,
+    "two_year_first_round": 12.6001,
+    "two_year_since_first_round_bp": 222.71,
+    "two_year_day_change_bp": -29.080000000000084,
+    "breakeven_2y": 6.6495,
+    "breakeven_2y_first_round": 5.268,
+    "real_2y": 7.6678,
+    "real_2y_first_round": 6.9651,
+    "breakeven_share": 66.28442567891757,
+    "first_round_breakeven_share": 61.3343587771582
+  },
+  "focus": {
+    "date": "2026-10-30",
+    "selic": {
+      "2026": 13.5,
+      "2027": 12.5,
+      "2028": 11.0,
+      "2029": 10.25
+    },
+    "ipca": {
+      "2026": 5.2166,
+      "2027": 4.7646,
+      "2028": 4.0,
+      "2029": 3.98
+    },
+    "fx": {
+      "2026": 5.3428,
+      "2027": 5.4,
+      "2028": 5.4,
+      "2029": 5.45
+    },
+    "previous_selic_2027": 11.75
+  },
+  "fx": {
+    "before_vote": 5.0374,
+    "after_vote": 5.50025,
+    "latest": 5.4775,
+    "date": "2026-11-04",
+    "since_vote_pct": 8.736649859054268,
+    "vs_copom_assumption_pct": 5.336538461538454,
+    "monthly_carry_pct": 0.7596609322517267
+  },
+  "oil": {
+    "date": "2026-11-03",
+    "before_vote": 128.3,
+    "after_vote": 128.12,
+    "latest": 107.03,
+    "fall_since_vote_pct": 16.46113019044646,
+    "brl_barrel": {
+      "before": 646.2984200000001,
+      "after": 704.69203,
+      "latest": 587.937196
+    },
+    "brl_vs_before_pct": -9.030073754473989,
+    "front_month": 94.62,
+    "front_month_change_pct": -8.66
+  },
+  "us2y": {
+    "after_vote": 4.68,
+    "before_vote": 4.69,
+    "latest": 4.58,
+    "change_bp": -9.999999999999964
+  },
+  "equity": {
+    "before_vote": 205082.56,
+    "after_vote": 176608.23,
+    "latest": 167563.47
+  },
+  "fiscal": {
+    "target_bn": 73.2,
+    "target_pct_gdp": 0.5,
+    "floor_bn": 36.6,
+    "room_needed_bn": 39.8,
+    "bill_filed": false,
+    "speech": "2026-11-08"
+  },
+  "rule": {
+    "written": "2026-10-27",
+    "conditions": {
+      "copom_holds": true,
+      "firm_on_inflation": true,
+      "budget_target_in_law": false
+    },
+    "expires": "2026-12-09"
+  },
+  "plan": {
+    "contract": "DI1F28",
+    "dv01_brl": 1000.0,
+    "entry_floor": 14.0,
+    "stop_bp": 50.0,
+    "target_bp": 100.0,
+    "carry_horizon_du": 21,
+    "contracts": 116,
+    "dv01": 1002.6239418553887,
+    "stop_loss_brl": 50131.197092769435,
+    "target_gain_brl": 100262.39418553887,
+    "jump_bp": 194.10000000000008,
+    "jump_loss_brl": 194609.30711413102,
+    "carry_bp_per_month": 6.108661855670103,
+    "roll_bp_per_month": 7.21426259380209,
+    "carry_roll_bp_per_month": 13.322924449472193,
+    "carry_roll_brl_per_month": 13357.883028571345,
+    "waiting_cost_bp": 41.000000000000014,
+    "scenarios": [
+      {
+        "key": "focus",
+        "average_cdi": 12.98120419676614,
+        "pnl_brl": 164814.30362994125
+      },
+      {
+        "key": "hold",
+        "average_cdi": 13.65000000000014,
+        "pnl_brl": 86611.63636362023
+      },
+      {
+        "key": "hike_100",
+        "average_cdi": 14.36834724677305,
+        "pnl_brl": 2535.53226936172
+      },
+      {
+        "key": "hike_200",
+        "average_cdi": 15.085751070756048,
+        "pnl_brl": -81511.75899570138
+      }
+    ]
+  },
+  "sources": [
+    {
+      "key": "copom",
+      "label": "BCB · Copom 282nd meeting statement",
+      "date": "2026-11-04",
+      "url": "https://www.bcb.gov.br/controleinflacao/comunicadoscopom"
+    },
+    {
+      "key": "ptax",
+      "label": "BCB · PTAX",
+      "date": "2026-11-04",
+      "url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/"
+    },
+    {
+      "key": "anbima",
+      "label": "ANBIMA · Term structure, 3 and 4 November",
+      "date": "2026-11-04",
+      "url": "https://www.anbima.com.br/informacoes/est-termo/CZ.asp"
+    },
+    {
+      "key": "focus",
+      "label": "BCB · Focus",
+      "date": "2026-10-30",
+      "url": "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/"
+    },
+    {
+      "key": "treasury",
+      "label": "U.S. Treasury · Par yields",
+      "date": "2026-11-04",
+      "url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve"
+    },
+    {
+      "key": "fed",
+      "label": "Federal Reserve · FOMC statement",
+      "date": "2026-10-28",
+      "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm"
+    },
+    {
+      "key": "brent",
+      "label": "EIA · Brent spot, via FRED",
+      "date": "2026-11-03",
+      "url": "https://fred.stlouisfed.org/series/DCOILBRENTEU"
+    },
+    {
+      "key": "di_futures",
+      "label": "Bom Dia Mercado · Juros futuros queimam prêmios",
+      "date": "2026-11-04",
+      "url": "https://www.bomdiamercado.com.br/mercado-financeiro/juros/juros-futuros-queimam-premios-com-alivio-externo-apos-eleicoes-nos-eua-e-expectativa-sobre-pronunciamento-de-lula/"
+    },
+    {
+      "key": "ibovespa",
+      "label": "Times Brasil · Ibovespa sobe 1,23% no pré-Copom",
+      "date": "2026-11-04",
+      "url": "https://timesbrasil.com.br/investimentos/bolsa/ibovespa-sobe-123-e-interrompe-seis-quedas-no-pre-copom-dolar-recua-a-r-545/"
+    },
+    {
+      "key": "brent_front_month",
+      "label": "CNN Brasil · Mercado financeiro, 4 November",
+      "date": "2026-11-04",
+      "url": "https://www.cnnbrasil.com.br/economia/money/mercado/mercado-financeiro-ibovespa-dolar-4-novembro-2026/"
+    },
+    {
+      "key": "expectations",
+      "label": "CNN Brasil · Broadcast survey, 39 of 75 expected a cut",
+      "date": "2026-11-04",
+      "url": "https://www.cnnbrasil.com.br/economia/money/mercado/mercado-financeiro-ibovespa-dolar-4-novembro-2026/"
+    },
+    {
+      "key": "expectations",
+      "label": "Seu Dinheiro · Copom segura Selic em 13,75%, about 70% priced",
+      "date": "2026-11-04",
+      "url": "https://www.seudinheiro.com/2026/economia/copom-segura-selic-em-1375-e-interrompe-ciclo-de-cortes-nos-juros-mlim/"
+    },
+    {
+      "key": "fiscal",
+      "label": "Metrópoles · Governo quebra-cabeça para desarmar bombas no Orçamento 2027",
+      "date": "2026-11-02",
+      "url": "https://www.metropoles.com/brasil/governo-desarmar-bombas-orcamento"
+    },
+    {
+      "key": "fiscal",
+      "label": "Estadão Conteúdo (republished) · Lula fará pronunciamento",
+      "date": "2026-11-04",
+      "url": "https://portalgilbertosilva.com.br/04/11/2026/lula-fara-pronunciamento-para-anunciar-medidas-de-ajuste-e-tentar-acalmar-mercadoutm_sourcerss-ultima-horautm_mediumrssutm_campaignrssfeed/"
+    }
+  ]
+}

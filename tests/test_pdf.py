@@ -7,7 +7,7 @@ import pytest
 from pypdf import PdfReader
 
 from src.content import TEXT
-from src.runoff_content import TEXT as UPDATE_TEXT
+from src.copom_content import TEXT as NOTE_TEXT
 from src.pdf_brief import markdown_brief, render_pdf
 
 from conftest import ROOT
@@ -42,14 +42,11 @@ def test_pdf_is_searchable_localized_and_short(generated, lang) -> None:
     reader = PdfReader(paths[lang])
     assert len(reader.pages) == 2
     text = normalize(text_of(paths[lang]))
-    t = TEXT[lang]
-    for key in ("act_label", "change_label"):
-        assert normalize(t[key]).split(":")[0][:30].lower() in text.lower(), key
-    for key in ("title", "moves_title", "fx_title", "rates_title", "fiscal_title", "decision_title", "review_title"):
-        assert normalize(UPDATE_TEXT[lang][key]).lower() in text.lower(), key
-    assert ("5,30" if lang != "en" else "5.30") in text
-    assert ("5,5003" if lang != "en" else "5.5003") in text
-    assert ("14,80" if lang != "en" else "14.80") in text
+    for key in ("title", "ticket_label", "q1_title", "q2_title", "q3_title", "q4_title", "q5_title", "q6_title", "q8_title"):
+        assert normalize(NOTE_TEXT[lang][key]).lower() in text.lower(), key
+    assert ("5,4775" if lang != "en" else "5.4775") in text
+    assert ("14,39" if lang != "en" else "14.39") in text
+    assert ("14,00" if lang != "en" else "14.00") in text
     assert reader.metadata.author == "Romeo Mugnier de Almeida"
     annotations = sum(len(page.get("/Annots") or []) for page in reader.pages)
     assert annotations >= 9  # clickable sources for this publication
@@ -65,9 +62,9 @@ def test_translated_pdf_has_no_english_headings(generated, lang) -> None:
 
 
 def test_signs_and_decimal_marks_survive_extraction(generated) -> None:
-    assert "−13.9%" in text_of(generated[0]["en"])
+    assert "−R$82,000" in normalize(text_of(generated[0]["en"]))
     assert "205.083" in text_of(generated[0]["pt"])
-    assert "5,4029" in text_of(generated[0]["fr"])
+    assert "5,4775" in text_of(generated[0]["fr"])
 
 
 @pytest.mark.parametrize("lang", ["en", "pt", "fr"])

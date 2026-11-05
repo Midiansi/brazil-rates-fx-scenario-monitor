@@ -24,6 +24,8 @@ from src import formatting as f
 from src.content import TEXT
 from src.page import GITHUB
 from src.thesis import fill, placeholders
+from src.copom import copom_values
+from src.copom_content import TEXT as NOTE_TEXT
 from src.runoff import runoff_values
 from src.runoff_content import TEXT as UPDATE_TEXT
 
@@ -31,9 +33,9 @@ INK = colors.HexColor("#102431")
 INK_2 = colors.HexColor("#3A5260")
 MUTED = colors.HexColor("#607782")
 LINE = colors.HexColor("#D3DEDC")
-TEAL = colors.HexColor("#0B7F70")
-TEAL_TINT = colors.HexColor("#E8F4F1")
-COPPER = colors.HexColor("#B45E33")
+TEAL = colors.HexColor("#1F4E79")
+TEAL_TINT = colors.HexColor("#EEF2F6")
+COPPER = colors.HexColor("#9A3B24")
 COPPER_TINT = colors.HexColor("#FBEFE8")
 SAND = colors.HexColor("#8A7440")
 PANEL = colors.HexColor("#F3F7F6")
@@ -99,7 +101,7 @@ def render_pdf(thesis: dict[str, Any], snapshot: dict[str, Any], output: Path | 
 
     ev = thesis["evidence"]
     story: list[Any] = [
-        p("BRAZIL MACRO · ROMEO MUGNIER DE ALMEIDA · EPFL", "eyebrow"),
+        p("Brazil macro notes · Romeo Mugnier de Almeida · EPFL", "eyebrow"),
         p(_pdf_text(t["pdf_title"]), "title"),
         p(s(t["pdf_subtitle"]) + " · " + _pdf_text(t["kicker"]), "subtitle"),
     ]
@@ -265,7 +267,7 @@ def render_pdf(thesis: dict[str, Any], snapshot: dict[str, Any], output: Path | 
     story.append(p(_pdf_text(t["sources_label"]), "h2"))
     labels = t["source_labels"]
     links = [
-        p(f"<a href='{escape(src['url'], quote=True)}' color='#0B7F70'>{_pdf_text(labels.get(key, src['label']))}</a> "
+        p(f"<a href='{escape(src['url'], quote=True)}' color='#1F4E79'>{_pdf_text(labels.get(key, src['label']))}</a> "
           f"<font color='#607782'>· {_pdf_text(f.day(src['date'], lang))}</font>", "tiny")
         for key, src in sorted(thesis["sources"].items(), key=lambda item: labels.get(item[0], item[1]["label"]))
     ]
@@ -275,8 +277,8 @@ def render_pdf(thesis: dict[str, Any], snapshot: dict[str, Any], output: Path | 
                       [("LINEBELOW", (0, 0), (-1, -1), 0, colors.white), ("TOPPADDING", (0, 0), (-1, -1), 1), ("BOTTOMPADDING", (0, 0), (-1, -1), 2)]))
     story.append(Spacer(1, 8))
     site = f"https://brasilmacro.streamlit.app/?lang={lang}"
-    story.append(p(f"{_pdf_text(t['pdf_more'])} <a href='{site}' color='#0B7F70'>{site.replace('https://', '')}</a> · "
-                   f"<a href='{GITHUB}' color='#0B7F70'>{GITHUB.replace('https://', '')}</a>", "small"))
+    story.append(p(f"{_pdf_text(t['pdf_more'])} <a href='{site}' color='#1F4E79'>{site.replace('https://', '')}</a> · "
+                   f"<a href='{GITHUB}' color='#1F4E79'>{GITHUB.replace('https://', '')}</a>", "small"))
     story.append(p(s(t["footer"]), "small"))
 
     def decorate(canvas, doc) -> None:
@@ -347,15 +349,24 @@ def markdown_brief(thesis: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def _note_values(thesis: dict[str, Any], lang: str) -> dict[str, str]:
+    values = {**placeholders(thesis, lang), **copom_values(thesis['current_update'], lang)}
+    if thesis.get('previous_update'):
+        values.update(runoff_values(thesis['previous_update'], lang))
+    return values
+
+
 def render_current_pdf(thesis: dict[str, Any], output: Path | str, lang: str = "en") -> Path:
-    """Two-page current note; previous briefs are preserved in outputs/archive/."""
-    report, u = thesis['current_update'], UPDATE_TEXT[lang]
-    values = {**placeholders(thesis, lang), **runoff_values(report, lang)}
+    """Two-page current note, in the order of the website; previous briefs stay in outputs/archive/."""
+    report, n = thesis['current_update'], NOTE_TEXT[lang]
+    values = _note_values(thesis, lang)
     styles = _styles()
-    styles['body'].fontSize, styles['body'].leading = 7.9, 10.6
-    styles['cell'].fontSize, styles['cell'].leading = 7.5, 9.8
-    styles['h2'].spaceBefore, styles['h2'].spaceAfter, styles['h2'].fontSize, styles['h2'].leading = 7, 3, 10.5, 13
-    styles['lead'].fontSize, styles['lead'].leading = 10, 13.5
+    styles['body'].fontSize, styles['body'].leading = 7.8, 10.3
+    styles['body'].spaceAfter = 3
+    styles['cell'].fontSize, styles['cell'].leading = 7.2, 9.2
+    styles['h2'].spaceBefore, styles['h2'].spaceAfter, styles['h2'].fontSize, styles['h2'].leading = 6, 2, 10, 12.4
+    styles['lead'].fontSize, styles['lead'].leading = 10.2, 13.2
+    styles['small'].fontSize, styles['small'].leading = 6.8, 8.6
     styles['title'].fontSize, styles['title'].leading = 17, 20.5
 
     def s(text):
@@ -365,51 +376,61 @@ def render_current_pdf(thesis: dict[str, Any], output: Path | str, lang: str = "
         return Paragraph(s(text), styles[style])
 
     def heading(key):
-        return p(u[key], 'h2')
+        return [CondPageBreak(60), p(n[key], 'h2')]
 
-    def section(key):  # a heading starts a new page only when fewer than ~4 lines are left
-        return [CondPageBreak(60), heading(f'{key}_title'), p(u[key])]
-
-    def table(headers, rows, widths):
+    def table(headers, rows, widths, numeric_from=99):
         data = [[p(h, 'label') for h in headers]] + [[p(cell, 'cell') for cell in row] for row in rows]
         result = Table(data, colWidths=widths, repeatRows=1, hAlign='LEFT')
         result.setStyle(TableStyle([
             ('VALIGN', (0, 0), (-1, -1), 'TOP'),
             ('BACKGROUND', (0, 0), (-1, 0), PANEL),
             ('LEFTPADDING', (0, 0), (-1, -1), 5), ('RIGHTPADDING', (0, 0), (-1, -1), 7),
-            ('TOPPADDING', (0, 0), (-1, -1), 4), ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
+            ('TOPPADDING', (0, 0), (-1, -1), 2.5), ('BOTTOMPADDING', (0, 0), (-1, -1), 2.5),
             ('LINEBELOW', (0, 0), (-1, -1), 0.4, LINE),
         ]))
         return result
 
-    decide = Table([[Paragraph(f"<b>{_pdf_text(TEXT[lang][key])}</b>", styles['body']) for key in ('act_label', 'change_label')],
-                    [p(u['act']), p(u['change'])]], colWidths=[WIDTH / 2 - 4, WIDTH / 2 - 4])
-    decide.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (0, -1), TEAL_TINT), ('BACKGROUND', (1, 0), (1, -1), COPPER_TINT),
-        ('VALIGN', (0, 0), (-1, -1), 'TOP'), ('LEFTPADDING', (0, 0), (-1, -1), 10), ('RIGHTPADDING', (0, 0), (-1, -1), 10),
-        ('TOPPADDING', (0, 0), (-1, 0), 8), ('TOPPADDING', (0, 1), (-1, 1), 0), ('BOTTOMPADDING', (0, -1), (-1, -1), 6),
+    ticket = Table([[Paragraph(f'<b>{s(n["ticket_label"])}</b> ({s(n["pdf_status"])})', styles['body']), '']]
+                   + [[p(term, 'cell'), p(value, 'cell')] for term, value in n['ticket']], colWidths=[WIDTH * .22, WIDTH * .78])
+    ticket.setStyle(TableStyle([
+        ('SPAN', (0, 0), (1, 0)), ('BACKGROUND', (0, 0), (-1, -1), TEAL_TINT), ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ('LEFTPADDING', (0, 0), (-1, -1), 9), ('RIGHTPADDING', (0, 0), (-1, -1), 9),
+        ('TOPPADDING', (0, 0), (-1, -1), 2.5), ('BOTTOMPADDING', (0, 0), (-1, -1), 2.5),
+        ('TOPPADDING', (0, 0), (-1, 0), 7), ('BOTTOMPADDING', (0, -1), (-1, -1), 7),
     ]))
-    story = [p('BRAZIL MACRO · ROMEO MUGNIER DE ALMEIDA · EPFL', 'eyebrow'),
-             p(u['title'], 'title'), p(u['dated'], 'subtitle'),
-             p(u['headline'], 'lead'), p(u['intro']),
-             heading('moves_title'),
-             table(u['moves_head'], u['moves_rows'], [WIDTH * .37, *([WIDTH * .21] * 3)]),
-             p(u['moves_note'], 'small'),
-             decide,
-             *section('fx'), *section('rates'), *section('fiscal'), *section('exporters'),
-             heading('decision_title'),
-             table(u['decision_head'], u['decisions'], [WIDTH * .36, WIDTH * .3, WIDTH * .34]),
-             p(u['calendar'], 'small'),
-             *section('risk'),
-             heading('review_title')]
-    rows = [[said, happened, u['verdicts'][verdict]] for said, happened, verdict in u['review_rows']]
-    story += [table(u['review_head'], rows, [WIDTH * .45, WIDTH * .41, WIDTH * .14]),
-              Spacer(1, 4), Paragraph(f"<b>{_pdf_text(u['lesson_label'])}.</b> {s(u['lesson'])}", styles['body'])]
+    points = Table([[Paragraph(f'<b>{s(title)}</b><br/>{s(body)}', styles['cell']) for title, body in n['q3_points']]],
+                   colWidths=[WIDTH / 3] * 3, hAlign='LEFT')
+    points.setStyle(TableStyle([('VALIGN', (0, 0), (-1, -1), 'TOP'), ('LEFTPADDING', (0, 0), (0, 0), 0), ('RIGHTPADDING', (0, 0), (-1, -1), 8),
+                                ('TOPPADDING', (0, 0), (-1, -1), 1), ('BOTTOMPADDING', (0, 0), (-1, -1), 2)]))
+    status = {key: value for key, value in n['rule_status'].items()}
+    conditions = [[condition, status[state], evidence] for condition, state, evidence in n['rule_rows']]
+    calls = [[said, happened, n['verdicts'][verdict]] for said, happened, verdict in n['review_rows']]
+    bullets = ' '.join(f'<b>{index}.</b> {s(item)}' for index, item in enumerate(n['q6_items'], 1))
+    dates = ' '.join(f'<b>{s(day)}:</b> {s(what)}.' for day, what in n['dates'])
+    story = [p('Brazil Macro · Romeo Mugnier de Almeida · EPFL', 'eyebrow'),
+             p(n['title'], 'title'), p(n['dated'], 'subtitle'),
+             p(n['headline'], 'lead'), p(n['summary']),
+             Spacer(1, 3), ticket, Spacer(1, 2),
+             *heading('q1_title'), p(n['q1']),
+             table(n['moves_head'], n['moves_rows'], [WIDTH * .37, *([WIDTH * .21] * 3)]),
+             p(n['moves_note'], 'small'),
+             *heading('q2_title'), p(n['q2']), p(n['q2b']),
+             *heading('q3_title'), points,
+             CondPageBreak(170), *heading('q4_title'), p(n['q4']),
+             table(n['rule_head'], conditions, [WIDTH * .27, WIDTH * .1, WIDTH * .63]),
+             Spacer(1, 3), p(n['q4b']),
+             *heading('q5_title'), p(n['q5_size']), p(n['q5_why']),
+             table(n['payoff_head'], n['payoff_rows'], [WIDTH * .6, WIDTH * .22, WIDTH * .18]),
+             p(n['payoff_note'], 'small'),
+             *heading('q6_title'), Paragraph(bullets, styles['body']), Paragraph(dates, styles['body']),
+             *heading('q7_title'), p(n['q7_oil']),
+             *heading('q8_title'),
+             table(n['review_head'], calls, [WIDTH * .36, WIDTH * .52, WIDTH * .12]),
+             Spacer(1, 3), Paragraph(f"<b>{_pdf_text(n['lesson_label'])}.</b> {s(n['lesson'])}", styles['body'])]
     # Outlet names only: the full headlines are listed on the website and in the saved report.
-    source_links = [f'<a href="{escape(source["url"], quote=True)}" color="#0B7F70">{_pdf_text(source["label"].split(" · ")[0])}</a> '
+    source_links = [f'<a href="{escape(source["url"], quote=True)}" color="#1F4E79">{_pdf_text(source["label"].split(" · ")[0])}</a> '
                     f'({_pdf_text(f.day(source["date"], lang, year=False))})' for source in report['sources']]
-    story += [p(u['sources_title'], 'label'), Paragraph(' · '.join(source_links), styles['tiny']),
-              p(u['sources_note'], 'tiny')]
+    story += [p(n['sources_title'], 'label'), Paragraph(' · '.join(source_links), styles['tiny']), p(n['sources_note'], 'tiny')]
 
     def decorate(canvas, doc):
         canvas.saveState()
@@ -418,40 +439,46 @@ def render_current_pdf(thesis: dict[str, Any], output: Path | str, lang: str = "
         canvas.line(MARGIN, A4[1] - 30, A4[0] - MARGIN, A4[1] - 30)
         canvas.setFont('Sans', 6.6)
         canvas.setFillColor(MUTED)
-        canvas.drawString(MARGIN, 24, fill(u['footer'], values, lang).replace(' ', ' '))
+        canvas.drawString(MARGIN, 24, fill(n['pdf_footer'], values, lang).replace(' ', ' '))
         canvas.drawRightString(A4[0] - MARGIN, 12, str(doc.page))
         canvas.restoreState()
 
     destination = Path(output)
     destination.parent.mkdir(parents=True, exist_ok=True)
     doc = SimpleDocTemplate(str(destination), pagesize=A4, leftMargin=MARGIN, rightMargin=MARGIN,
-                            topMargin=46, bottomMargin=43, title=fill(u['title'], values, lang),
-                            author='Romeo Mugnier de Almeida', subject=fill(u['dated'], values, lang),
+                            topMargin=46, bottomMargin=43, title=fill(n['title'], values, lang),
+                            author='Romeo Mugnier de Almeida', subject=fill(n['dated'], values, lang),
                             lang=TEXT[lang]['html_lang'], creator='Brazil Macro')
     doc.build(story, onFirstPage=decorate, onLaterPages=decorate)
     return destination
 
 
 def current_markdown(thesis: dict[str, Any]) -> str:
-    report, u = thesis['current_update'], UPDATE_TEXT['en']
-    values = {**placeholders(thesis, 'en'), **runoff_values(report, 'en')}
+    report, n = thesis['current_update'], NOTE_TEXT['en']
+    values = _note_values(thesis, 'en')
     s = lambda text: fill(text, values, 'en')
     row = lambda cells: '| ' + ' | '.join(s(cell) for cell in cells) + ' |'
-    lines = [f'# {u["title"]}', '', s(u['dated']), '', f'**{s(u["headline"])}**', '', s(u['intro']), '',
-             f'## {u["moves_title"]}', '', row(u['moves_head']), '|---|---:|---:|---:|']
-    lines += [row(cells) for cells in u['moves_rows']]
-    lines += ['', s(u['moves_note']), '', f'**{TEXT["en"]["act_label"]}.** {s(u["act"])}', '',
-              f'**{TEXT["en"]["change_label"]}.** {s(u["change"])}', '']
-    for key in ('fx', 'rates', 'fiscal', 'exporters'):
-        lines += [f'## {u[key + "_title"]}', '', s(u[key]), '']
-    lines += [f'## {u["decision_title"]}', '', row(u['decision_head']), '|---|---|---|']
-    lines += [row(cells) for cells in u['decisions']]
-    lines += ['', s(u['calendar']), '', f'## {u["risk_title"]}', '', s(u['risk']), '', f'## {u["review_title"]}', '',
-              row(u['review_head']), '|---|---|---|']
-    lines += [row([said, happened, u['verdicts'][verdict]]) for said, happened, verdict in u['review_rows']]
-    lines += ['', f'**{u["lesson_label"]}.** {s(u["lesson"])}', '', f'## {u["sources_title"]}', '', s(u['sources_note']), '']
-    lines += [f'- [{source["label"]}]({source["url"]}) — {source["date"]}' for source in report['sources']]
-    lines += ['', f'## {u["glossary_title"]}', '']
-    lines += [f'- **{s(term)}:** {s(text)}' for term, text in u['glossary']]
-    lines += ['', u['footer'], '']
+    lines = [f'# {n["title"]}', '', s(n['dated']), '', f'**{s(n["headline"])}**', '', s(n['summary']), '',
+             f'## {n["ticket_label"]}', '']
+    lines += [f'- **{s(term)}:** {s(value)}' for term, value in n['ticket']]
+    lines += ['', f'## {n["q1_title"]}', '', s(n['q1']), '', row(n['moves_head']), '|---|---:|---:|---:|']
+    lines += [row(cells) for cells in n['moves_rows']]
+    lines += ['', s(n['moves_note']), '', f'## {n["q2_title"]}', '', s(n['q2']), '', s(n['q2b']), '', f'## {n["q3_title"]}', '']
+    lines += [f'- **{s(title)}** {s(body)}' for title, body in n['q3_points']]
+    lines += ['', f'## {n["q4_title"]}', '', s(n['q4']), '', row(n['rule_head']), '|---|---|---|']
+    lines += [row([condition, n['rule_status'][state], evidence]) for condition, state, evidence in n['rule_rows']]
+    lines += ['', s(n['q4b']), '', f'## {n["q5_title"]}', '']
+    lines += [f'- **{s(term)}:** {s(value)}' for term, value in n['plan_rows']]
+    lines += ['', s(n['q5_size']), '', s(n['q5_why']), '', f'### {s(n["payoff_title"])}', '', row(n['payoff_head']), '|---|---:|---:|']
+    lines += [row(cells) for cells in n['payoff_rows']]
+    lines += ['', s(n['payoff_note']), '', f'## {n["q6_title"]}', '']
+    lines += [f'- {s(item)}' for item in n['q6_items']]
+    lines += ['', f'**{n["dates_label"]}:** ' + ' '.join(f'{s(day)}: {s(what)}.' for day, what in n['dates']), '',
+              f'## {n["q7_title"]}', '', s(n['q7_fx']), '', s(n['q7_oil']), '', f'## {n["q8_title"]}', '', row(n['review_head']), '|---|---|---|']
+    lines += [row([said, happened, n['verdicts'][verdict]]) for said, happened, verdict in n['review_rows']]
+    lines += ['', f'**{n["lesson_label"]}.** {s(n["lesson"])}', '', f'## {n["sources_title"]}', '', s(n['sources_note']), '']
+    lines += [f'- [{source["label"]}]({source["url"]}), {source["date"]}' for source in report['sources']]
+    lines += ['', f'## {n["glossary_title"]}', '']
+    lines += [f'- **{s(term)}:** {s(text)}' for term, text in n['glossary']]
+    lines += ['', s(n['pdf_footer']), '']
     return '\n'.join(lines)

@@ -9,9 +9,9 @@ import pytest
 from streamlit.testing.v1 import AppTest
 
 EXPECTED = {
-    "EN": ("Brazil macro, from policy to price.", "What I would do", "Thesis review: the previous view, checked"),
-    "PT": ("Brasil macro: da política monetária aos preços.", "O que eu faria", "Revisão da tese: a visão anterior, conferida"),
-    "FR": ("Le Brésil, de la politique monétaire aux marchés.", "Ce que je ferais", "Revue de la thèse"),
+    "EN": ("dated calls, scored in public", "The paper trade", "What have I got wrong so far?"),
+    "PT": ("teses datadas, avaliadas em público", "A operação simulada", "No que errei até agora?"),
+    "FR": ("des vues datées, évaluées en public", "Le trade simulé", "Où me suis-je trompé"),
 }
 
 
@@ -55,8 +55,8 @@ def test_render_imports_no_heavy_or_network_modules(monkeypatch) -> None:
 
 def test_page_is_a_handful_of_elements() -> None:
     app = run()
-    assert len(app.get("html")) <= 16  # research blocks plus the interactive lab
-    assert len(app.markdown) <= 6  # the five inline-SVG figures
+    assert len(app.get("html")) <= 18  # research blocks plus the interactive lab
+    assert len(app.markdown) <= 6  # the inline-SVG figures and the archive that holds one
     assert len(app.button_group) == 1
 
 
@@ -77,15 +77,15 @@ def test_every_language_renders_completely(label, no_network) -> None:
 def test_lens_can_be_shared_by_url() -> None:
     quant = page_text(run())
     commodities = page_text(run(lens="commodities"))
-    assert quant.index("Rates, FX and quant: what the first day tells us") < quant.index("Commodities: Brazil sells in dollars")
-    assert commodities.index("Commodities: Brazil sells in dollars") < commodities.index("Rates, FX and quant: what the first day tells us")
+    assert quant.index("Rates and FX after the first round") < quant.index("Commodities and the real")
+    assert commodities.index("Commodities and the real") < commodities.index("Rates and FX after the first round")
 
 
 def test_language_can_be_shared_by_url() -> None:
     app = run(lang="pt")
     assert not app.exception
     assert EXPECTED["PT"][0] in page_text(app)
-    assert download_label(app).startswith("Baixar o relatório")
+    assert download_label(app).startswith("Baixar o resumo")
 
 
 def test_clicking_the_active_language_keeps_the_page() -> None:
@@ -97,4 +97,4 @@ def test_clicking_the_active_language_keeps_the_page() -> None:
 
 def test_download_button_serves_the_localized_pdf() -> None:
     app = run(lang="fr")
-    assert "PDF, français" in download_label(app)
+    assert "résumé de 2 pages" in download_label(app)

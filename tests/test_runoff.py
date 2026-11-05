@@ -14,7 +14,7 @@ from conftest import ROOT
 from src.page import render
 from src.runoff import build_runoff, path_average, runoff_values
 from src.runoff_content import TEXT
-from src.thesis import survey_path_average
+from src.thesis import fill, survey_path_average
 
 
 def read(name):
@@ -43,7 +43,7 @@ def previous():
 
 @pytest.fixture
 def report(thesis):
-    return thesis['current_update']
+    return thesis['previous_update']
 
 
 def test_publication_reproduces_offline(report, inputs, history, baseline, previous):
@@ -156,12 +156,10 @@ def test_current_note_resolves_and_precedes_archived_studies(thesis, inputs, lan
     page = ''.join(blocks.values())
     text = unescape(re.sub(r'<[^>]+>', ' ', page))
     assert not re.search(r'\{[a-z_0-9]+\}', text)
-    assert page.index('id="update"') < page.index('id="quant"')
-    assert 'datetime="2026-10-27"' in blocks['hero']
-    assert ('5.5003' if lang == 'en' else '5,5003') in blocks['hero']
-    assert TEXT[lang]['archive'] in unescape(page)
-    assert TEXT[lang]['monitor_note'] in unescape(blocks['hero'])
-    assert unescape(TEXT[lang]['title']) in unescape(blocks['update'])
+    assert page.index('id="update"') < page.index('class="previous-note"') < page.index('id="quant"')
+    assert ('5.5003' if lang == 'en' else '5,5003') in page
+    assert TEXT[lang]['monitor_note'] in unescape(page)
+    assert fill(TEXT[lang]['title'], {}, lang) in unescape(page)
 
 
 def test_languages_have_matching_fields_and_placeholders(report):
@@ -180,6 +178,7 @@ def test_languages_have_matching_fields_and_placeholders(report):
 def test_missing_followup_keeps_original_page_available(thesis, inputs):
     old = copy.deepcopy(thesis)
     old.pop('current_update')
+    old.pop('previous_update')
     page = render('en', old, inputs, date(2026, 10, 27))
     assert page['update'] == ''
     assert 'datetime="2026-10-06"' in page['hero']
