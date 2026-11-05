@@ -66,7 +66,7 @@ def test_one_failed_feed_does_not_blank_the_page(thesis, snapshot) -> None:
 @pytest.mark.parametrize("snapshot_value", [{}, None, {"series": None, "commodities": "x", "history": None}])
 def test_missing_or_malformed_snapshot_still_renders(thesis, snapshot_value) -> None:
     page = html(thesis, snapshot_value)
-    assert "Brazil macro notes" in page
+    assert "dated calls, scored in public" in page
     assert "Rule check unavailable" in page
 
 
@@ -82,7 +82,7 @@ def charts(thesis, snapshot, lens="quant") -> dict[str, str]:
 
 def test_every_chart_has_both_variants_and_accessible_text(thesis, snapshot) -> None:
     blocks = charts(thesis, snapshot)
-    assert len(blocks) == 5  # curve, event paths, commodity scatter, producer prices, PTAX with the decision levels
+    assert len(blocks) == 6  # market pricing, curve, event paths, commodity scatter, producer prices, archived PTAX with the decision levels
     for name, chart in blocks.items():
         assert chart.count("<svg") == 2 and "chart-compact" in chart and "chart-wide" in chart, name
         assert "<title" in chart and "<desc" in chart and "<figcaption" in chart, name
@@ -103,7 +103,8 @@ def test_the_chosen_lens_comes_first(thesis, snapshot) -> None:
     for lens, first, second in (("quant", 'id="quant"', 'id="commodities"'), ("commodities", 'id="commodities"', 'id="quant"'), ("nonsense", 'id="quant"', 'id="commodities"')):
         page = "".join(render("en", thesis, snapshot, THESIS_DATE, lens).values())
         assert page.index(first) < page.index(second), lens
-    assert 'class="lens-card first" href="#commodities"' in "".join(render("en", thesis, snapshot, THESIS_DATE, "commodities").values())
+    proof = render("en", thesis, snapshot, THESIS_DATE, "commodities")["proof"]
+    assert proof.index('href="#commodities"') < proof.index('href="#update"')
 
 
 def plain(markup: str) -> str:
@@ -122,7 +123,7 @@ def test_the_first_screen_reads_cold(thesis, snapshot, lang) -> None:
 
 
 def test_every_section_leads_with_a_takeaway_and_hides_dense_tables(thesis, snapshot) -> None:
-    body = "".join(block for name, block in render("en", thesis, snapshot, THESIS_DATE).items() if name.startswith("body_"))
+    body = "".join(block for name, block in render("en", thesis, snapshot, THESIS_DATE).items() if name.startswith(("body_", "chart_")))
     assert body.count('class="take"') == 8  # three rates/FX/quant questions and five commodity ones
     assert body.count('<details class="numbers">') == 4  # curve, events, rule and producer tables are one click away
     assert body.index('id="trade"') < body.index('id="review"') < body.index('id="evidence"')  # the track record sits after the current view

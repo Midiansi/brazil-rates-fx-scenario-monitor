@@ -16,7 +16,7 @@ from pathlib import Path
 
 import streamlit as st
 
-from src import chart, content, formatting, freshness, lab_content, risk, runoff, runoff_content, page, thesis, lab
+from src import chart, content, copom, copom_content, formatting, freshness, lab_content, risk, runoff, runoff_content, page, thesis, lab
 
 ROOT = Path(__file__).resolve().parent
 THESIS_PATH = ROOT / "research" / "thesis.json"
@@ -24,11 +24,11 @@ SNAPSHOT_PATH = ROOT / "research" / "live_snapshot.json"
 STUDY_PATH = ROOT / "research" / "study_2026-10-06.json"
 RISK_PATH = ROOT / "research" / "risk_2026-10-07.json"
 RISK_CSV_PATH = ROOT / "research" / "risk_forecasts.csv"
-UPDATE_PATH = ROOT / "research" / "runoff_2026-10-27.json"
+UPDATE_PATH = ROOT / "research" / "copom_2026-11-05.json"
 CSS_PATH = ROOT / "src" / "style.css"
 LANGUAGES = {"EN": "en", "PT": "pt", "FR": "fr"}
 PDF_NAMES = {"en": "Brazil_Rates_FX_Trade_Brief.pdf", "pt": "Brazil_Rates_FX_Trade_Brief_PT.pdf", "fr": "Brazil_Rates_FX_Trade_Brief_FR.pdf"}
-MODULES = (formatting, content, lab_content, runoff_content, freshness, chart, thesis, risk, runoff, page, lab)  # dependency order
+MODULES = (formatting, content, lab_content, runoff_content, copom_content, freshness, chart, thesis, risk, runoff, copom, page, lab)  # dependency order
 
 
 def _mtime(path: Path | str) -> float:
@@ -126,10 +126,12 @@ pdf_path = ROOT / "outputs" / PDF_NAMES[lang]
 pdf_bytes = _pdf(str(pdf_path), _mtime(pdf_path))
 if pdf_bytes:
     st.download_button(
-        content.TEXT[lang]["download"], data=pdf_bytes, file_name=pdf_path.name, mime="application/pdf",
+        (copom_content.TEXT[lang]["download"] if "proof" in blocks and blocks["proof"] else content.TEXT[lang]["download"]), data=pdf_bytes, file_name=pdf_path.name, mime="application/pdf",
         help=content.TEXT[lang]["download_help"], on_click="ignore", icon=":material/download:",
     )
 
+if blocks.get("proof"):
+    st.html(blocks["proof"])
 if "toc" in blocks:  # its own element so CSS can pin it while the sections scroll
     st.html(blocks["toc"])
 for name, markup in blocks.items():

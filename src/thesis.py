@@ -40,6 +40,8 @@ def load_thesis(path: Path | None = None) -> dict[str, Any]:
     # A dated follow-up does not rewrite the earlier study or its inputs.
     update_file = thesis.get("current_update_file")
     thesis["current_update"] = read_json(ROOT / update_file) if isinstance(update_file, str) else {}
+    previous_file = thesis.get("previous_update_file")
+    thesis["previous_update"] = read_json(ROOT / previous_file) if isinstance(previous_file, str) else {}
     return thesis
 
 
