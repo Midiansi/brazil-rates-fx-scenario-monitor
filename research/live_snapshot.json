@@ -218,10 +218,6 @@
   ],
   "ptax": [
    [
-    "2026-07-09",
-    5.1326
-   ],
-   [
     "2026-07-10",
     5.1085
    ],
@@ -576,13 +572,13 @@
    [
     "2026-11-16",
     5.7321
+   ],
+   [
+    "2026-11-17",
+    5.7848
    ]
   ],
   "us_2y": [
-   [
-    "2026-09-18",
-    4.76
-   ],
    [
     "2026-09-21",
     4.76
@@ -738,76 +734,80 @@
    [
     "2026-11-16",
     4.83
+   ],
+   [
+    "2026-11-17",
+    4.8
    ]
   ]
  },
  "note": "Written by scripts/refresh_market_data.py from official feeds. A failed source keeps its last good value; see refresh.sources.",
  "refresh": {
-  "attempted_at": "2026-11-17T04:33:18Z",
+  "attempted_at": "2026-11-18T03:43:38Z",
   "sources": {
    "brent": {
     "error": "",
-    "last_success": "2026-11-17T04:33:18Z",
+    "last_success": "2026-11-18T03:43:38Z",
     "source": "FRED DCOILBRENTEU",
     "status": "ok"
    },
    "fed_range": {
     "error": "",
-    "last_success": "2026-11-17T04:33:18Z",
+    "last_success": "2026-11-18T03:43:38Z",
     "source": "New York Fed (EFFR feed)",
     "status": "ok"
    },
    "focus_fx": {
     "error": "",
-    "last_success": "2026-11-17T04:33:18Z",
+    "last_success": "2026-11-18T03:43:38Z",
     "source": "BCB Focus",
     "status": "ok"
    },
    "focus_ipca": {
     "error": "",
-    "last_success": "2026-11-17T04:33:18Z",
+    "last_success": "2026-11-18T03:43:38Z",
     "source": "BCB Focus",
     "status": "ok"
    },
    "focus_selic": {
     "error": "",
-    "last_success": "2026-11-17T04:33:18Z",
+    "last_success": "2026-11-18T03:43:38Z",
     "source": "BCB Focus",
     "status": "ok"
    },
    "iron_ore": {
     "error": "",
-    "last_success": "2026-11-17T04:33:18Z",
+    "last_success": "2026-11-18T03:43:38Z",
     "source": "FRED PIORECRUSDM",
     "status": "ok"
    },
    "ptax": {
     "error": "",
-    "last_success": "2026-11-17T04:33:18Z",
+    "last_success": "2026-11-18T03:43:38Z",
     "source": "BCB PTAX",
     "status": "ok"
    },
    "selic_target": {
     "error": "",
-    "last_success": "2026-11-17T04:33:18Z",
+    "last_success": "2026-11-18T03:43:38Z",
     "source": "BCB SGS 432",
     "status": "ok"
    },
    "soybeans": {
     "error": "",
-    "last_success": "2026-11-17T04:33:18Z",
+    "last_success": "2026-11-18T03:43:38Z",
     "source": "FRED PSOYBUSDM",
     "status": "ok"
    },
    "sugar": {
     "error": "",
-    "last_success": "2026-11-17T04:33:18Z",
+    "last_success": "2026-11-18T03:43:38Z",
     "source": "FRED PSUGAISAUSDM",
     "status": "ok"
    },
    "us_yields": {
     "error": "",
-    "last_success": "2026-11-17T04:33:18Z",
+    "last_success": "2026-11-18T03:43:38Z",
     "source": "U.S. Treasury par yield curve",
     "status": "ok"
    }
@@ -821,9 +821,9 @@
    "additional_source_url": "https://www.newyorkfed.org/markets/reference-rates/effr",
    "frequency": "daily",
    "label": "Selic target minus federal-funds target-range midpoint",
-   "latest_observation_date": "2026-11-13",
+   "latest_observation_date": "2026-11-16",
    "source": "Derived: BCB SGS 432 and New York Fed (EFFR feed)",
-   "source_url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=17/09/2026&dataFinal=17/11/2026",
+   "source_url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=17/09/2026&dataFinal=18/11/2026",
    "unit": "percentage points",
    "value": 9.875
   },
@@ -831,7 +831,7 @@
    "effective_since": "2026-09-17",
    "frequency": "daily",
    "label": "Federal-funds target range",
-   "latest_observation_date": "2026-11-13",
+   "latest_observation_date": "2026-11-16",
    "lower": 3.75,
    "midpoint": 3.875,
    "source": "New York Fed (EFFR feed)",
@@ -891,68 +891,68 @@
    }
   },
   "ptax_usd_brl_midpoint": {
-   "buying_rate": 5.7318,
-   "five_business_day_change_percent": 3.949730700179521,
+   "buying_rate": 5.7845,
+   "five_business_day_change_percent": 3.601554524777484,
    "frequency": "daily",
    "label": "USD/BRL PTAX midpoint",
-   "latest_observation_date": "2026-11-16",
-   "latest_observation_timestamp": "2026-11-16T13:06:32.509132",
-   "one_month_change_percent": 12.785549849477595,
-   "selling_rate": 5.7324,
+   "latest_observation_date": "2026-11-17",
+   "latest_observation_timestamp": "2026-11-17T13:07:26.015160",
+   "one_month_change_percent": 13.822481947149923,
+   "selling_rate": 5.7851,
    "source": "BCB PTAX",
    "source_url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/",
    "twenty_observation_range": {
-    "end_date": "2026-11-16",
-    "high": 5.7321,
+    "end_date": "2026-11-17",
+    "high": 5.784800000000001,
     "low": 5.0137,
-    "midpoint": 5.3729,
-    "start_date": "2026-10-19",
-    "width": 0.7183999999999999
+    "midpoint": 5.39925,
+    "start_date": "2026-10-20",
+    "width": 0.7711000000000006
    },
    "unit": "BRL per USD",
-   "value": 5.7321
+   "value": 5.784800000000001
   },
   "selic_target": {
    "effective_since": "2026-09-17",
    "frequency": "daily",
    "label": "BCB Selic target",
-   "latest_observation_date": "2026-11-17",
+   "latest_observation_date": "2026-11-18",
    "source": "BCB SGS 432",
-   "source_url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=17/09/2026&dataFinal=17/11/2026",
+   "source_url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=17/09/2026&dataFinal=18/11/2026",
    "unit": "% p.a.",
    "value": 13.75
   },
   "us_10_year_treasury": {
-   "five_business_day_change_pp": 0.2599999999999998,
+   "five_business_day_change_pp": 0.21999999999999975,
    "frequency": "daily",
    "label": "U.S. 10-year Treasury yield",
-   "latest_observation_date": "2026-11-16",
-   "one_month_change_pp": 0.03000000000000025,
+   "latest_observation_date": "2026-11-17",
+   "one_month_change_pp": 0.009999999999999787,
    "source": "U.S. Treasury par yield curve",
    "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve",
    "unit": "% p.a.",
-   "value": 5.12
+   "value": 5.1
   },
   "us_2_year_treasury": {
-   "five_business_day_change_pp": 0.3200000000000003,
+   "five_business_day_change_pp": 0.2400000000000002,
    "frequency": "daily",
    "label": "U.S. 2-year Treasury yield",
-   "latest_observation_date": "2026-11-16",
-   "one_month_change_pp": 0.08999999999999986,
+   "latest_observation_date": "2026-11-17",
+   "one_month_change_pp": 0.05999999999999961,
    "source": "U.S. Treasury par yield curve",
    "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve",
    "unit": "% p.a.",
-   "value": 4.83
+   "value": 4.8
   },
   "us_2s10s": {
    "frequency": "daily",
    "label": "U.S. 2s10s slope (10-year minus 2-year)",
-   "latest_observation_date": "2026-11-16",
+   "latest_observation_date": "2026-11-17",
    "source": "U.S. Treasury par yield curve",
    "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve",
    "unit": "percentage points",
-   "value": 0.29000000000000004
+   "value": 0.2999999999999998
   }
  },
- "updated_at": "2026-11-17T04:33:18Z"
+ "updated_at": "2026-11-18T03:43:38Z"
 }
